@@ -100,6 +100,7 @@ a:hover {
 }
 
 /* —— Header —— */
+/* HOVER STATE DEMO ACTIVE */
 .site-header {
   position: relative;
   z-index: 50;
@@ -188,7 +189,7 @@ a:hover {
 .site-header__link {
   padding: 10px;
   font-size: 16px;
-  color: var(--color-grey-400);
+  color: var(--color-purple); /* DEMO: Showing hover state permanently */
   border-radius: var(--radius-sm);
   min-height: 44px;
   display: inline-flex;
@@ -206,7 +207,7 @@ a:hover {
   justify-content: center;
   padding: 11px;
   font-size: 16px;
-  color: var(--color-grey-400);
+  color: var(--color-purple); /* DEMO: Showing hover state permanently */
   border-radius: var(--radius-sm);
   min-height: 44px;
   min-width: 44px;
@@ -269,7 +270,7 @@ a:hover {
 }
 
 .btn--header {
-  background: var(--color-purple);
+  background: var(--color-purple-hover); /* DEMO: Showing hover state permanently */
   color: var(--color-grey-100);
   font-size: 16px;
   border-radius: 9999px;
