@@ -1,6 +1,6 @@
 :root {
   --text: #6b6375;
-  --text-h: #08060d;
+  --text-h: #6E34FF;
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
@@ -128,7 +128,7 @@ code {
   }
 
   .base {
-    width: 170px;
+    width: 527px;
     position: relative;
     z-index: 0;
   }
