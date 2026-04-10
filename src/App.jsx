@@ -3,6 +3,7 @@ import javascriptLogo from './assets/javascript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
+import SnakeGame from './SnakeGame.jsx'
 
 export default function App() {
   const [count, setCount] = useState(0)
@@ -28,6 +29,10 @@ export default function App() {
           Count is {count}
         </button>
       </section>
+
+      <div className="ticks"></div>
+
+      <SnakeGame />
 
       <div className="ticks"></div>
 
