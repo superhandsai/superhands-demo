@@ -1,4 +1,6 @@
 import wordmarkSvg from './wordmark.svg?url'
+import googlePlayBadgePng from './google-play-badge.png?url'
+import appStoreBadgePng from './app-store-badge.png?url'
 
 /** Figma MCP asset URLs (expire after ~7 days; re-fetch from get_design_context if broken). */
 export const tripma = {
@@ -16,10 +18,8 @@ export const tripma = {
   facebook: 'https://www.figma.com/api/mcp/asset/7c9da88e-8a76-4632-bc94-34d08ee5a4f6',
   instagram: 'https://www.figma.com/api/mcp/asset/a449ed57-9af9-4b0f-99e7-c59fa5916ede',
   twitter: 'https://www.figma.com/api/mcp/asset/1f81a766-209d-4554-a683-2304db4a3483',
-  googlePlay: 'https://www.figma.com/api/mcp/asset/bd16dc88-ca7c-46ca-a579-32e33508b633',
-  appleIcon: 'https://www.figma.com/api/mcp/asset/b219a2d9-81c1-42e3-993e-63fe5510b22c',
-  downloadOnThe: 'https://www.figma.com/api/mcp/asset/61e0c598-127c-44b7-a443-bbd80b1f317c',
-  appStore: 'https://www.figma.com/api/mcp/asset/5bf0f118-dffc-4bc5-b648-644e541416c9',
+  googlePlay: googlePlayBadgePng,
+  appStoreBadge: appStoreBadgePng,
   starFilled: 'https://www.figma.com/api/mcp/asset/e517f03e-0330-4a47-828f-48e1230ad7e9',
   starEmpty: 'https://www.figma.com/api/mcp/asset/9020574a-ef67-491c-bad1-f8acdb6a944d',
   avatar1: 'https://www.figma.com/api/mcp/asset/a4e1b14a-4e37-4c5d-b8a7-58f447375605',
@@ -32,5 +32,4 @@ export const tripma = {
   stayMaldives: 'https://www.figma.com/api/mcp/asset/3af34c54-04dc-4152-a843-49b896429006',
   stayMorocco: 'https://www.figma.com/api/mcp/asset/48a7cd7d-d0e7-4479-870a-f2204f750a66',
   stayMongolia: 'https://www.figma.com/api/mcp/asset/e64c16ff-cd20-4e86-b3c9-2f90a6c60e27',
-  arrowRight: 'https://www.figma.com/api/mcp/asset/00d49c00-8ffc-4f9b-b3be-fb590bd86bae',
 }

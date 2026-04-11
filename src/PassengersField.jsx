@@ -48,9 +48,10 @@ function StepperRow({ title, hint, value, min, max, decAria, incAria, onDec, onI
   )
 }
 
-export function PassengersField({ icon }) {
+export function PassengersField() {
   const rootRef = useRef(null)
   const baseId = useId()
+  const travellersLabelId = `${baseId}-travellers-label`
   const [open, setOpen] = useState(false)
   const [adults, setAdults] = useState(1)
   const [children, setChildren] = useState(0)
@@ -78,21 +79,26 @@ export function PassengersField({ icon }) {
       <input type="hidden" name="adults" value={adults} />
       <input type="hidden" name="children" value={children} />
       <label
-        className={`flight-search__field flight-search__field--people ${open ? 'is-open' : ''}`}
+        className={`flight-search__field flight-search__field--people flight-search__field--stacked ${open ? 'is-open' : ''}`}
       >
-        {icon}
-        <input
-          id={baseId}
-          type="text"
-          className="flight-search__input"
-          readOnly
-          value={summary}
-          aria-haspopup="dialog"
-          aria-expanded={open}
-          aria-controls={`${baseId}-popover`}
-          onClick={() => setOpen(true)}
-          onFocus={() => setOpen(true)}
-        />
+        <span className="flight-search__label" id={travellersLabelId}>
+          Travellers
+        </span>
+        <div className="flight-search__value-row">
+          <input
+            id={baseId}
+            type="text"
+            className="flight-search__input flight-search__input--stacked"
+            readOnly
+            value={summary}
+            aria-labelledby={travellersLabelId}
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            aria-controls={`${baseId}-popover`}
+            onClick={() => setOpen(true)}
+            onFocus={() => setOpen(true)}
+          />
+        </div>
       </label>
       {open && (
         <div
@@ -100,12 +106,12 @@ export function PassengersField({ icon }) {
           className="flight-search__passengers-popover"
           role="dialog"
           aria-modal="true"
-          aria-label="Travelers"
+          aria-label="Travellers"
         >
           <div className="passengers-picker">
             <StepperRow
               title="Adults"
-              hint="Age 13+"
+              hint="Aged 18+"
               value={adults}
               min={ADULT_MIN}
               max={ADULT_MAX}
@@ -116,7 +122,7 @@ export function PassengersField({ icon }) {
             />
             <StepperRow
               title="Children"
-              hint="Ages 0–12"
+              hint="Aged 0 to 17"
               value={children}
               min={CHILD_MIN}
               max={CHILD_MAX}
