@@ -477,7 +477,7 @@ a:hover {
   max-width: none;
   font-size: clamp(1.75rem, 4vw, 3rem);
   font-weight: 800;
-  line-height: 0.85;
+  line-height: 1.1;
   text-align: center;
   letter-spacing: -0.02em;
   background: var(--hero-title-gradient);
