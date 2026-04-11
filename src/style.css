@@ -544,7 +544,7 @@ a:hover {
 .hero__search-block .search-pills__pill:not(.is-selected):hover {
   color: var(--color-purple);
   border-color: var(--color-purple);
-  background: yellow;
+  background: pink;
 }
 
 .hero__search-block .flight-search .flight-search__placeholder {
@@ -601,7 +601,7 @@ a:hover {
 .search-pills__pill:not(.is-selected):hover {
   color: var(--color-purple);
   border-color: var(--color-purple);
-  background: yellow;
+  background: pink;
 }
 
 .search-pills__pill.is-selected {
