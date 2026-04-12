@@ -11,6 +11,20 @@ import {
   getAirportApi,
 } from './lib/airportSearch.js'
 
+function useMatchMax768() {
+  const [matches, setMatches] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const onChange = () => setMatches(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return matches
+}
+
 function StarRow({ filled, total = 5 }) {
   return (
     <div className="star-row" role="img" aria-label={`${filled} out of ${total} stars`}>
@@ -24,6 +38,26 @@ function StarRow({ filled, total = 5 }) {
         />
       ))}
     </div>
+  )
+}
+
+function HeaderMenuIcon() {
+  return (
+    <svg
+      className="site-header__menu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <path
+        d="M15 17.5H9C9 17.5 11 15.2444 11 12.5C11 11 9.91479 10.4867 9.89534 8.96204C9.8966 5.94404 13.5297 6.1045 14.7926 7.30402M9 12.5H14M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 
@@ -83,20 +117,7 @@ function SiteHeader() {
         <a href="#" className="site-header__logo">
           <img src={tripma.wordmark} alt="Tripma" width={105} height={30} />
         </a>
-        <button
-          type="button"
-          className="site-header__menu-btn"
-          aria-expanded={open}
-          aria-controls={navId}
-          onClick={() => setOpen(v => !v)}
-        >
-          <span className="visually-hidden">Menu</span>
-          <span className="site-header__burger" aria-hidden />
-        </button>
         <nav id={navId} className={`site-header__nav ${open ? 'is-open' : ''}`}>
-          <a className="site-header__link" href="#">
-            Help
-          </a>
           <div
             className="site-header__locale"
             role="group"
@@ -114,13 +135,33 @@ function SiteHeader() {
               £ GBP
             </a>
           </div>
-          <a className="site-header__favourites" href="#" aria-label="Favourites">
+          <a className="site-header__favourites site-header__hide-mobile" href="#" aria-label="Favourites">
             <HeartIcon />
           </a>
-          <a className="btn btn--header" href="#">
+          <a className="btn btn--header site-header__hide-mobile" href="#">
             Log in
           </a>
         </nav>
+        <div className="site-header__end">
+          <div className="site-header__end-cluster">
+            <button
+              type="button"
+              className="site-header__menu-btn"
+              aria-expanded={open}
+              aria-controls={navId}
+              onClick={() => setOpen(v => !v)}
+            >
+              <span className="visually-hidden">Menu</span>
+              <HeaderMenuIcon />
+            </button>
+            <a className="site-header__favourites" href="#" aria-label="Favourites">
+              <HeartIcon />
+            </a>
+          </div>
+          <a className="btn btn--header" href="#">
+            Log in
+          </a>
+        </div>
       </div>
     </header>
   )
@@ -138,6 +179,7 @@ function AirportField({
   onCloseMenu,
   excludeCodes = [],
   showFlightSearchOptions = false,
+  omitDirectFlightsOption = false,
   nearbyAirportsChecked = false,
   onNearbyAirportsChange,
   directFlightsChecked = false,
@@ -157,8 +199,16 @@ function AirportField({
   const [filter, setFilter] = useState('')
   const [airportApi, setAirportApi] = useState(null)
   const [popoverPlacement, setPopoverPlacement] = useState(null)
+  const matchMax768 = useMatchMax768()
 
   const open = menuOpen === fieldKey
+
+  const hasMobileAirportExtras =
+    matchMax768 &&
+    ((showFlightSearchOptions && onNearbyAirportsChange) ||
+      (showToNearbyAirportsOption && onToNearbyAirportsChange))
+
+  const useAirportPopoverSplit = Boolean(open && popoverPlacement && hasMobileAirportExtras)
 
   useEffect(() => {
     getAirportApi().then(setAirportApi)
@@ -284,9 +334,7 @@ function AirportField({
           ) : null}
         </div>
       </div>
-      {showFlightSearchOptions &&
-      onNearbyAirportsChange &&
-      onDirectFlightsChange ? (
+      {!matchMax768 && showFlightSearchOptions && onNearbyAirportsChange ? (
         <div className="flight-search__airport-options" role="group" aria-label="Flight search options">
           <label className="flight-search__airport-option" htmlFor={nearbyId}>
             <input
@@ -298,19 +346,21 @@ function AirportField({
             />
             <span>Add nearby airports</span>
           </label>
-          <label className="flight-search__airport-option" htmlFor={directId}>
-            <input
-              id={directId}
-              type="checkbox"
-              name="direct_flights"
-              checked={directFlightsChecked}
-              onChange={e => onDirectFlightsChange(e.target.checked)}
-            />
-            <span>Direct flights</span>
-          </label>
+          {!omitDirectFlightsOption && onDirectFlightsChange ? (
+            <label className="flight-search__airport-option" htmlFor={directId}>
+              <input
+                id={directId}
+                type="checkbox"
+                name="direct_flights"
+                checked={directFlightsChecked}
+                onChange={e => onDirectFlightsChange(e.target.checked)}
+              />
+              <span>Direct flights</span>
+            </label>
+          ) : null}
         </div>
       ) : null}
-      {showToNearbyAirportsOption && onToNearbyAirportsChange ? (
+      {!matchMax768 && showToNearbyAirportsOption && onToNearbyAirportsChange ? (
         <div className="flight-search__airport-options" role="group" aria-label="Arrival airport options">
           <label className="flight-search__airport-option" htmlFor={toNearbyId}>
             <input
@@ -327,47 +377,137 @@ function AirportField({
       {open &&
         popoverPlacement &&
         createPortal(
-          <div
-            ref={popoverRef}
-            id={listId}
-            className="flight-search__popover flight-search__popover--portal"
-            style={{
-              top: popoverPlacement.top,
-              left: popoverPlacement.left,
-              width: popoverPlacement.width,
-            }}
-            role="listbox"
-            aria-label={label}
-          >
-            {!airportApi ? (
-              <p className="flight-search__empty">Loading airports…</p>
-            ) : filtered.length === 0 ? (
-              <p className="flight-search__empty">No airports match</p>
-            ) : (
-              filtered.map(a => {
-                const title = buildAirportOptionTitle(a)
-                const subtitle = buildAirportOptionSubtitle(a)
-                const aria = subtitle ? `${title}, ${subtitle}` : title
-                return (
-                  <button
-                    key={a.code}
-                    type="button"
-                    role="option"
-                    aria-label={aria}
-                    aria-selected={a.code === value}
-                    className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
-                    onMouseDown={e => e.preventDefault()}
-                    onClick={() => pick(a.code)}
-                  >
-                    <span className="flight-search__option-title">{title}</span>
-                    {subtitle ? (
-                      <span className="flight-search__option-sub">{subtitle}</span>
+          useAirportPopoverSplit ? (
+            <div
+              ref={popoverRef}
+              className="flight-search__popover flight-search__popover--portal flight-search__popover--airport-mobile"
+              style={{
+                top: popoverPlacement.top,
+                left: popoverPlacement.left,
+                width: popoverPlacement.width,
+              }}
+            >
+              <div className="flight-search__popover-airport-extras">
+                {showFlightSearchOptions && onNearbyAirportsChange ? (
+                  <div className="flight-search__airport-options" role="group" aria-label="Flight search options">
+                    <label className="flight-search__airport-option" htmlFor={nearbyId}>
+                      <input
+                        id={nearbyId}
+                        type="checkbox"
+                        name="nearby_airports"
+                        checked={nearbyAirportsChecked}
+                        onChange={e => onNearbyAirportsChange(e.target.checked)}
+                      />
+                      <span>Add nearby airports</span>
+                    </label>
+                    {!omitDirectFlightsOption && onDirectFlightsChange ? (
+                      <label className="flight-search__airport-option" htmlFor={directId}>
+                        <input
+                          id={directId}
+                          type="checkbox"
+                          name="direct_flights"
+                          checked={directFlightsChecked}
+                          onChange={e => onDirectFlightsChange(e.target.checked)}
+                        />
+                        <span>Direct flights</span>
+                      </label>
                     ) : null}
-                  </button>
-                )
-              })
-            )}
-          </div>,
+                  </div>
+                ) : null}
+                {showToNearbyAirportsOption && onToNearbyAirportsChange ? (
+                  <div className="flight-search__airport-options" role="group" aria-label="Arrival airport options">
+                    <label className="flight-search__airport-option" htmlFor={toNearbyId}>
+                      <input
+                        id={toNearbyId}
+                        type="checkbox"
+                        name="to_nearby_airports"
+                        checked={toNearbyAirportsChecked}
+                        onChange={e => onToNearbyAirportsChange(e.target.checked)}
+                      />
+                      <span>Add nearby airports</span>
+                    </label>
+                  </div>
+                ) : null}
+              </div>
+              <div
+                id={listId}
+                className="flight-search__popover-airport-results"
+                role="listbox"
+                aria-label={label}
+              >
+                {!airportApi ? (
+                  <p className="flight-search__empty">Loading airports…</p>
+                ) : filtered.length === 0 ? (
+                  <p className="flight-search__empty">No airports match</p>
+                ) : (
+                  filtered.map(a => {
+                    const title = buildAirportOptionTitle(a)
+                    const subtitle = buildAirportOptionSubtitle(a)
+                    const aria = subtitle ? `${title}, ${subtitle}` : title
+                    return (
+                      <button
+                        key={a.code}
+                        type="button"
+                        role="option"
+                        aria-label={aria}
+                        aria-selected={a.code === value}
+                        className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => pick(a.code)}
+                      >
+                        <span className="flight-search__option-title">{title}</span>
+                        {subtitle ? (
+                          <span className="flight-search__option-sub">{subtitle}</span>
+                        ) : null}
+                      </button>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+          ) : (
+            <div
+              ref={popoverRef}
+              id={listId}
+              className="flight-search__popover flight-search__popover--portal"
+              style={{
+                top: popoverPlacement.top,
+                left: popoverPlacement.left,
+                width: popoverPlacement.width,
+              }}
+              role="listbox"
+              aria-label={label}
+            >
+              {!airportApi ? (
+                <p className="flight-search__empty">Loading airports…</p>
+              ) : filtered.length === 0 ? (
+                <p className="flight-search__empty">No airports match</p>
+              ) : (
+                filtered.map(a => {
+                  const title = buildAirportOptionTitle(a)
+                  const subtitle = buildAirportOptionSubtitle(a)
+                  const aria = subtitle ? `${title}, ${subtitle}` : title
+                  return (
+                    <button
+                      key={a.code}
+                      type="button"
+                      role="option"
+                      aria-label={aria}
+                      aria-selected={a.code === value}
+                      className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
+                      onMouseDown={e => e.preventDefault()}
+                      onClick={() => pick(a.code)}
+                    >
+                      <span className="flight-search__option-title">{title}</span>
+                      {subtitle ? (
+                        <span className="flight-search__option-sub">{subtitle}</span>
+                      ) : null}
+                    </button>
+                  )
+                })
+              )}
+            </div>
+          ),
           document.body
         )}
     </div>
@@ -474,7 +614,7 @@ function HeroSearchGroup() {
               {tab.id === 'hotels' ? <HotelsTabIcon /> : null}
               {tab.id === 'cars' ? <CarsTabIcon /> : null}
               {tab.id === 'packages' ? <PackagesTabIcon /> : null}
-              {tab.label}
+              <span className="search-pills__pill-label">{tab.label}</span>
             </span>
           ))}
         </div>
@@ -657,6 +797,7 @@ function SwapAirportsIcon() {
 }
 
 function FlightSearchBar() {
+  const directFlightsId = useId()
   const [tripType, setTripType] = useState('return')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -696,10 +837,9 @@ function FlightSearchBar() {
             onCloseMenu={() => setAirportMenu(null)}
             excludeCodes={to ? [to] : []}
             showFlightSearchOptions
+            omitDirectFlightsOption
             nearbyAirportsChecked={nearbyAirports}
             onNearbyAirportsChange={setNearbyAirports}
-            directFlightsChecked={directFlights}
-            onDirectFlightsChange={setDirectFlights}
           />
           <button
             type="button"
@@ -730,7 +870,21 @@ function FlightSearchBar() {
           />
         </div>
         <DateRangeField oneWay={tripType === 'one-way'} />
-        <PassengersField />
+        <div className="flight-search__passengers-and-options">
+          <PassengersField />
+          <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
+            <label className="flight-search__airport-option" htmlFor={directFlightsId}>
+              <input
+                id={directFlightsId}
+                type="checkbox"
+                name="direct_flights"
+                checked={directFlights}
+                onChange={e => setDirectFlights(e.target.checked)}
+              />
+              <span>Direct flights</span>
+            </label>
+          </div>
+        </div>
         <button type="submit" className="btn btn--search">
           <span className="btn--search__text">Search</span>
           <span className="btn--search__icon" aria-hidden>
