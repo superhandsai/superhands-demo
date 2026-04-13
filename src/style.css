@@ -558,6 +558,10 @@ a:hover {
   }
 }
 
+#hero-heading {
+  min-height: 100px;
+}
+
 .hero__search-block__lead {
   display: flex;
   flex-direction: column;
