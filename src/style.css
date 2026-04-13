@@ -554,7 +554,7 @@ a:hover {
 
 @media (min-width: 1025px) {
   .hero__title {
-    font-size: 56px;
+    font-size: 32px;
   }
 }
 
@@ -1094,7 +1094,7 @@ a:hover {
 .flight-search__airport-option > span {
   display: inline-flex;
   align-items: center;
-  min-height: 0;
+  min-height: 199px;
   line-height: 1.25;
 }
 
