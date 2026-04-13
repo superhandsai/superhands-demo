@@ -554,7 +554,7 @@ a:hover {
 
 @media (min-width: 1025px) {
   .hero__title {
-    font-size: 56px;
+    font-size: 51px;
   }
 }
 
@@ -603,7 +603,7 @@ a:hover {
   font-weight: 500;
   color: var(--color-grey-600);
   background: var(--color-white);
-  border: 1px solid var(--color-grey-200);
+  border: 1px dashed #e3ec5f;
   border-radius: 9999px;
   cursor: default;
   user-select: none;
