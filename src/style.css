@@ -2149,6 +2149,11 @@ a:hover {
   padding-top: 24px;
 }
 
+.band__cta .btn {
+  min-height: unset;
+  padding: 12px 20px;
+}
+
 .section-title {
   display: flex;
   flex-wrap: nowrap;

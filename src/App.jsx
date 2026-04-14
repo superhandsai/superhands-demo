@@ -1174,11 +1174,8 @@ export default function App() {
               />
             </div>
             <div className="band__cta">
-              <a className="btn btn--secondary" href="#">
-                <span className="btn--secondary__text">Explore more stays</span>
-                <span className="btn--secondary__icon" aria-hidden>
-                  <ArrowRightIcon className="btn--secondary__arrow" />
-                </span>
+              <a className="btn btn--primary" href="#">
+                <span className="btn--primary__text">Explore more stays</span>
               </a>
             </div>
           </section>
