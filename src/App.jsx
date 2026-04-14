@@ -1201,7 +1201,7 @@ export default function App() {
                 stars={5}
                 meta={
                   <>
-                    Seoul, South Korea <span className="text-muted-sep">|</span> April 2019
+                    Seoul, South Korea <span className="text-muted-sep">|</span> April 2026
                   </>
                 }
               >
@@ -1213,7 +1213,7 @@ export default function App() {
                 stars={4}
                 meta={
                   <>
-                    Honolulu, Hawaii <span className="text-muted-sep">|</span> February 2017
+                    Honolulu, Hawaii <span className="text-muted-sep">|</span> February 2026
                   </>
                 }
               >
@@ -1225,7 +1225,7 @@ export default function App() {
                 stars={5}
                 meta={
                   <>
-                    Berlin, Germany <span className="text-muted-sep">|</span> April 2019
+                    Berlin, Germany <span className="text-muted-sep">|</span> April 2026
                   </>
                 }
               >

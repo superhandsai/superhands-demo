@@ -2225,7 +2225,7 @@ a:hover {
 }
 
 .deal-card__price-currency {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--color-grey-400);
 }
