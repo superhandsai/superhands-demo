@@ -64,17 +64,18 @@ function HeaderMenuIcon() {
 function HeartIcon() {
   return (
     <svg
-      width={22}
-      height={22}
+      width={20}
+      height={20}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
       <path
-        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+        d="M16.1111 3C19.6333 3 22 6.3525 22 9.48C22 15.8138 12.1778 21 12 21C11.8222 21 2 15.8138 2 9.48C2 6.3525 4.36667 3 7.88889 3C9.91111 3 11.2333 4.02375 12 4.92375C12.7667 4.02375 14.0889 3 16.1111 3Z"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
@@ -135,6 +136,9 @@ function SiteHeader() {
               £ GBP
             </a>
           </div>
+          <a className="site-header__favourites" href="#" aria-label="Favourites">
+            <HeartIcon />
+          </a>
           <a className="btn btn--header site-header__hide-mobile" href="#">
             Log in
           </a>
