@@ -135,9 +135,6 @@ function SiteHeader() {
               £ GBP
             </a>
           </div>
-          <a className="site-header__favourites site-header__hide-mobile" href="#" aria-label="Favourites">
-            <HeartIcon />
-          </a>
           <a className="btn btn--header site-header__hide-mobile" href="#">
             Log in
           </a>
@@ -154,9 +151,6 @@ function SiteHeader() {
               <span className="visually-hidden">Menu</span>
               <HeaderMenuIcon />
             </button>
-            <a className="site-header__favourites" href="#" aria-label="Favourites">
-              <HeartIcon />
-            </a>
           </div>
           <a className="btn btn--header" href="#">
             Log in
@@ -334,46 +328,6 @@ function AirportField({
           ) : null}
         </div>
       </div>
-      {!matchMax768 && showFlightSearchOptions && onNearbyAirportsChange ? (
-        <div className="flight-search__airport-options" role="group" aria-label="Flight search options">
-          <label className="flight-search__airport-option" htmlFor={nearbyId}>
-            <input
-              id={nearbyId}
-              type="checkbox"
-              name="nearby_airports"
-              checked={nearbyAirportsChecked}
-              onChange={e => onNearbyAirportsChange(e.target.checked)}
-            />
-            <span>Add nearby airports</span>
-          </label>
-          {!omitDirectFlightsOption && onDirectFlightsChange ? (
-            <label className="flight-search__airport-option" htmlFor={directId}>
-              <input
-                id={directId}
-                type="checkbox"
-                name="direct_flights"
-                checked={directFlightsChecked}
-                onChange={e => onDirectFlightsChange(e.target.checked)}
-              />
-              <span>Direct flights</span>
-            </label>
-          ) : null}
-        </div>
-      ) : null}
-      {!matchMax768 && showToNearbyAirportsOption && onToNearbyAirportsChange ? (
-        <div className="flight-search__airport-options" role="group" aria-label="Arrival airport options">
-          <label className="flight-search__airport-option" htmlFor={toNearbyId}>
-            <input
-              id={toNearbyId}
-              type="checkbox"
-              name="to_nearby_airports"
-              checked={toNearbyAirportsChecked}
-              onChange={e => onToNearbyAirportsChange(e.target.checked)}
-            />
-            <span>Add nearby airports</span>
-          </label>
-        </div>
-      ) : null}
       {open &&
         popoverPlacement &&
         createPortal(
@@ -388,46 +342,6 @@ function AirportField({
               }}
             >
               <div className="flight-search__popover-airport-extras">
-                {showFlightSearchOptions && onNearbyAirportsChange ? (
-                  <div className="flight-search__airport-options" role="group" aria-label="Flight search options">
-                    <label className="flight-search__airport-option" htmlFor={nearbyId}>
-                      <input
-                        id={nearbyId}
-                        type="checkbox"
-                        name="nearby_airports"
-                        checked={nearbyAirportsChecked}
-                        onChange={e => onNearbyAirportsChange(e.target.checked)}
-                      />
-                      <span>Add nearby airports</span>
-                    </label>
-                    {!omitDirectFlightsOption && onDirectFlightsChange ? (
-                      <label className="flight-search__airport-option" htmlFor={directId}>
-                        <input
-                          id={directId}
-                          type="checkbox"
-                          name="direct_flights"
-                          checked={directFlightsChecked}
-                          onChange={e => onDirectFlightsChange(e.target.checked)}
-                        />
-                        <span>Direct flights</span>
-                      </label>
-                    ) : null}
-                  </div>
-                ) : null}
-                {showToNearbyAirportsOption && onToNearbyAirportsChange ? (
-                  <div className="flight-search__airport-options" role="group" aria-label="Arrival airport options">
-                    <label className="flight-search__airport-option" htmlFor={toNearbyId}>
-                      <input
-                        id={toNearbyId}
-                        type="checkbox"
-                        name="to_nearby_airports"
-                        checked={toNearbyAirportsChecked}
-                        onChange={e => onToNearbyAirportsChange(e.target.checked)}
-                      />
-                      <span>Add nearby airports</span>
-                    </label>
-                  </div>
-                ) : null}
               </div>
               <div
                 id={listId}
@@ -587,7 +501,6 @@ const HERO_SEARCH_TABS = [
   { id: 'flights', label: 'Flights' },
   { id: 'hotels', label: 'Hotels' },
   { id: 'cars', label: 'Cars' },
-  { id: 'packages', label: 'Packages' },
 ]
 
 function HeroSearchGroup() {
@@ -870,27 +783,25 @@ function FlightSearchBar() {
           />
         </div>
         <DateRangeField oneWay={tripType === 'one-way'} />
-        <div className="flight-search__passengers-and-options">
-          <PassengersField />
-          <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
-            <label className="flight-search__airport-option" htmlFor={directFlightsId}>
-              <input
-                id={directFlightsId}
-                type="checkbox"
-                name="direct_flights"
-                checked={directFlights}
-                onChange={e => setDirectFlights(e.target.checked)}
-              />
-              <span>Direct flights</span>
-            </label>
-          </div>
-        </div>
+        <PassengersField />
         <button type="submit" className="btn btn--search">
           <span className="btn--search__text">Search</span>
           <span className="btn--search__icon" aria-hidden>
             <ArrowRightIcon className="btn--search__arrow" />
           </span>
         </button>
+        <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
+          <label className="flight-search__airport-option" htmlFor={directFlightsId}>
+            <input
+              id={directFlightsId}
+              type="checkbox"
+              name="direct_flights"
+              checked={directFlights}
+              onChange={e => setDirectFlights(e.target.checked)}
+            />
+            <span>Direct flights</span>
+          </label>
+        </div>
       </div>
     </form>
   )
@@ -1181,10 +1092,10 @@ export default function App() {
               />
             </div>
             <div className="band__cta">
-              <a className="btn btn--primary" href="#">
-                <span className="btn--primary__text">Explore more stays</span>
-                <span className="btn--primary__icon" aria-hidden>
-                  <ArrowRightIcon className="btn--primary__arrow" />
+              <a className="btn btn--secondary" href="#">
+                <span className="btn--secondary__text">Explore more stays</span>
+                <span className="btn--secondary__icon" aria-hidden>
+                  <ArrowRightIcon className="btn--secondary__arrow" />
                 </span>
               </a>
             </div>

@@ -353,6 +353,45 @@ a:hover {
   background: var(--color-purple-hover);
 }
 
+.btn--secondary {
+  gap: 10px;
+  background: transparent;
+  color: var(--color-purple);
+  border-radius: 16px;
+  border: 2px solid var(--color-purple);
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.btn--secondary__text {
+  font-weight: 600;
+}
+
+.btn--secondary__icon {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn--secondary__arrow {
+  display: block;
+  flex-shrink: 0;
+}
+
+.btn--secondary:hover {
+  background: color-mix(in srgb, var(--color-purple) 12%, transparent);
+}
+
+.btn--secondary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-purple) 35%, transparent);
+  outline-offset: 2px;
+}
+
 @media (max-width: 768px) {
   .site-header__end {
     display: flex;
@@ -751,7 +790,7 @@ a:hover {
   width: 100%;
   min-width: 0;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 16px;
   box-sizing: border-box;
@@ -763,6 +802,12 @@ a:hover {
   overflow: visible;
   position: relative;
   z-index: 1;
+}
+
+.flight-search__direct-flights {
+  flex: 0 0 100%;
+  order: 99;
+  align-self: flex-start;
 }
 
 .flight-search .btn--search {
@@ -1180,6 +1225,7 @@ a:hover {
 @media (min-width: 769px) {
   .flight-search {
     gap: 0;
+    row-gap: 12px;
   }
 
   /*
@@ -1201,7 +1247,7 @@ a:hover {
     min-width: 0;
   }
 
-  .flight-search > .flight-search__passengers-and-options {
+  .flight-search > .flight-search__passengers-field {
     flex: 1 1 0;
     min-width: 0;
   }
@@ -1210,10 +1256,16 @@ a:hover {
     flex-direction: row;
     gap: 0;
     align-items: flex-start;
+    flex-wrap: wrap;
+    row-gap: 12px;
   }
 
   .flight-search__airports-pair > .flight-search__airport {
     flex: 1 1 0;
+  }
+
+  .flight-search__direct-flights {
+    flex: 0 0 100%;
   }
 
   /* Swap centered on the seam: half the 44px button overlaps each field (matches design) */
@@ -1256,7 +1308,6 @@ a:hover {
   }
 
   .flight-search
-    > .flight-search__passengers-and-options
     > .flight-search__passengers-field
     > .flight-search__field.flight-search__field--people {
     border-radius: 0;
@@ -1264,7 +1315,7 @@ a:hover {
     border-right: none;
   }
 
-  .flight-search > .flight-search__passengers-and-options + .btn--search {
+  .flight-search > .flight-search__passengers-field + .btn--search {
     margin-left: 0;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -2245,7 +2296,7 @@ a:hover {
 
 /* —— Testimonials —— */
 .band--testimonials {
-  padding-top: 120px;
+  padding-top: 80px;
   padding-bottom: 24px;
 }
 
