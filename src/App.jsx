@@ -505,6 +505,7 @@ const HERO_SEARCH_TABS = [
   { id: 'flights', label: 'Flights' },
   { id: 'hotels', label: 'Hotels' },
   { id: 'cars', label: 'Cars' },
+  { id: 'packages', label: 'Packages' },
 ]
 
 function HeroSearchGroup() {
