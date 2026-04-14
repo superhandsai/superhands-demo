@@ -2230,10 +2230,16 @@ a:hover {
   cursor: pointer;
 }
 
-@media (max-width: 1024px) {
+/* Tablet: two cards on row one; third card spans full width (avoids narrow 2+1 column) */
+@media (min-width: 769px) and (max-width: 1024px) {
   .card-grid--deals,
   .card-grid--stays {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-grid--deals > :nth-child(3),
+  .card-grid--stays > :nth-child(3) {
+    grid-column: 1 / -1;
   }
 }
 
