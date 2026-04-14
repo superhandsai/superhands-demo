@@ -182,15 +182,19 @@ a:hover {
 }
 
 .site-header__favourites {
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 11px;
+  height: var(--header-control-height);
+  min-height: var(--header-control-height);
+  min-width: var(--header-control-height);
+  padding: 0;
   font-size: 16px;
   color: var(--color-grey-400);
-  border-radius: var(--radius-sm);
-  min-height: 44px;
-  min-width: 44px;
+  border: 1px solid var(--color-grey-200);
+  border-radius: 12px;
+  background: var(--color-white);
   text-decoration: none;
 }
 
@@ -200,7 +204,10 @@ a:hover {
 }
 
 .site-header__favourites svg {
+  display: block;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 /* Desktop: favourites + Log in live in the nav. Mobile copies sit in .site-header__end */
