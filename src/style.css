@@ -2503,6 +2503,33 @@ a:hover {
     padding: 40px 32px 120px;
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* Put “Get the app” directly under the logo, full width, before other columns. */
+  .site-footer__grid > .footer-col--apps {
+    order: 1;
+    grid-column: 1 / -1;
+  }
+
+  .site-footer__grid > .footer-col:not(.footer-col--apps) {
+    order: 2;
+  }
+
+  .footer-col--apps .footer-col__list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+
+  .footer-col--apps .footer-col__list li {
+    padding: 0;
+  }
+
+  .footer-col--apps .footer-col__list a {
+    min-height: 0;
+    padding: 0;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2529,15 +2556,12 @@ a:hover {
     font-size: 15px;
   }
 
-  .site-footer .footer-col--apps .footer-col__list {
-    margin-bottom: 8px;
+  .site-footer .footer-col--apps .footer-col__list a {
+    padding: 0;
   }
 
-  .site-footer .footer-badges {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
+  .site-footer .footer-col--apps .footer-col__list {
+    margin-bottom: 8px;
   }
 }
 
@@ -2597,13 +2621,6 @@ a:hover {
 
 .footer-col--apps .footer-col__list {
   margin-bottom: 12px;
-}
-
-.footer-badges {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
 }
 
 .badge-app-store {

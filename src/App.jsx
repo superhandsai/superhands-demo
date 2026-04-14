@@ -1029,15 +1029,12 @@ function SiteFooter() {
     'Careers',
     'Press',
     'Blog',
-    'Forum',
   ]
   const partner = [
     'Partnership programs',
     'Affiliate program',
-    'Connectivity partners',
     'Promotions and events',
     'Integrations',
-    'Community',
     'Loyalty program',
   ]
   const support = [
@@ -1045,11 +1042,8 @@ function SiteFooter() {
     'Contact us',
     'Privacy policy',
     'Terms of service',
-    'Trust and safety',
     'Accessibility',
   ]
-  const app = ['Tripma for Android', 'Tripma for iOS', 'Mobile site']
-
   return (
     <footer className="site-footer">
       <div className="site-footer__grid">
@@ -1064,32 +1058,29 @@ function SiteFooter() {
         <div className="footer-col footer-col--apps">
           <h3 className="footer-col__title">Get the app</h3>
           <ul className="footer-col__list">
-            {app.map(label => (
-              <li key={label}>
-                <a href="#">{label}</a>
-              </li>
-            ))}
+            <li>
+              <a
+                href="https://apps.apple.com/"
+                className="badge-app-store"
+                aria-label="Download on the App Store"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={tripma.appStoreBadge} alt="" decoding="async" />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://play.google.com/store"
+                className="badge-google-play"
+                aria-label="Get it on Google Play"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={tripma.googlePlay} alt="" decoding="async" />
+              </a>
+            </li>
           </ul>
-          <div className="footer-badges">
-            <a
-              href="https://apps.apple.com/"
-              className="badge-app-store"
-              aria-label="Download on the App Store"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={tripma.appStoreBadge} alt="" decoding="async" />
-            </a>
-            <a
-              href="https://play.google.com/store"
-              className="badge-google-play"
-              aria-label="Get it on Google Play"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={tripma.googlePlay} alt="" decoding="async" />
-            </a>
-          </div>
         </div>
       </div>
     </footer>
