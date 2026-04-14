@@ -817,6 +817,38 @@ a:hover {
   align-self: flex-start;
 }
 
+.flight-search__airports-column {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Two “Add nearby airports” checkboxes aligned with From / To columns (desktop grid matches swap column width) */
+.flight-search__nearby-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.flight-search__nearby-spacer {
+  width: 44px;
+  min-width: 44px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.flight-search__nearby-option {
+  min-width: 0;
+}
+
+/* Nearby checkboxes: desktop uses .flight-search__nearby-row; ≤768px they render in each airport popover */
+
 .flight-search .btn--search {
   flex: 0 0 auto;
   align-self: flex-start;
@@ -1054,7 +1086,8 @@ a:hover {
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
-  flex: 1 1 160px;
+  height: fit-content;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -1237,9 +1270,9 @@ a:hover {
 
   /*
    * Equal width for From, To, Depart, Return, Travellers:
-   * airports pair : date strip : passengers = 2 : 2 : 1 flex-grow units.
+   * airports column : date strip : passengers = 2 : 2 : 1 flex-grow units.
    */
-  .flight-search > .flight-search__airports-pair {
+  .flight-search > .flight-search__airports-column {
     flex: 2 1 0;
     min-width: 0;
   }
@@ -1284,6 +1317,11 @@ a:hover {
     border: 2px solid var(--color-grey-200);
     color: var(--color-grey-600);
     box-shadow: none;
+  }
+
+  /* Grid uses a literal 44px gutter; swap’s negative margins pull the To field 22px left — match that here */
+  .flight-search__nearby-row > .flight-search__nearby-option:last-child {
+    margin-left: -22px;
   }
 
   .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control {
@@ -1776,6 +1814,7 @@ a:hover {
   position: relative;
   flex: 0 1 280px;
   min-width: 240px;
+  height: fit-content;
   display: flex;
   flex-direction: column;
 }
@@ -2006,12 +2045,27 @@ a:hover {
   .flight-search__field,
   .flight-search__field--narrow,
   .flight-search__field--people,
+  .flight-search__airports-column,
   .flight-search__airports-pair,
   .flight-search__airport,
   .flight-search__date-field,
   .flight-search__passengers-and-options {
     flex: 1 1 auto;
     width: 100%;
+  }
+
+  /*
+   * Stacked layout: main axis is vertical — base flex-basis 280px on .flight-search__passengers-field
+   * is for *width* on desktop row; here it becomes height and leaves a huge empty band. Pin to content.
+   */
+  .flight-search__passengers-field {
+    flex: 0 0 auto;
+    min-height: 0;
+    width: 100%;
+  }
+
+  .flight-search__passengers-field .flight-search__field--people {
+    flex: 0 0 auto;
   }
 
   .flight-search__date-fields {
