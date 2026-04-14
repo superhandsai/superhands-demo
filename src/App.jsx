@@ -197,6 +197,8 @@ function AirportField({
   showToNearbyAirportsOption = false,
   toNearbyAirportsChecked = false,
   onToNearbyAirportsChange,
+  nearbyAirportsInputId,
+  toNearbyAirportsInputId,
 }) {
   const rootRef = useRef(null)
   const controlRef = useRef(null)
@@ -358,6 +360,39 @@ function AirportField({
               }}
             >
               <div className="flight-search__popover-airport-extras">
+                {showFlightSearchOptions && onNearbyAirportsChange ? (
+                  <div className="flight-search__airport-options">
+                    <label
+                      className="flight-search__airport-option flight-search__nearby-option"
+                      htmlFor={nearbyAirportsInputId ?? nearbyId}
+                    >
+                      <input
+                        id={nearbyAirportsInputId ?? nearbyId}
+                        type="checkbox"
+                        name="nearby_airports_from"
+                        checked={nearbyAirportsChecked}
+                        onChange={e => onNearbyAirportsChange(e.target.checked)}
+                      />
+                      <span>Add nearby airports</span>
+                    </label>
+                  </div>
+                ) : showToNearbyAirportsOption && onToNearbyAirportsChange ? (
+                  <div className="flight-search__airport-options">
+                    <label
+                      className="flight-search__airport-option flight-search__nearby-option"
+                      htmlFor={toNearbyAirportsInputId ?? toNearbyId}
+                    >
+                      <input
+                        id={toNearbyAirportsInputId ?? toNearbyId}
+                        type="checkbox"
+                        name="nearby_airports_to"
+                        checked={toNearbyAirportsChecked}
+                        onChange={e => onToNearbyAirportsChange(e.target.checked)}
+                      />
+                      <span>Add nearby airports</span>
+                    </label>
+                  </div>
+                ) : null}
               </div>
               <div
                 id={listId}
@@ -727,7 +762,10 @@ function SwapAirportsIcon() {
 }
 
 function FlightSearchBar() {
+  const matchMax768 = useMatchMax768()
   const directFlightsId = useId()
+  const nearbyFromAirportsId = useId()
+  const nearbyToAirportsId = useId()
   const [tripType, setTripType] = useState('return')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -754,50 +792,89 @@ function FlightSearchBar() {
         <TripTypeSelect value={tripType} onChange={setTripType} />
       </div>
       <div className="flight-search">
-        <div className="flight-search__airports-pair">
-          <AirportField
-            fieldKey="from"
-            name="from"
-            label="From"
-            hint="Country, city or airport"
-            value={from}
-            onChange={setFrom}
-            menuOpen={airportMenu}
-            onOpenMenu={setAirportMenu}
-            onCloseMenu={() => setAirportMenu(null)}
-            excludeCodes={to ? [to] : []}
-            showFlightSearchOptions
-            omitDirectFlightsOption
-            nearbyAirportsChecked={nearbyAirports}
-            onNearbyAirportsChange={setNearbyAirports}
-          />
-          <button
-            type="button"
-            className="flight-search__airport-swap"
-            aria-label="Swap departure and arrival airports"
-            onClick={swapFromTo}
-          >
-            <span
-              className={`flight-search__airport-swap-icon ${swapIconFlipped ? 'flight-search__airport-swap-icon--flipped' : ''}`}
+        <div className="flight-search__airports-column">
+          <div className="flight-search__airports-pair">
+            <AirportField
+              fieldKey="from"
+              name="from"
+              label="From"
+              hint="Country, city or airport"
+              value={from}
+              onChange={setFrom}
+              menuOpen={airportMenu}
+              onOpenMenu={setAirportMenu}
+              onCloseMenu={() => setAirportMenu(null)}
+              excludeCodes={to ? [to] : []}
+              showFlightSearchOptions
+              omitDirectFlightsOption
+              nearbyAirportsInputId={nearbyFromAirportsId}
+              nearbyAirportsChecked={nearbyAirports}
+              onNearbyAirportsChange={setNearbyAirports}
+            />
+            <button
+              type="button"
+              className="flight-search__airport-swap"
+              aria-label="Swap departure and arrival airports"
+              onClick={swapFromTo}
             >
-              <SwapAirportsIcon />
-            </span>
-          </button>
-          <AirportField
-            fieldKey="to"
-            name="to"
-            label="To"
-            hint="Country, city or airport"
-            value={to}
-            onChange={setTo}
-            menuOpen={airportMenu}
-            onOpenMenu={setAirportMenu}
-            onCloseMenu={() => setAirportMenu(null)}
-            excludeCodes={from ? [from] : []}
-            showToNearbyAirportsOption
-            toNearbyAirportsChecked={toNearbyAirports}
-            onToNearbyAirportsChange={setToNearbyAirports}
-          />
+              <span
+                className={`flight-search__airport-swap-icon ${swapIconFlipped ? 'flight-search__airport-swap-icon--flipped' : ''}`}
+              >
+                <SwapAirportsIcon />
+              </span>
+            </button>
+            <AirportField
+              fieldKey="to"
+              name="to"
+              label="To"
+              hint="Country, city or airport"
+              value={to}
+              onChange={setTo}
+              menuOpen={airportMenu}
+              onOpenMenu={setAirportMenu}
+              onCloseMenu={() => setAirportMenu(null)}
+              excludeCodes={from ? [from] : []}
+              showToNearbyAirportsOption
+              toNearbyAirportsInputId={nearbyToAirportsId}
+              toNearbyAirportsChecked={toNearbyAirports}
+              onToNearbyAirportsChange={setToNearbyAirports}
+            />
+          </div>
+          {!matchMax768 ? (
+            <div
+              className="flight-search__nearby-row"
+              role="group"
+              aria-label="Nearby airports for From and To"
+            >
+              <label
+                className="flight-search__airport-option flight-search__nearby-option"
+                htmlFor={nearbyFromAirportsId}
+              >
+                <input
+                  id={nearbyFromAirportsId}
+                  type="checkbox"
+                  name="nearby_airports_from"
+                  checked={nearbyAirports}
+                  onChange={e => setNearbyAirports(e.target.checked)}
+                />
+                <span>Add nearby airports</span>
+              </label>
+              <div className="flight-search__nearby-spacer" aria-hidden="true" />
+              <label
+                className="flight-search__airport-option flight-search__nearby-option"
+                htmlFor={nearbyToAirportsId}
+              >
+                <input
+                  id={nearbyToAirportsId}
+                  type="checkbox"
+                  name="nearby_airports_to"
+                  checked={toNearbyAirports}
+                  onChange={e => setToNearbyAirports(e.target.checked)}
+                />
+                <span>Add nearby airports</span>
+              </label>
+            </div>
+          ) : null}
         </div>
         <DateRangeField oneWay={tripType === 'one-way'} />
         <PassengersField />
