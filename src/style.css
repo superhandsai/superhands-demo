@@ -523,8 +523,8 @@ a:hover {
   margin: 0;
   width: 100%;
   max-width: none;
-  font-size: clamp(1.75rem, 4vw, 3rem);
-  font-weight: 800;
+  font-size: 40px;
+  font-weight: 700;
   line-height: 1.05;
   text-align: left;
   letter-spacing: -0.02em;
@@ -600,7 +600,7 @@ a:hover {
 
 @media (min-width: 1025px) {
   .hero__title {
-    font-size: 56px;
+    font-size: 40px;
   }
 }
 
