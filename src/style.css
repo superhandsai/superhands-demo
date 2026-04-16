@@ -486,6 +486,7 @@ a:hover {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 5px 9px rgba(0, 0, 0, 0.3);
 }
 
 .hero__search-block {
@@ -554,7 +555,7 @@ a:hover {
 
 @media (min-width: 1025px) {
   .hero__title {
-    font-size: 56px;
+    font-size: 50px;
   }
 }
 
