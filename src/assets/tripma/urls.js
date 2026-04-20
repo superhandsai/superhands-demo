@@ -4,6 +4,9 @@ import appStoreBadgePng from './app-store-badge.png?url'
 import avatar1Png from './avatar-1.png?url'
 import avatar2Png from './avatar-2.png?url'
 import avatar3Png from './avatar-3.png?url'
+import stayMaldivesPng from './stay-maldives.png?url'
+import stayMoroccoPng from './stay-morocco.png?url'
+import stayMongoliaPng from './stay-mongolia.png?url'
 
 /** Figma MCP asset URLs (expire after ~7 days; re-fetch from get_design_context if broken). */
 export const tripma = {
@@ -32,7 +35,7 @@ export const tripma = {
   /* Sydney card uses stacked layers in Figma; top layer: */
   dealSydney: 'https://www.figma.com/api/mcp/asset/7495ccb2-e643-400c-8b95-53612f7c4d81',
   dealKyoto: 'https://www.figma.com/api/mcp/asset/4beca99c-f5bb-4b2e-b373-d9f6d951219c',
-  stayMaldives: 'https://www.figma.com/api/mcp/asset/3af34c54-04dc-4152-a843-49b896429006',
-  stayMorocco: 'https://www.figma.com/api/mcp/asset/48a7cd7d-d0e7-4479-870a-f2204f750a66',
-  stayMongolia: 'https://www.figma.com/api/mcp/asset/e64c16ff-cd20-4e86-b3c9-2f90a6c60e27',
+  stayMaldives: stayMaldivesPng,
+  stayMorocco: stayMoroccoPng,
+  stayMongolia: stayMongoliaPng,
 }
