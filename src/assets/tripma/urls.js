@@ -7,6 +7,9 @@ import avatar3Png from './avatar-3.png?url'
 import stayMaldivesPng from './stay-maldives.png?url'
 import stayMoroccoPng from './stay-morocco.png?url'
 import stayMongoliaPng from './stay-mongolia.png?url'
+import dealShanghaiPng from './deal-shanghai.png?url'
+import dealSydneyPng from './deal-sydney.png?url'
+import dealKyotoPng from './deal-kyoto.png?url'
 
 /** Figma MCP asset URLs (expire after ~7 days; re-fetch from get_design_context if broken). */
 export const tripma = {
@@ -31,10 +34,9 @@ export const tripma = {
   avatar1: avatar1Png,
   avatar2: avatar2Png,
   avatar3: avatar3Png,
-  dealShanghai: 'https://www.figma.com/api/mcp/asset/3fce8285-9c17-4f07-ac9a-1680f03b80a1',
-  /* Sydney card uses stacked layers in Figma; top layer: */
-  dealSydney: 'https://www.figma.com/api/mcp/asset/7495ccb2-e643-400c-8b95-53612f7c4d81',
-  dealKyoto: 'https://www.figma.com/api/mcp/asset/4beca99c-f5bb-4b2e-b373-d9f6d951219c',
+  dealShanghai: dealShanghaiPng,
+  dealSydney: dealSydneyPng,
+  dealKyoto: dealKyotoPng,
   stayMaldives: stayMaldivesPng,
   stayMorocco: stayMoroccoPng,
   stayMongolia: stayMongoliaPng,
