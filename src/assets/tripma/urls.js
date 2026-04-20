@@ -10,6 +10,7 @@ import stayMongoliaPng from './stay-mongolia.png?url'
 import dealShanghaiPng from './deal-shanghai.png?url'
 import dealSydneyPng from './deal-sydney.png?url'
 import dealKyotoPng from './deal-kyoto.png?url'
+import heroMapPng from './hero-map.png?url'
 
 /** Figma MCP asset URLs (expire after ~7 days; re-fetch from get_design_context if broken). */
 export const tripma = {
@@ -21,7 +22,7 @@ export const tripma = {
   calDot2: 'https://www.figma.com/api/mcp/asset/4984ea5e-ca3c-47ef-be29-862ffbb106c1',
   personHead: 'https://www.figma.com/api/mcp/asset/8a57a2a6-c6b7-44e6-a581-332f707e99fd',
   personBody: 'https://www.figma.com/api/mcp/asset/3f7a6d64-f8ba-4fbe-8ddd-0cc94fac056c',
-  heroMap: 'https://www.figma.com/api/mcp/asset/e9ca9602-10d3-4af9-a0f5-e3fd5d873068',
+  heroMap: heroMapPng,
   heroTextMask: 'https://www.figma.com/api/mcp/asset/7a0a30b5-7588-4108-a4c4-13eb749af15f',
   heroTextFill: 'https://www.figma.com/api/mcp/asset/54a8135e-d4a8-4e4d-8dc6-d3547dc6abdb',
   facebook: 'https://www.figma.com/api/mcp/asset/7c9da88e-8a76-4632-bc94-34d08ee5a4f6',
