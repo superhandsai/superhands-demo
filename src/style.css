@@ -2390,9 +2390,23 @@ a:hover {
   padding-top: 4px;
 }
 
-.star-row img {
+.star-row__star {
   width: 24px;
   height: 24px;
+  display: block;
+  color: color-mix(in srgb, var(--color-purple) 35%, white);
+}
+
+.star-row__star.is-filled {
+  color: var(--color-purple);
+}
+
+.star-row__star.is-filled path {
+  fill: currentColor;
+}
+
+.star-row__star.is-empty path {
+  fill: none;
 }
 
 .testimonial__text {
