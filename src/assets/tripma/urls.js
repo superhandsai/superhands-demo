@@ -1,6 +1,9 @@
 import wordmarkSvg from './wordmark.svg?url'
 import googlePlayBadgePng from './google-play-badge.png?url'
 import appStoreBadgePng from './app-store-badge.png?url'
+import avatar1Png from './avatar-1.png?url'
+import avatar2Png from './avatar-2.png?url'
+import avatar3Png from './avatar-3.png?url'
 
 /** Figma MCP asset URLs (expire after ~7 days; re-fetch from get_design_context if broken). */
 export const tripma = {
@@ -22,9 +25,9 @@ export const tripma = {
   appStoreBadge: appStoreBadgePng,
   starFilled: 'https://www.figma.com/api/mcp/asset/e517f03e-0330-4a47-828f-48e1230ad7e9',
   starEmpty: 'https://www.figma.com/api/mcp/asset/9020574a-ef67-491c-bad1-f8acdb6a944d',
-  avatar1: 'https://www.figma.com/api/mcp/asset/a4e1b14a-4e37-4c5d-b8a7-58f447375605',
-  avatar2: 'https://www.figma.com/api/mcp/asset/630c6393-aeab-43cd-b8e4-298f7f56d5d3',
-  avatar3: 'https://www.figma.com/api/mcp/asset/873668ce-c5cc-409d-a4b4-fdb355a1bd21',
+  avatar1: avatar1Png,
+  avatar2: avatar2Png,
+  avatar3: avatar3Png,
   dealShanghai: 'https://www.figma.com/api/mcp/asset/3fce8285-9c17-4f07-ac9a-1680f03b80a1',
   /* Sydney card uses stacked layers in Figma; top layer: */
   dealSydney: 'https://www.figma.com/api/mcp/asset/7495ccb2-e643-400c-8b95-53612f7c4d81',
