@@ -1,4 +1,12 @@
-import { useId } from 'react'
+import { type ComponentType, useId } from 'react'
+
+export type SearchPillTabId = 'flights' | 'hotels' | 'cars' | 'packages'
+export type SearchPillSize = 'sm' | 'md' | 'lg'
+
+export interface SearchPillTab {
+  id: SearchPillTabId
+  label: string
+}
 
 function FlightsTabIcon() {
   return (
@@ -69,20 +77,32 @@ function PackagesTabIcon() {
   )
 }
 
-const TAB_ICONS = {
+const TAB_ICONS: Record<SearchPillTabId, ComponentType> = {
   flights: FlightsTabIcon,
   hotels: HotelsTabIcon,
   cars: CarsTabIcon,
   packages: PackagesTabIcon,
 }
 
-const SEARCH_TABS = [
+const SEARCH_TABS: readonly SearchPillTab[] = [
   { id: 'flights', label: 'Flights' },
   { id: 'hotels', label: 'Hotels' },
   { id: 'cars', label: 'Cars' },
 ]
 
-export function SearchPills({ tabs = SEARCH_TABS, selectedTab, id, size = 'md' }) {
+export interface SearchPillsProps {
+  tabs?: readonly SearchPillTab[]
+  selectedTab?: SearchPillTabId
+  id?: string
+  size?: SearchPillSize
+}
+
+export function SearchPills({
+  tabs = SEARCH_TABS,
+  selectedTab,
+  id,
+  size = 'md',
+}: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
 

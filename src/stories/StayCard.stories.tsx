@@ -1,14 +1,15 @@
-import { StayCard } from '../App.jsx'
-import { tripma } from '../assets/tripma/urls.js'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { StayCard } from '../App'
+import { tripma } from '../assets/tripma/urls'
 
-export default {
+const meta: Meta<typeof StayCard> = {
   title: 'Components/StayCard',
   component: StayCard,
   argTypes: {
     description: { control: 'text' },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ maxWidth: 420 }}>
         <Story />
       </div>
@@ -16,7 +17,11 @@ export default {
   ],
 }
 
-export const Maldives = {
+export default meta
+
+type Story = StoryObj<typeof StayCard>
+
+export const Maldives: Story = {
   args: {
     image: tripma.stayMaldives,
     title: (
@@ -29,7 +34,7 @@ export const Maldives = {
   },
 }
 
-export const Morocco = {
+export const Morocco: Story = {
   args: {
     image: tripma.stayMorocco,
     title: (
@@ -42,7 +47,7 @@ export const Morocco = {
   },
 }
 
-export const Mongolia = {
+export const Mongolia: Story = {
   args: {
     image: tripma.stayMongolia,
     title: (
@@ -56,7 +61,7 @@ export const Mongolia = {
   },
 }
 
-export const ShortDescription = {
+export const ShortDescription: Story = {
   args: {
     image: tripma.stayMaldives,
     title: (
@@ -68,7 +73,7 @@ export const ShortDescription = {
   },
 }
 
-export const LongDescription = {
+export const LongDescription: Story = {
   args: {
     image: tripma.stayMorocco,
     title: (
@@ -81,7 +86,7 @@ export const LongDescription = {
   },
 }
 
-export const PlainTitle = {
+export const PlainTitle: Story = {
   args: {
     image: tripma.stayMaldives,
     title: 'A cozy cabin in the Swiss Alps',
@@ -89,9 +94,9 @@ export const PlainTitle = {
   },
 }
 
-export const GridOfThree = {
+export const GridOfThree: Story = {
   decorators: [
-    (Story) => (
+    Story => (
       <div className="card-grid card-grid--stays" style={{ maxWidth: 1312 }}>
         <Story />
       </div>

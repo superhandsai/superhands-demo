@@ -1,13 +1,14 @@
-import { FooterColumn } from '../App.jsx'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { FooterColumn } from '../App'
 
-export default {
+const meta: Meta<typeof FooterColumn> = {
   title: 'Components/FooterColumn',
   component: FooterColumn,
   argTypes: {
     title: { control: 'text' },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ maxWidth: 280 }}>
         <Story />
       </div>
@@ -15,14 +16,18 @@ export default {
   ],
 }
 
-export const About = {
+export default meta
+
+type Story = StoryObj<typeof FooterColumn>
+
+export const About: Story = {
   args: {
     title: 'About',
     links: ['About Tripma', 'How it works', 'Careers', 'Press', 'Blog', 'Forum'],
   },
 }
 
-export const PartnerWithUs = {
+export const PartnerWithUs: Story = {
   args: {
     title: 'Partner with us',
     links: [
@@ -37,28 +42,28 @@ export const PartnerWithUs = {
   },
 }
 
-export const Support = {
+export const Support: Story = {
   args: {
     title: 'Support',
     links: ['Help Center', 'Contact us', 'Privacy policy', 'Terms of service', 'Trust and safety', 'Accessibility'],
   },
 }
 
-export const GetTheApp = {
+export const GetTheApp: Story = {
   args: {
     title: 'Get the app',
     links: ['Tripma for Android', 'Tripma for iOS', 'Mobile site'],
   },
 }
 
-export const SingleLink = {
+export const SingleLink: Story = {
   args: {
     title: 'Legal',
     links: ['Terms & Conditions'],
   },
 }
 
-export const ManyLinks = {
+export const ManyLinks: Story = {
   args: {
     title: 'All destinations',
     links: [

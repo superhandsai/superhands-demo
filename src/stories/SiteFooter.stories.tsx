@@ -1,6 +1,7 @@
-import { SiteFooter } from '../App.jsx'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { SiteFooter } from '../App'
 
-export default {
+const meta: Meta<typeof SiteFooter> = {
   title: 'Components/SiteFooter',
   component: SiteFooter,
   parameters: {
@@ -8,16 +9,20 @@ export default {
   },
 }
 
-export const Default = {}
+export default meta
 
-export const NarrowViewport = {
+type Story = StoryObj<typeof SiteFooter>
+
+export const Default: Story = {}
+
+export const NarrowViewport: Story = {
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
     chromatic: { viewports: [375] },
   },
 }
 
-export const TabletViewport = {
+export const TabletViewport: Story = {
   parameters: {
     viewport: { defaultViewport: 'tablet' },
     chromatic: { viewports: [768] },

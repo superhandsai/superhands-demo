@@ -1,40 +1,49 @@
-import { useEffect, useId, useRef, useState } from 'react'
-import { FieldClearButton } from './FieldClearButton.jsx'
+import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { FieldClearButton } from './FieldClearButton'
 
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'] as const
 
-function pad2(n) {
+type PickIntent = 'depart' | 'return'
+interface YearMonth {
+  year: number
+  month: number
+}
+interface MonthCell {
+  date: Date
+  outside: boolean
+}
+
+function pad2(n: number): string {
   return String(n).padStart(2, '0')
 }
 
-function dateKey(d) {
+function dateKey(d: Date): string {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
 }
 
-function fromKey(key) {
+function fromKey(key: string | null | undefined): Date | null {
   if (!key) return null
   const [y, m, day] = key.split('-').map(Number)
   if (!y || !m || !day) return null
   return new Date(y, m - 1, day)
 }
 
-function startOfToday() {
+function startOfToday(): Date {
   const t = new Date()
   return new Date(t.getFullYear(), t.getMonth(), t.getDate())
 }
 
-function addMonths(year, monthIndex, delta) {
+function addMonths(year: number, monthIndex: number, delta: number): YearMonth {
   const d = new Date(year, monthIndex + delta, 1)
   return { year: d.getFullYear(), month: d.getMonth() }
 }
 
-/** @returns {{ date: Date, outside: boolean }[]} */
-function monthCells(year, monthIndex) {
+function monthCells(year: number, monthIndex: number): MonthCell[] {
   const first = new Date(year, monthIndex, 1)
   const startPad = first.getDay()
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
   const prevLast = new Date(year, monthIndex, 0).getDate()
-  const cells = []
+  const cells: MonthCell[] = []
   for (let i = 0; i < startPad; i++) {
     const day = prevLast - startPad + i + 1
     cells.push({ date: new Date(year, monthIndex - 1, day), outside: true })
@@ -52,7 +61,7 @@ function monthCells(year, monthIndex) {
   return cells
 }
 
-function formatSingleDateLabel(key) {
+function formatSingleDateLabel(key: string): string {
   const d = fromKey(key)
   if (!d) return ''
   return d.toLocaleDateString(undefined, {
@@ -61,6 +70,20 @@ function formatSingleDateLabel(key) {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+interface MonthGridProps {
+  year: number
+  monthIndex: number
+  departKey: string
+  returnKey: string
+  hoverKey: string | null
+  today: Date
+  onPick: (key: string) => void
+  onHover: (key: string) => void
+  onLeave: () => void
+  headLeading?: ReactNode
+  headTrailing?: ReactNode
 }
 
 function MonthGrid({
@@ -75,14 +98,14 @@ function MonthGrid({
   onLeave,
   headLeading = null,
   headTrailing = null,
-}) {
+}: MonthGridProps) {
   const label = new Date(year, monthIndex, 1).toLocaleDateString(undefined, {
     month: 'long',
     year: 'numeric',
   })
   const cells = monthCells(year, monthIndex)
 
-  function rangeClass(key) {
+  function rangeClass(key: string): string {
     if (!departKey) return ''
     const end = returnKey || hoverKey
     if (!end) {
@@ -141,20 +164,23 @@ function MonthGrid({
   )
 }
 
-export function DateRangeField({ oneWay = false }) {
-  const rootRef = useRef(null)
+interface DateRangeFieldProps {
+  oneWay?: boolean
+}
+
+export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const dialogId = useId()
   const departLabelId = `${dialogId}-depart-label`
   const returnLabelId = `${dialogId}-return-label`
   const departInputId = `${dialogId}-depart`
   const returnInputId = `${dialogId}-return`
   const [open, setOpen] = useState(false)
-  /** @type {'depart' | 'return'} */
-  const [pickIntent, setPickIntent] = useState('depart')
+  const [pickIntent, setPickIntent] = useState<PickIntent>('depart')
   const [departKey, setDepartKey] = useState('')
   const [returnKey, setReturnKey] = useState('')
-  const [hoverKey, setHoverKey] = useState(null)
-  const [leftMonth, setLeftMonth] = useState(() => {
+  const [hoverKey, setHoverKey] = useState<string | null>(null)
+  const [leftMonth, setLeftMonth] = useState<YearMonth>(() => {
     const t = startOfToday()
     return { year: t.getFullYear(), month: t.getMonth() }
   })
@@ -170,10 +196,11 @@ export function DateRangeField({ oneWay = false }) {
 
   useEffect(() => {
     if (!open) return
-    function onDocMouseDown(e) {
-      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false)
+    function onDocMouseDown(e: MouseEvent) {
+      const target = e.target as Node | null
+      if (rootRef.current && target && !rootRef.current.contains(target)) setOpen(false)
     }
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') setOpen(false)
     }
     document.addEventListener('mousedown', onDocMouseDown)
@@ -184,11 +211,11 @@ export function DateRangeField({ oneWay = false }) {
     }
   }, [open])
 
-  function shiftMonths(delta) {
+  function shiftMonths(delta: number) {
     setLeftMonth(m => addMonths(m.year, m.month, delta))
   }
 
-  function onPick(key) {
+  function onPick(key: string) {
     const dep = fromKey(departKey)
     const picked = fromKey(key)
     if (pickIntent === 'return' && departKey && returnKey && dep && picked) {

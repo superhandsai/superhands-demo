@@ -1,4 +1,9 @@
-export function FieldClearButton({ ariaLabel, onClear }) {
+interface FieldClearButtonProps {
+  ariaLabel: string
+  onClear: () => void
+}
+
+export function FieldClearButton({ ariaLabel, onClear }: FieldClearButtonProps) {
   return (
     <button
       type="button"

@@ -1,11 +1,16 @@
-import { SectionTitle, SeeAllLink } from '../App.jsx'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { SectionTitle, SeeAllLink } from '../App'
 
-export default {
+const meta: Meta<typeof SectionTitle> = {
   title: 'Components/SectionTitle',
   component: SectionTitle,
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj<typeof SectionTitle>
+
+export const Default: Story = {
   args: {
     children: (
       <>
@@ -16,7 +21,7 @@ export const Default = {
   },
 }
 
-export const WithSeeAll = {
+export const WithSeeAll: Story = {
   args: {
     children: (
       <>
@@ -28,14 +33,14 @@ export const WithSeeAll = {
   },
 }
 
-export const PlainText = {
+export const PlainText: Story = {
   args: {
     children: 'Popular destinations this month',
     headingId: 'demo-heading-3',
   },
 }
 
-export const LongTitle = {
+export const LongTitle: Story = {
   args: {
     children: (
       <>
@@ -48,7 +53,7 @@ export const LongTitle = {
   },
 }
 
-export const NoAside = {
+export const NoAside: Story = {
   args: {
     children: (
       <>

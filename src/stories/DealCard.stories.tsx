@@ -1,7 +1,8 @@
-import { DealCard } from '../App.jsx'
-import { tripma } from '../assets/tripma/urls.js'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { DealCard } from '../App'
+import { tripma } from '../assets/tripma/urls'
 
-export default {
+const meta: Meta<typeof DealCard> = {
   title: 'Components/DealCard',
   component: DealCard,
   argTypes: {
@@ -11,7 +12,7 @@ export default {
     description: { control: 'text' },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ maxWidth: 420 }}>
         <Story />
       </div>
@@ -19,7 +20,11 @@ export default {
   ],
 }
 
-export const Shanghai = {
+export default meta
+
+type Story = StoryObj<typeof DealCard>
+
+export const Shanghai: Story = {
   args: {
     image: tripma.dealShanghai,
     title: 'The Bund,',
@@ -29,7 +34,7 @@ export const Shanghai = {
   },
 }
 
-export const Sydney = {
+export const Sydney: Story = {
   args: {
     image: tripma.dealSydney,
     title: 'Sydney Opera House,',
@@ -39,7 +44,7 @@ export const Sydney = {
   },
 }
 
-export const Kyoto = {
+export const Kyoto: Story = {
   args: {
     image: tripma.dealKyoto,
     title: 'Kōdaiji Temple,',
@@ -49,7 +54,7 @@ export const Kyoto = {
   },
 }
 
-export const HighPrice = {
+export const HighPrice: Story = {
   args: {
     image: tripma.dealSydney,
     title: 'First Class to',
@@ -59,7 +64,7 @@ export const HighPrice = {
   },
 }
 
-export const LowPrice = {
+export const LowPrice: Story = {
   args: {
     image: tripma.dealShanghai,
     title: 'Budget hop to',
@@ -69,7 +74,7 @@ export const LowPrice = {
   },
 }
 
-export const LongDescription = {
+export const LongDescription: Story = {
   args: {
     image: tripma.dealKyoto,
     title: 'Ancient temples of',
@@ -80,7 +85,7 @@ export const LongDescription = {
   },
 }
 
-export const NoHighlight = {
+export const NoHighlight: Story = {
   args: {
     image: tripma.dealShanghai,
     title: 'Weekend getaway deal',
@@ -90,7 +95,7 @@ export const NoHighlight = {
   },
 }
 
-export const DollarCurrency = {
+export const DollarCurrency: Story = {
   args: {
     image: tripma.dealSydney,
     title: 'Golden Gate Bridge,',
@@ -100,7 +105,7 @@ export const DollarCurrency = {
   },
 }
 
-export const EuroCurrency = {
+export const EuroCurrency: Story = {
   args: {
     image: tripma.dealKyoto,
     title: 'Eiffel Tower,',
@@ -110,9 +115,9 @@ export const EuroCurrency = {
   },
 }
 
-export const GridOfThree = {
+export const GridOfThree: Story = {
   decorators: [
-    (Story) => (
+    Story => (
       <div className="card-grid card-grid--deals" style={{ maxWidth: 1312 }}>
         <Story />
       </div>

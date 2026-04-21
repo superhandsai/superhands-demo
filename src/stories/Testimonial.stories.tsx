@@ -1,7 +1,8 @@
-import { Testimonial } from '../App.jsx'
-import { tripma } from '../assets/tripma/urls.js'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Testimonial } from '../App'
+import { tripma } from '../assets/tripma/urls'
 
-export default {
+const meta: Meta<typeof Testimonial> = {
   title: 'Components/Testimonial',
   component: Testimonial,
   argTypes: {
@@ -10,7 +11,7 @@ export default {
     children: { control: 'text' },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ maxWidth: 480 }}>
         <Story />
       </div>
@@ -18,7 +19,11 @@ export default {
   ],
 }
 
-export const FiveStar = {
+export default meta
+
+type Story = StoryObj<typeof Testimonial>
+
+export const FiveStar: Story = {
   args: {
     avatar: tripma.avatar1,
     name: 'Yifei Chen',
@@ -33,7 +38,7 @@ export const FiveStar = {
   },
 }
 
-export const FourStar = {
+export const FourStar: Story = {
   args: {
     avatar: tripma.avatar2,
     name: 'Kaori Yamaguchi',
@@ -48,7 +53,7 @@ export const FourStar = {
   },
 }
 
-export const ThreeStar = {
+export const ThreeStar: Story = {
   args: {
     avatar: tripma.avatar3,
     name: 'Sam Martinez',
@@ -63,7 +68,7 @@ export const ThreeStar = {
   },
 }
 
-export const OneStar = {
+export const OneStar: Story = {
   args: {
     avatar: tripma.avatar1,
     name: 'Alex Thompson',
@@ -78,7 +83,7 @@ export const OneStar = {
   },
 }
 
-export const ShortReview = {
+export const ShortReview: Story = {
   args: {
     avatar: tripma.avatar2,
     name: 'Li Wei',
@@ -92,7 +97,7 @@ export const ShortReview = {
   },
 }
 
-export const LongReview = {
+export const LongReview: Story = {
   args: {
     avatar: tripma.avatar3,
     name: 'Priya Sharma',
@@ -107,9 +112,9 @@ export const LongReview = {
   },
 }
 
-export const GridOfThree = {
+export const GridOfThree: Story = {
   decorators: [
-    (Story) => (
+    Story => (
       <div className="testimonial-grid" style={{ maxWidth: 1312 }}>
         <Story />
       </div>

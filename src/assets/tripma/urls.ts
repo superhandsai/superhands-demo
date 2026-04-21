@@ -41,4 +41,4 @@ export const tripma = {
   stayMaldives: stayMaldivesPng,
   stayMorocco: stayMoroccoPng,
   stayMongolia: stayMongoliaPng,
-}
+} as const

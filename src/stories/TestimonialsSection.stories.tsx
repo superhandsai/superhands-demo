@@ -1,14 +1,19 @@
-import { Testimonial } from '../App.jsx'
-import { tripma } from '../assets/tripma/urls.js'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Testimonial } from '../App'
+import { tripma } from '../assets/tripma/urls'
 
-export default {
+const meta: Meta = {
   title: 'Pages/Testimonials Section',
   parameters: {
     layout: 'padded',
   },
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj
+
+export const Default: Story = {
   render: () => (
     <section
       className="band band--testimonials"

@@ -1,19 +1,38 @@
 import { createPortal } from 'react-dom'
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { tripma } from './assets/tripma/urls.js'
-import { DateRangeField } from './DateRangeField.jsx'
-import { FieldClearButton } from './FieldClearButton.jsx'
-import { PassengersField } from './PassengersField.jsx'
-import { SearchPills } from './SearchPills.jsx'
 import {
+  type ReactNode,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { tripma } from './assets/tripma/urls'
+import { DateRangeField } from './DateRangeField'
+import { FieldClearButton } from './FieldClearButton'
+import { PassengersField } from './PassengersField'
+import { SearchPills } from './SearchPills'
+import {
+  type Airport,
+  type AirportApi,
   buildAirportLocationLabel,
   buildAirportOptionSubtitle,
   buildAirportOptionTitle,
   getAirportApi,
-} from './lib/airportSearch.js'
+} from './lib/airportSearch'
 
-function useMatchMax768() {
-  const [matches, setMatches] = useState(() =>
+type TripType = 'return' | 'one-way' | 'multi-city'
+type AirportMenuKey = 'from' | 'to' | null
+
+interface PopoverPlacement {
+  top: number
+  left: number
+  width: number
+}
+
+function useMatchMax768(): boolean {
+  const [matches, setMatches] = useState<boolean>(() =>
     typeof window !== 'undefined' ? window.matchMedia('(max-width: 768px)').matches : false
   )
   useEffect(() => {
@@ -26,7 +45,12 @@ function useMatchMax768() {
   return matches
 }
 
-export function StarRow({ filled, total = 5 }) {
+interface StarRowProps {
+  filled: number
+  total?: number
+}
+
+export function StarRow({ filled, total = 5 }: StarRowProps) {
   return (
     <div className="star-row" role="img" aria-label={`${filled} out of ${total} stars`}>
       {Array.from({ length: total }, (_, i) => (
@@ -68,26 +92,6 @@ function HeaderMenuIcon() {
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function HeartIcon() {
-  return (
-    <svg
-      width={22}
-      height={22}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-        stroke="currentColor"
-        strokeWidth="2"
         strokeLinejoin="round"
       />
     </svg>
@@ -174,6 +178,28 @@ export function SiteHeader() {
   )
 }
 
+interface AirportFieldProps {
+  fieldKey: 'from' | 'to'
+  name: string
+  label: string
+  hint: string
+  value: string
+  onChange: (code: string) => void
+  menuOpen: AirportMenuKey
+  onOpenMenu: (key: 'from' | 'to') => void
+  onCloseMenu: () => void
+  excludeCodes?: readonly string[]
+  showFlightSearchOptions?: boolean
+  omitDirectFlightsOption?: boolean
+  nearbyAirportsChecked?: boolean
+  onNearbyAirportsChange?: (checked: boolean) => void
+  directFlightsChecked?: boolean
+  onDirectFlightsChange?: (checked: boolean) => void
+  showToNearbyAirportsOption?: boolean
+  toNearbyAirportsChecked?: boolean
+  onToNearbyAirportsChange?: (checked: boolean) => void
+}
+
 export function AirportField({
   fieldKey,
   name,
@@ -186,26 +212,20 @@ export function AirportField({
   onCloseMenu,
   excludeCodes = [],
   showFlightSearchOptions = false,
-  omitDirectFlightsOption = false,
-  nearbyAirportsChecked = false,
+  nearbyAirportsChecked: _nearbyAirportsChecked = false,
   onNearbyAirportsChange,
-  directFlightsChecked = false,
-  onDirectFlightsChange,
   showToNearbyAirportsOption = false,
-  toNearbyAirportsChecked = false,
+  toNearbyAirportsChecked: _toNearbyAirportsChecked = false,
   onToNearbyAirportsChange,
-}) {
-  const rootRef = useRef(null)
-  const controlRef = useRef(null)
-  const popoverRef = useRef(null)
+}: AirportFieldProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const controlRef = useRef<HTMLDivElement | null>(null)
+  const popoverRef = useRef<HTMLDivElement | null>(null)
   const listId = useId()
   const labelId = useId()
-  const nearbyId = useId()
-  const directId = useId()
-  const toNearbyId = useId()
   const [filter, setFilter] = useState('')
-  const [airportApi, setAirportApi] = useState(null)
-  const [popoverPlacement, setPopoverPlacement] = useState(null)
+  const [airportApi, setAirportApi] = useState<AirportApi | null>(null)
+  const [popoverPlacement, setPopoverPlacement] = useState<PopoverPlacement | null>(null)
   const matchMax768 = useMatchMax768()
 
   const open = menuOpen === fieldKey
@@ -231,6 +251,7 @@ export function AirportField({
 
     function updatePlacement() {
       const anchor = controlRef.current ?? root
+      if (!anchor) return
       const r = anchor.getBoundingClientRect()
       const w = Math.max(r.width, Math.min(480, window.innerWidth - 48))
       setPopoverPlacement({ top: r.bottom + 4, left: r.left, width: w })
@@ -247,16 +268,18 @@ export function AirportField({
 
   useEffect(() => {
     if (!open) return
-    function onDocMouseDown(e) {
+    function onDocMouseDown(e: MouseEvent) {
+      const target = e.target as Node | null
+      if (!target) return
       if (
-        (rootRef.current && rootRef.current.contains(e.target)) ||
-        (popoverRef.current && popoverRef.current.contains(e.target))
+        (rootRef.current && rootRef.current.contains(target)) ||
+        (popoverRef.current && popoverRef.current.contains(target))
       ) {
         return
       }
       onCloseMenu()
     }
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onCloseMenu()
     }
     document.addEventListener('mousedown', onDocMouseDown)
@@ -267,7 +290,7 @@ export function AirportField({
     }
   }, [open, onCloseMenu])
 
-  const filtered = useMemo(() => {
+  const filtered = useMemo<Airport[]>(() => {
     if (!airportApi) return []
     const list = airportApi.searchAirports(filter, { limit: 80, excludeCodes })
     const selected = value ? airportApi.getAirportByCode(value) : null
@@ -284,9 +307,36 @@ export function AirportField({
   const showHint =
     (!closedDisplay && !open) || (open && !String(inputDisplay ?? '').trim())
 
-  function pick(code) {
+  function pick(code: string) {
     onChange(code)
     onCloseMenu()
+  }
+
+  function renderOptions() {
+    if (!airportApi) return <p className="flight-search__empty">Loading airports…</p>
+    if (filtered.length === 0) return <p className="flight-search__empty">No airports match</p>
+    return filtered.map(a => {
+      const title = buildAirportOptionTitle(a)
+      const subtitle = buildAirportOptionSubtitle(a)
+      const aria = subtitle ? `${title}, ${subtitle}` : title
+      return (
+        <button
+          key={a.code}
+          type="button"
+          role="option"
+          aria-label={aria}
+          aria-selected={a.code === value}
+          className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
+          onMouseDown={e => e.preventDefault()}
+          onClick={() => pick(a.code)}
+        >
+          <span className="flight-search__option-title">{title}</span>
+          {subtitle ? (
+            <span className="flight-search__option-sub">{subtitle}</span>
+          ) : null}
+        </button>
+      )
+    })
   }
 
   return (
@@ -354,42 +404,14 @@ export function AirportField({
                 width: popoverPlacement.width,
               }}
             >
-              <div className="flight-search__popover-airport-extras">
-              </div>
+              <div className="flight-search__popover-airport-extras" />
               <div
                 id={listId}
                 className="flight-search__popover-airport-results"
                 role="listbox"
                 aria-label={label}
               >
-                {!airportApi ? (
-                  <p className="flight-search__empty">Loading airports…</p>
-                ) : filtered.length === 0 ? (
-                  <p className="flight-search__empty">No airports match</p>
-                ) : (
-                  filtered.map(a => {
-                    const title = buildAirportOptionTitle(a)
-                    const subtitle = buildAirportOptionSubtitle(a)
-                    const aria = subtitle ? `${title}, ${subtitle}` : title
-                    return (
-                      <button
-                        key={a.code}
-                        type="button"
-                        role="option"
-                        aria-label={aria}
-                        aria-selected={a.code === value}
-                        className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
-                        onMouseDown={e => e.preventDefault()}
-                        onClick={() => pick(a.code)}
-                      >
-                        <span className="flight-search__option-title">{title}</span>
-                        {subtitle ? (
-                          <span className="flight-search__option-sub">{subtitle}</span>
-                        ) : null}
-                      </button>
-                    )
-                  })
-                )}
+                {renderOptions()}
               </div>
             </div>
           ) : (
@@ -405,34 +427,7 @@ export function AirportField({
               role="listbox"
               aria-label={label}
             >
-              {!airportApi ? (
-                <p className="flight-search__empty">Loading airports…</p>
-              ) : filtered.length === 0 ? (
-                <p className="flight-search__empty">No airports match</p>
-              ) : (
-                filtered.map(a => {
-                  const title = buildAirportOptionTitle(a)
-                  const subtitle = buildAirportOptionSubtitle(a)
-                  const aria = subtitle ? `${title}, ${subtitle}` : title
-                  return (
-                    <button
-                      key={a.code}
-                      type="button"
-                      role="option"
-                      aria-label={aria}
-                      aria-selected={a.code === value}
-                      className={`flight-search__option ${a.code === value ? 'is-selected' : ''}`}
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => pick(a.code)}
-                    >
-                      <span className="flight-search__option-title">{title}</span>
-                      {subtitle ? (
-                        <span className="flight-search__option-sub">{subtitle}</span>
-                      ) : null}
-                    </button>
-                  )
-                })
-              )}
+              {renderOptions()}
             </div>
           ),
           document.body
@@ -463,7 +458,12 @@ export function HeroSearchGroup() {
   )
 }
 
-const FLIGHT_TRIP_TYPES = [
+interface TripTypeOption {
+  value: TripType
+  label: string
+}
+
+const FLIGHT_TRIP_TYPES: readonly TripTypeOption[] = [
   { value: 'return', label: 'Return' },
   { value: 'one-way', label: 'One way' },
   { value: 'multi-city', label: 'Multi-city' },
@@ -517,7 +517,11 @@ function TripTypeMultiCityIcon() {
   )
 }
 
-function TripTypeTriggerChevron({ open }) {
+interface TripTypeTriggerChevronProps {
+  open: boolean
+}
+
+function TripTypeTriggerChevron({ open }: TripTypeTriggerChevronProps) {
   return (
     <span
       className={`flight-search-bar__trip-trigger-chevron ${open ? 'is-open' : ''}`}
@@ -536,18 +540,24 @@ function TripTypeTriggerChevron({ open }) {
   )
 }
 
-export function TripTypeSelect({ value, onChange }) {
-  const rootRef = useRef(null)
+interface TripTypeSelectProps {
+  value: TripType
+  onChange: (value: TripType) => void
+}
+
+export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const listId = useId()
   const [open, setOpen] = useState(false)
   const selected = FLIGHT_TRIP_TYPES.find(t => t.value === value) ?? FLIGHT_TRIP_TYPES[0]
 
   useEffect(() => {
     if (!open) return
-    function onDocMouseDown(e) {
-      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false)
+    function onDocMouseDown(e: MouseEvent) {
+      const target = e.target as Node | null
+      if (rootRef.current && target && !rootRef.current.contains(target)) setOpen(false)
     }
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') setOpen(false)
     }
     document.addEventListener('mousedown', onDocMouseDown)
@@ -628,16 +638,16 @@ function SwapAirportsIcon() {
 
 export function FlightSearchBar() {
   const directFlightsId = useId()
-  const [tripType, setTripType] = useState('return')
+  const [tripType, setTripType] = useState<TripType>('return')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
-  const [airportMenu, setAirportMenu] = useState(null)
+  const [airportMenu, setAirportMenu] = useState<AirportMenuKey>(null)
   const [nearbyAirports, setNearbyAirports] = useState(false)
   const [toNearbyAirports, setToNearbyAirports] = useState(false)
   const [directFlights, setDirectFlights] = useState(false)
   const [swapIconFlipped, setSwapIconFlipped] = useState(false)
 
-  function onSubmit(e) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
   }
 
@@ -724,7 +734,13 @@ export function FlightSearchBar() {
   )
 }
 
-export function SectionTitle({ children, aside, headingId }) {
+interface SectionTitleProps {
+  children: ReactNode
+  aside?: ReactNode
+  headingId?: string
+}
+
+export function SectionTitle({ children, aside, headingId }: SectionTitleProps) {
   return (
     <div className="section-title">
       <h2 className="section-title__heading" id={headingId}>
@@ -735,7 +751,11 @@ export function SectionTitle({ children, aside, headingId }) {
   )
 }
 
-export function ArrowRightIcon({ className }) {
+interface ArrowRightIconProps {
+  className?: string
+}
+
+export function ArrowRightIcon({ className }: ArrowRightIconProps) {
   return (
     <svg
       className={className}
@@ -768,13 +788,22 @@ export function SeeAllLink() {
   )
 }
 
-function splitDealPrice(price) {
+function splitDealPrice(price: string): { prefix: string; digits: string } {
   const m = String(price).match(/^(\D+)(\d[\d,]*)$/)
   if (m) return { prefix: m[1], digits: m[2] }
   return { prefix: '', digits: String(price) }
 }
 
-export function DealCard({ image, title, highlight, price, description, imageClass }) {
+interface DealCardProps {
+  image: string
+  title: ReactNode
+  highlight?: ReactNode
+  price: string
+  description: ReactNode
+  imageClass?: string
+}
+
+export function DealCard({ image, title, highlight, price, description, imageClass }: DealCardProps) {
   const { prefix, digits } = splitDealPrice(price)
   return (
     <article className="deal-card">
@@ -807,7 +836,14 @@ export function DealCard({ image, title, highlight, price, description, imageCla
   )
 }
 
-export function StayCard({ image, title, description, imageClass }) {
+interface StayCardProps {
+  image: string
+  title: ReactNode
+  description: ReactNode
+  imageClass?: string
+}
+
+export function StayCard({ image, title, description, imageClass }: StayCardProps) {
   return (
     <article className="deal-card">
       <div className={`deal-card__image ${imageClass ?? ''}`}>
@@ -821,7 +857,15 @@ export function StayCard({ image, title, description, imageClass }) {
   )
 }
 
-export function Testimonial({ avatar, name, meta, stars, children }) {
+interface TestimonialProps {
+  avatar: string
+  name: string
+  meta: ReactNode
+  stars: number
+  children: ReactNode
+}
+
+export function Testimonial({ avatar, name, meta, stars, children }: TestimonialProps) {
   return (
     <blockquote className="testimonial">
       <img className="testimonial__avatar" src={avatar} alt="" width={48} height={48} />
@@ -842,7 +886,12 @@ export function Testimonial({ avatar, name, meta, stars, children }) {
   )
 }
 
-export function FooterColumn({ title, links }) {
+interface FooterColumnProps {
+  title: string
+  links: readonly string[]
+}
+
+export function FooterColumn({ title, links }: FooterColumnProps) {
   return (
     <div className="footer-col">
       <h3 className="footer-col__title">{title}</h3>
@@ -858,14 +907,7 @@ export function FooterColumn({ title, links }) {
 }
 
 export function SiteFooter() {
-  const about = [
-    'About Tripma',
-    'How it works',
-    'Careers',
-    'Press',
-    'Blog',
-    'Forum',
-  ]
+  const about = ['About Tripma', 'How it works', 'Careers', 'Press', 'Blog', 'Forum']
   const partner = [
     'Partnership programs',
     'Affiliate program',

@@ -1,6 +1,7 @@
-import { SiteHeader } from '../App.jsx'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { SiteHeader } from '../App'
 
-export default {
+const meta: Meta<typeof SiteHeader> = {
   title: 'Components/SiteHeader',
   component: SiteHeader,
   parameters: {
@@ -8,16 +9,20 @@ export default {
   },
 }
 
-export const Default = {}
+export default meta
 
-export const NarrowViewport = {
+type Story = StoryObj<typeof SiteHeader>
+
+export const Default: Story = {}
+
+export const NarrowViewport: Story = {
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
     chromatic: { viewports: [375] },
   },
 }
 
-export const TabletViewport = {
+export const TabletViewport: Story = {
   parameters: {
     viewport: { defaultViewport: 'tablet' },
     chromatic: { viewports: [768] },

@@ -1,14 +1,19 @@
-import { SectionTitle, SeeAllLink, StayCard, ArrowRightIcon } from '../App.jsx'
-import { tripma } from '../assets/tripma/urls.js'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { ArrowRightIcon, SectionTitle, SeeAllLink, StayCard } from '../App'
+import { tripma } from '../assets/tripma/urls'
 
-export default {
+const meta: Meta = {
   title: 'Pages/Stays Section',
   parameters: {
     layout: 'padded',
   },
 }
 
-export const Default = {
+export default meta
+
+type Story = StoryObj
+
+export const Default: Story = {
   render: () => (
     <section className="band" style={{ maxWidth: 1312, margin: '0 auto' }}>
       <SectionTitle aside={<SeeAllLink />} headingId="stays-heading">

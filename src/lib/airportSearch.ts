@@ -3,88 +3,45 @@
  * Loaded asynchronously so the main bundle stays small.
  */
 
-const POPULAR_IATA = [
-  'LHR',
-  'JFK',
-  'LAX',
-  'SFO',
-  'ORD',
-  'ATL',
-  'CDG',
-  'DXB',
-  'SIN',
-  'HKG',
-  'NRT',
-  'AMS',
-  'FRA',
-  'MAD',
-  'BCN',
-  'SYD',
-  'MEL',
-  'YYZ',
-  'DEN',
-  'SEA',
-  'LAS',
-  'MCO',
-  'MIA',
-  'BOS',
-  'PHX',
-  'IAH',
-  'MSP',
-  'CLT',
-  'PDX',
-  'AUS',
-  'SJC',
-  'EWR',
-  'LGW',
-  'STN',
-  'MAN',
-  'DUB',
-  'ZRH',
-  'VIE',
-  'CPH',
-  'OSL',
-  'ARN',
-  'HEL',
-  'WAW',
-  'PRG',
-  'BUD',
-  'LIS',
-  'OPO',
-  'FCO',
-  'MXP',
-  'ATH',
-  'TLV',
-  'CAI',
-  'JNB',
-  'CPT',
-  'NBO',
-  'BOM',
-  'DEL',
-  'BLR',
-  'BKK',
-  'KUL',
-  'CGK',
-  'ICN',
-  'PEK',
-  'PVG',
-  'CAN',
-  'TPE',
-  'MEX',
-  'GRU',
-  'EZE',
-  'SCL',
-  'LIM',
-  'BOG',
-  'PTY',
-  'AKL',
-  'WLG',
-  'CHC',
+export interface Airport {
+  code: string
+  name: string
+  city: string
+  country: string
+}
+
+export interface SearchOptions {
+  limit?: number
+  excludeCodes?: readonly string[]
+}
+
+export interface AirportApi {
+  getAirportByCode(code: string | null | undefined): Airport | null
+  formatAirportFieldValue(code: string | null | undefined): string
+  searchAirports(query: string, options?: SearchOptions): Airport[]
+}
+
+interface RawAirport {
+  iata?: string
+  name?: string
+  city?: string
+  country?: string
+}
+
+const POPULAR_IATA: readonly string[] = [
+  'LHR', 'JFK', 'LAX', 'SFO', 'ORD', 'ATL', 'CDG', 'DXB', 'SIN', 'HKG',
+  'NRT', 'AMS', 'FRA', 'MAD', 'BCN', 'SYD', 'MEL', 'YYZ', 'DEN', 'SEA',
+  'LAS', 'MCO', 'MIA', 'BOS', 'PHX', 'IAH', 'MSP', 'CLT', 'PDX', 'AUS',
+  'SJC', 'EWR', 'LGW', 'STN', 'MAN', 'DUB', 'ZRH', 'VIE', 'CPH', 'OSL',
+  'ARN', 'HEL', 'WAW', 'PRG', 'BUD', 'LIS', 'OPO', 'FCO', 'MXP', 'ATH',
+  'TLV', 'CAI', 'JNB', 'CPT', 'NBO', 'BOM', 'DEL', 'BLR', 'BKK', 'KUL',
+  'CGK', 'ICN', 'PEK', 'PVG', 'CAN', 'TPE', 'MEX', 'GRU', 'EZE', 'SCL',
+  'LIM', 'BOG', 'PTY', 'AKL', 'WLG', 'CHC',
 ]
 
 /** Strip "Airport" phrasing from dataset names for UI labels (dropdown, field value). */
-export function stripAirportFromDisplayName(s) {
-  if (s == null || typeof s !== 'string') return s
+export function stripAirportFromDisplayName(s: string | null | undefined): string {
+  if (s == null || typeof s !== 'string') return ''
   let t = s.trim()
   if (!t) return t
   t = t.replace(/\s+International\s+Airport\b/gi, ' ')
@@ -97,7 +54,7 @@ export function stripAirportFromDisplayName(s) {
 /**
  * Location line only (no IATA): "Los Angeles", "New York John F Kennedy", "London Heathrow".
  */
-export function buildAirportLocationLabel(a) {
+export function buildAirportLocationLabel(a: Airport | null | undefined): string {
   if (!a) return ''
   const city = (a.city || '').trim()
   const nameClean = stripAirportFromDisplayName(a.name || '') || ''
@@ -124,7 +81,7 @@ export function buildAirportLocationLabel(a) {
 }
 
 /** Primary dropdown / field label: "Los Angeles (LAX)". */
-export function buildAirportOptionTitle(a) {
+export function buildAirportOptionTitle(a: Airport | null | undefined): string {
   if (!a) return ''
   const loc = buildAirportLocationLabel(a)
   const code = (a.code || '').trim()
@@ -133,13 +90,18 @@ export function buildAirportOptionTitle(a) {
   return `${loc} (${code})`
 }
 
-export function buildAirportOptionSubtitle(a) {
+export function buildAirportOptionSubtitle(a: Airport | null | undefined): string {
   if (!a) return ''
   return (a.country || '').trim()
 }
 
-function buildIndexes(rawAirports) {
-  const byCode = new Map()
+interface Indexes {
+  byCode: Map<string, Airport>
+  all: Airport[]
+}
+
+function buildIndexes(rawAirports: readonly RawAirport[]): Indexes {
+  const byCode = new Map<string, Airport>()
   for (const row of rawAirports) {
     const code = typeof row.iata === 'string' ? row.iata.trim().toUpperCase() : ''
     if (!code || code.length !== 3 || !/^[A-Z]{3}$/.test(code)) continue
@@ -157,28 +119,28 @@ function buildIndexes(rawAirports) {
   return { byCode, all }
 }
 
-function createApi(rawAirports) {
+function createApi(rawAirports: readonly RawAirport[]): AirportApi {
   const { byCode, all } = buildIndexes(rawAirports)
 
-  function getAirportByCode(code) {
+  function getAirportByCode(code: string | null | undefined): Airport | null {
     if (!code) return null
     return byCode.get(String(code).trim().toUpperCase()) ?? null
   }
 
-  function formatAirportFieldValue(code) {
+  function formatAirportFieldValue(code: string | null | undefined): string {
     const a = getAirportByCode(code)
     if (!a) return code || ''
     return buildAirportOptionTitle(a)
   }
 
-  function searchAirports(query, { limit = 80, excludeCodes = [] } = {}) {
+  function searchAirports(query: string, { limit = 80, excludeCodes = [] }: SearchOptions = {}): Airport[] {
     const ex = new Set(excludeCodes.map(c => String(c).trim().toUpperCase()).filter(Boolean))
     const q = query.trim().toLowerCase()
     const max = Math.min(Math.max(limit, 1), 200)
 
     if (!q) {
-      const out = []
-      const seen = new Set()
+      const out: Airport[] = []
+      const seen = new Set<string>()
       for (const code of POPULAR_IATA) {
         if (ex.has(code)) continue
         const a = byCode.get(code)
@@ -196,7 +158,7 @@ function createApi(rawAirports) {
       return out
     }
 
-    const scored = []
+    const scored: { a: Airport; tier: number }[] = []
     for (const a of all) {
       if (ex.has(a.code)) continue
       const code = a.code.toLowerCase()
@@ -231,15 +193,15 @@ function createApi(rawAirports) {
   return { getAirportByCode, formatAirportFieldValue, searchAirports }
 }
 
-let cachedApi = null
-let loadPromise = null
+let cachedApi: AirportApi | null = null
+let loadPromise: Promise<AirportApi> | null = null
 
 /** Single shared load — airport JSON is fetched/parsed once. */
-export function getAirportApi() {
+export function getAirportApi(): Promise<AirportApi> {
   if (cachedApi) return Promise.resolve(cachedApi)
   if (!loadPromise) {
     loadPromise = import('@nwpr/airport-codes/dist/airports.json').then(m => {
-      cachedApi = createApi(m.default)
+      cachedApi = createApi(m.default as RawAirport[])
       return cachedApi
     })
   }

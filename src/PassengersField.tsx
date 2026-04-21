@@ -5,14 +5,36 @@ const ADULT_MAX = 9
 const CHILD_MIN = 0
 const CHILD_MAX = 8
 
-function formatSummary(adults, children) {
+function formatSummary(adults: number, children: number): string {
   const a = adults === 1 ? '1 adult' : `${adults} adults`
   if (children === 0) return a
   const c = children === 1 ? '1 child' : `${children} children`
   return `${a}, ${c}`
 }
 
-function StepperRow({ title, hint, value, min, max, decAria, incAria, onDec, onInc }) {
+interface StepperRowProps {
+  title: string
+  hint?: string
+  value: number
+  min: number
+  max: number
+  decAria: string
+  incAria: string
+  onDec: () => void
+  onInc: () => void
+}
+
+function StepperRow({
+  title,
+  hint,
+  value,
+  min,
+  max,
+  decAria,
+  incAria,
+  onDec,
+  onInc,
+}: StepperRowProps) {
   return (
     <div className="passengers-picker__row">
       <div className="passengers-picker__label">
@@ -49,23 +71,22 @@ function StepperRow({ title, hint, value, min, max, decAria, incAria, onDec, onI
 }
 
 export function PassengersField() {
-  const rootRef = useRef(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
   const baseId = useId()
   const travellersLabelId = `${baseId}-travellers-label`
   const [open, setOpen] = useState(false)
-  const [touched, setTouched] = useState(false)
   const [adults, setAdults] = useState(1)
   const [children, setChildren] = useState(0)
 
   const summary = formatSummary(adults, children)
-  const displayValue = touched ? summary : ''
 
   useEffect(() => {
     if (!open) return
-    function onDocMouseDown(e) {
-      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false)
+    function onDocMouseDown(e: MouseEvent) {
+      const target = e.target as Node | null
+      if (rootRef.current && target && !rootRef.current.contains(target)) setOpen(false)
     }
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') setOpen(false)
     }
     document.addEventListener('mousedown', onDocMouseDown)
@@ -90,22 +111,15 @@ export function PassengersField() {
           <input
             id={baseId}
             type="text"
-            className={`flight-search__input flight-search__input--stacked ${touched ? '' : 'is-empty'}`}
+            className="flight-search__input flight-search__input--stacked"
             readOnly
-            value={displayValue}
-            placeholder="Add people"
+            value={summary}
             aria-labelledby={travellersLabelId}
             aria-haspopup="dialog"
             aria-expanded={open}
             aria-controls={`${baseId}-popover`}
-            onClick={() => {
-              setTouched(true)
-              setOpen(true)
-            }}
-            onFocus={() => {
-              setTouched(true)
-              setOpen(true)
-            }}
+            onClick={() => setOpen(true)}
+            onFocus={() => setOpen(true)}
           />
         </div>
       </label>
@@ -120,6 +134,7 @@ export function PassengersField() {
           <div className="passengers-picker">
             <StepperRow
               title="Adults"
+              hint="Aged 18+"
               value={adults}
               min={ADULT_MIN}
               max={ADULT_MAX}
@@ -130,6 +145,7 @@ export function PassengersField() {
             />
             <StepperRow
               title="Children"
+              hint="Aged 0 to 17"
               value={children}
               min={CHILD_MIN}
               max={CHILD_MAX}
