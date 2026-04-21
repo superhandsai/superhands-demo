@@ -845,6 +845,7 @@ a:hover {
 
 .flight-search__nearby-option {
   min-width: 0;
+  font-size: 16px;
 }
 
 /* Nearby checkboxes: desktop uses .flight-search__nearby-row; ≤768px they render in each airport popover */
