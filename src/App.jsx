@@ -25,7 +25,7 @@ function useMatchMax768() {
   return matches
 }
 
-function StarRow({ filled, total = 5 }) {
+export function StarRow({ filled, total = 5 }) {
   return (
     <div className="star-row" role="img" aria-label={`${filled} out of ${total} stars`}>
       {Array.from({ length: total }, (_, i) => (
@@ -119,7 +119,7 @@ function UkFlagIcon() {
   )
 }
 
-function SiteHeader() {
+export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const navId = useId()
 
@@ -173,7 +173,7 @@ function SiteHeader() {
   )
 }
 
-function AirportField({
+export function AirportField({
   fieldKey,
   name,
   label,
@@ -515,7 +515,7 @@ const HERO_SEARCH_TABS = [
   { id: 'cars', label: 'Cars' },
 ]
 
-function HeroSearchGroup() {
+export function HeroSearchGroup() {
   const pillsId = useId()
   const selectedTab = 'flights'
 
@@ -631,7 +631,7 @@ function TripTypeTriggerChevron({ open }) {
   )
 }
 
-function TripTypeSelect({ value, onChange }) {
+export function TripTypeSelect({ value, onChange }) {
   const rootRef = useRef(null)
   const listId = useId()
   const [open, setOpen] = useState(false)
@@ -721,7 +721,7 @@ function SwapAirportsIcon() {
   )
 }
 
-function FlightSearchBar() {
+export function FlightSearchBar() {
   const directFlightsId = useId()
   const [tripType, setTripType] = useState('return')
   const [from, setFrom] = useState('')
@@ -819,7 +819,7 @@ function FlightSearchBar() {
   )
 }
 
-function SectionTitle({ children, aside, headingId }) {
+export function SectionTitle({ children, aside, headingId }) {
   return (
     <div className="section-title">
       <h2 className="section-title__heading" id={headingId}>
@@ -830,7 +830,7 @@ function SectionTitle({ children, aside, headingId }) {
   )
 }
 
-function ArrowRightIcon({ className }) {
+export function ArrowRightIcon({ className }) {
   return (
     <svg
       className={className}
@@ -852,7 +852,7 @@ function ArrowRightIcon({ className }) {
   )
 }
 
-function SeeAllLink() {
+export function SeeAllLink() {
   return (
     <a className="see-all" href="#">
       <span className="see-all__label">All</span>
@@ -869,7 +869,7 @@ function splitDealPrice(price) {
   return { prefix: '', digits: String(price) }
 }
 
-function DealCard({ image, title, highlight, price, description, imageClass }) {
+export function DealCard({ image, title, highlight, price, description, imageClass }) {
   const { prefix, digits } = splitDealPrice(price)
   return (
     <article className="deal-card">
@@ -902,7 +902,7 @@ function DealCard({ image, title, highlight, price, description, imageClass }) {
   )
 }
 
-function StayCard({ image, title, description, imageClass }) {
+export function StayCard({ image, title, description, imageClass }) {
   return (
     <article className="deal-card">
       <div className={`deal-card__image ${imageClass ?? ''}`}>
@@ -916,7 +916,7 @@ function StayCard({ image, title, description, imageClass }) {
   )
 }
 
-function Testimonial({ avatar, name, meta, stars, children }) {
+export function Testimonial({ avatar, name, meta, stars, children }) {
   return (
     <blockquote className="testimonial">
       <img className="testimonial__avatar" src={avatar} alt="" width={48} height={48} />
@@ -937,7 +937,7 @@ function Testimonial({ avatar, name, meta, stars, children }) {
   )
 }
 
-function FooterColumn({ title, links }) {
+export function FooterColumn({ title, links }) {
   return (
     <div className="footer-col">
       <h3 className="footer-col__title">{title}</h3>
@@ -952,7 +952,7 @@ function FooterColumn({ title, links }) {
   )
 }
 
-function SiteFooter() {
+export function SiteFooter() {
   const about = [
     'About Tripma',
     'How it works',
