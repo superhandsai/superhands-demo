@@ -687,6 +687,29 @@ a:hover {
   color: var(--color-grey-100);
 }
 
+/* Search pills sizes */
+.search-pills--sm .search-pills__pill {
+  padding: 6px 10px;
+  font-size: 13px;
+  gap: 6px;
+}
+
+.search-pills--sm .search-pills__pill-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.search-pills--lg .search-pills__pill {
+  padding: 14px 18px;
+  font-size: 18px;
+  gap: 10px;
+}
+
+.search-pills--lg .search-pills__pill-icon {
+  width: 22px;
+  height: 22px;
+}
+
 /* Flight search bar (trip type + row of fields) */
 .flight-search-bar {
   width: 100%;
