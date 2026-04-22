@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { tripma } from './assets/tripma/urls'
 import { DateRangeField } from './DateRangeField'
 import { FieldClearButton } from './FieldClearButton'
@@ -21,6 +22,8 @@ import {
   buildAirportOptionTitle,
   getAirportApi,
 } from './lib/airportSearch'
+import { sessionStore, signOut } from './lib/sessionStore'
+import { useStore } from './lib/useStore'
 
 type TripType = 'return' | 'one-way' | 'multi-city'
 type AirportMenuKey = 'from' | 'to' | null
@@ -127,34 +130,56 @@ function UkFlagIcon() {
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const navId = useId()
+  const navigate = useNavigate()
+  const session = useStore(sessionStore)
+  const account = session.account
 
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <a href="#" className="site-header__logo">
+        <Link to="/" className="site-header__logo">
           <img src={tripma.wordmark} alt="Tripma" width={105} height={30} />
-        </a>
+        </Link>
         <nav id={navId} className={`site-header__nav ${open ? 'is-open' : ''}`}>
+          <Link to="/destinations" className="site-header__link">Destinations</Link>
+          <Link to="/stays" className="site-header__link">Stays</Link>
+          {account ? (
+            <Link to="/trips" className="site-header__link">My trips</Link>
+          ) : null}
+          <Link to="/help" className="site-header__link">Help</Link>
           <div
             className="site-header__locale"
             role="group"
             aria-label="Language, location, and currency"
           >
-            <a className="site-header__link" href="#">
-              English (UK)
-            </a>
+            <a className="site-header__link" href="#">English (UK)</a>
             <a className="site-header__link" href="#">
               <span className="site-header__locale-pair">
                 <UkFlagIcon /><span className="site-header__locale-text">United Kingdom</span>
               </span>
             </a>
-            <a className="site-header__link" href="#">
-              £ GBP
-            </a>
+            <a className="site-header__link" href="#">£ GBP</a>
           </div>
-          <a className="btn btn--header site-header__hide-mobile" href="#">
-            Log in
-          </a>
+          {account ? (
+            <>
+              <Link to="/account" className="site-header__link site-header__hide-mobile">
+                {account.firstName || 'Account'}
+              </Link>
+              <button
+                type="button"
+                className="btn btn--header site-header__hide-mobile"
+                onClick={() => {
+                  signOut()
+                  setOpen(false)
+                  navigate('/')
+                }}
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <Link to="/signin" className="btn btn--header site-header__hide-mobile">Log in</Link>
+          )}
         </nav>
         <div className="site-header__end">
           <div className="site-header__end-cluster">
@@ -169,9 +194,11 @@ export function SiteHeader() {
               <HeaderMenuIcon />
             </button>
           </div>
-          <a className="btn btn--header" href="#">
-            Log in
-          </a>
+          {account ? (
+            <Link to="/account" className="btn btn--header">{account.firstName || 'Account'}</Link>
+          ) : (
+            <Link to="/signin" className="btn btn--header">Log in</Link>
+          )}
         </div>
       </div>
     </header>
@@ -638,6 +665,7 @@ function SwapAirportsIcon() {
 
 export function FlightSearchBar() {
   const directFlightsId = useId()
+  const navigate = useNavigate()
   const [tripType, setTripType] = useState<TripType>('return')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -649,6 +677,25 @@ export function FlightSearchBar() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const data = new FormData(e.currentTarget)
+    const params = new URLSearchParams()
+    const fromValue = String(data.get('from') || '').trim()
+    const toValue = String(data.get('to') || '').trim()
+    const depart = String(data.get('depart_date') || '').trim()
+    const returnDate = String(data.get('return_date') || '').trim()
+    const adults = String(data.get('adults') || '1')
+    const children = String(data.get('children') || '0')
+    const direct = data.get('direct_flights') ? '1' : ''
+    const trip = String(data.get('trip_type') || tripType)
+    if (fromValue) params.set('from', fromValue)
+    if (toValue) params.set('to', toValue)
+    if (depart) params.set('depart', depart)
+    if (returnDate && trip !== 'one-way') params.set('return', returnDate)
+    params.set('adults', adults)
+    params.set('children', children)
+    if (direct) params.set('direct', direct)
+    params.set('trip', trip)
+    navigate(`/flights?${params.toString()}`)
   }
 
   function swapFromTo() {
@@ -777,14 +824,18 @@ export function ArrowRightIcon({ className }: ArrowRightIconProps) {
   )
 }
 
-export function SeeAllLink() {
+interface SeeAllLinkProps {
+  to?: string
+}
+
+export function SeeAllLink({ to = '/destinations' }: SeeAllLinkProps = {}) {
   return (
-    <a className="see-all" href="#">
+    <Link className="see-all" to={to}>
       <span className="see-all__label">All</span>
       <span className="see-all__icon">
         <ArrowRightIcon className="see-all__arrow" />
       </span>
-    </a>
+    </Link>
   )
 }
 
@@ -973,11 +1024,9 @@ export function SiteFooter() {
   )
 }
 
-export default function App() {
+export function HomeContent() {
   return (
-    <div className="tripma">
-      <SiteHeader />
-
+    <>
       <section className="hero" aria-labelledby="hero-heading">
         <img className="hero__map" src={tripma.heroMap} alt="" />
         <div className="hero__content">
@@ -1051,12 +1100,12 @@ export default function App() {
               />
             </div>
             <div className="band__cta">
-              <a className="btn btn--secondary" href="#">
+              <Link className="btn btn--secondary" to="/stays">
                 <span className="btn--secondary__text">Explore more stays</span>
                 <span className="btn--secondary__icon" aria-hidden>
                   <ArrowRightIcon className="btn--secondary__arrow" />
                 </span>
-              </a>
+              </Link>
             </div>
           </section>
 
@@ -1105,7 +1154,15 @@ export default function App() {
           </section>
         </div>
       </main>
+    </>
+  )
+}
 
+export default function App() {
+  return (
+    <div className="tripma">
+      <SiteHeader />
+      <HomeContent />
       <SiteFooter />
     </div>
   )

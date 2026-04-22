@@ -1,7 +1,13 @@
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import '../src/style.css'
+import '../src/pages.css'
 
 /** @type { import('@storybook/react-vite').Preview } */
 const preview = {
+  decorators: [
+    (Story) => React.createElement(MemoryRouter, null, React.createElement(Story)),
+  ],
   parameters: {
     controls: {
       matchers: {
