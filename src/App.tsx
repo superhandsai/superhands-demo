@@ -163,6 +163,10 @@ export function SiteHeader() {
           {account ? (
             <Link to="/trips" className="site-header__link">My trips</Link>
           ) : null}
+          <Link to="/status" className="site-header__link">Status</Link>
+          {account ? (
+            <Link to="/saved" className="site-header__link">Saved</Link>
+          ) : null}
           <Link to="/help" className="site-header__link">Help</Link>
           <div
             className="site-header__locale"

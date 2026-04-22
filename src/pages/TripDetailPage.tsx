@@ -1,13 +1,16 @@
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { PageShell } from './PageShell'
 import { bookingsStore, updateBooking } from '../lib/bookingsStore'
 import { useStore } from '../lib/useStore'
 import { formatDurationMins, formatIsoDate } from '../data/flights'
+import { RefundModal } from '../components/RefundModal'
+import { pushToast } from '../lib/toastStore'
 
 export function TripDetailPage() {
   const { pnr = '' } = useParams()
   const bookings = useStore(bookingsStore)
-  const navigate = useNavigate()
+  const [showRefund, setShowRefund] = useState(false)
   const booking = bookings.find(b => b.pnr === pnr) ?? null
 
   if (!booking) {
@@ -26,12 +29,6 @@ export function TripDetailPage() {
 
   const first = booking.flight.outbound[0]
   const last = booking.flight.outbound[booking.flight.outbound.length - 1]
-
-  function onCancel() {
-    if (!window.confirm('Cancel this trip? Refund eligibility depends on fare rules.')) return
-    updateBooking(booking!.pnr, b => ({ ...b, status: 'cancelled' }))
-    navigate('/trips')
-  }
 
   return (
     <PageShell
@@ -124,7 +121,7 @@ export function TripDetailPage() {
                   <button
                     type="button"
                     className="btn btn--secondary"
-                    onClick={() =>
+                    onClick={() => {
                       updateBooking(booking!.pnr, b => ({
                         ...b,
                         extras: {
@@ -136,7 +133,12 @@ export function TripDetailPage() {
                         },
                         totalGBP: b.totalGBP + 30,
                       }))
-                    }
+                      pushToast({
+                        tone: 'success',
+                        title: 'Bag added',
+                        body: `${p.firstName} ${p.lastName} · £30 charged to card ending ${booking!.paymentLast4}`,
+                      })
+                    }}
                   >
                     Add bag (+£30)
                   </button>
@@ -149,26 +151,41 @@ export function TripDetailPage() {
               <button
                 type="button"
                 className="btn btn--secondary"
-                onClick={() =>
+                onClick={() => {
                   updateBooking(booking!.pnr, b => ({
                     ...b,
                     extras: { ...b.extras, priorityBoarding: true },
                     totalGBP: b.totalGBP + 15,
                   }))
-                }
+                  pushToast({
+                    tone: 'success',
+                    title: 'Priority boarding added',
+                    body: '£15 charged',
+                  })
+                }}
               >
                 Add priority boarding (+£15)
               </button>
             ) : (
               <span className="detail-card__sub">Priority boarding added</span>
             )}
-            <button type="button" className="btn btn--secondary" disabled>
-              Change flight
-            </button>
-            <button type="button" className="btn btn--secondary" onClick={onCancel}>
+            <Link
+              to={`/status?no=${booking.flight.outbound[0].flightNumber}`}
+              className="btn btn--secondary"
+            >
+              Flight status
+            </Link>
+            <button
+              type="button"
+              className="btn btn--secondary"
+              onClick={() => setShowRefund(true)}
+            >
               Cancel trip
             </button>
           </div>
+          {showRefund ? (
+            <RefundModal booking={booking} onClose={() => setShowRefund(false)} />
+          ) : null}
           <p className="manage-note">
             Change and cancel fees depend on the fare rules shown at booking.
           </p>

@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { PageShell } from './PageShell'
 import { STAYS } from '../data/stays'
+import { SaveButton } from '../components/SaveButton'
 
 export function StayDetailPage() {
   const { id = '' } = useParams()
@@ -29,6 +30,17 @@ export function StayDetailPage() {
         { label: 'Stays', to: '/stays' },
         { label: stay.name },
       ]}
+      actions={
+        <SaveButton
+          kind="stay"
+          stay={{
+            id: stay.id,
+            name: stay.name,
+            location: `${stay.location}, ${stay.country}`,
+            nightlyGBP: stay.nightlyGBP,
+          }}
+        />
+      }
     >
       <div className="stay-hero">
         <img src={stay.image} alt="" />

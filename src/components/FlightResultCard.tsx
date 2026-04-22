@@ -3,6 +3,7 @@ import {
   type FlightSegment,
   formatDurationMins,
 } from '../data/flights'
+import { SaveButton } from './SaveButton'
 
 interface FlightLegSummaryProps {
   segments: FlightSegment[]
@@ -50,12 +51,29 @@ interface FlightResultCardProps {
 
 export function FlightResultCard({ flight, onSelect }: FlightResultCardProps) {
   const first = flight.outbound[0]
+  const last = flight.outbound[flight.outbound.length - 1]
+  const ret = flight.return
+  const returnLast = ret ? ret[ret.length - 1] : null
   return (
     <article className="flight-card">
       <div className="flight-card__main">
         <div className="flight-card__airline">
           <span className="flight-card__airline-name">{first.carrier}</span>
           <span className="flight-card__airline-code">{first.flightNumber}</span>
+          <span className="flight-card__save">
+            <SaveButton
+              kind="flight"
+              flight={{
+                id: flight.id,
+                from: first.from,
+                to: last.to,
+                depart: first.departDate,
+                returnDate: returnLast?.departDate,
+                priceGBP: flight.priceGBP,
+                carrier: first.carrier,
+              }}
+            />
+          </span>
         </div>
         <FlightLegSummary segments={flight.outbound} label="Outbound" />
         {flight.return ? <FlightLegSummary segments={flight.return} label="Return" /> : null}

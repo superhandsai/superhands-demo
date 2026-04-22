@@ -8,6 +8,7 @@ import {
   type PaymentMethod,
 } from '../lib/sessionStore'
 import { useStore } from '../lib/useStore'
+import { pushToast } from '../lib/toastStore'
 
 type Tab = 'profile' | 'travellers' | 'payment' | 'preferences' | 'rewards'
 
@@ -313,6 +314,11 @@ function RewardsTab() {
     if (points < item.cost) return
     updateAccount(a => ({ ...a, rewardsPoints: a.rewardsPoints - item.cost }))
     setRedeemed(item.id)
+    pushToast({
+      tone: 'success',
+      title: `${item.title} redeemed`,
+      body: `−${item.cost.toLocaleString()} points · Added to your wallet`,
+    })
     window.setTimeout(() => setRedeemed(null), 3000)
   }
 

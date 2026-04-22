@@ -22,6 +22,9 @@ import { DestinationsPage } from './pages/DestinationsPage'
 import { HelpCenterPage } from './pages/HelpCenterPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { AlertsPage } from './pages/AlertsPage'
+import { SavedPage } from './pages/SavedPage'
+import { FlightStatusPage } from './pages/FlightStatusPage'
 
 export function Router() {
   return (
@@ -51,6 +54,9 @@ export function Router() {
           <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/saved" element={<SavedPage />} />
+          <Route path="/status" element={<FlightStatusPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

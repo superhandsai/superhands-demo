@@ -4,6 +4,8 @@ import { PageShell } from './PageShell'
 import { FlightResultCard } from '../components/FlightResultCard'
 import { CalendarPricingStrip } from '../components/CalendarPricingStrip'
 import { ResultsSkeleton } from '../components/ResultsSkeleton'
+import { addAlert } from '../lib/alertsStore'
+import { pushToast } from '../lib/toastStore'
 import {
   formatIsoDate,
   generateFlights,
@@ -127,7 +129,34 @@ export function FlightResultsPage() {
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Flights' }]}
       title={`Flights from ${from} to ${to}`}
       subtitle={subtitle}
-      actions={<Link className="btn btn--secondary" to="/">New search</Link>}
+      actions={
+        <>
+          <button
+            type="button"
+            className="btn btn--secondary"
+            onClick={() => {
+              const cheapest = allFlights[0]
+              if (!cheapest) return
+              addAlert({
+                from,
+                to,
+                depart,
+                returnDate: trip !== 'one-way' && ret ? ret : undefined,
+                startingPriceGBP: cheapest.priceGBP,
+              })
+              pushToast({
+                tone: 'success',
+                title: 'Price alert saved',
+                body: `We'll notify you when ${from} → ${to} drops.`,
+              })
+            }}
+            disabled={allFlights.length === 0}
+          >
+            Watch this search
+          </button>
+          <Link className="btn btn--secondary" to="/">New search</Link>
+        </>
+      }
     >
       <div className="results-layout">
         <aside className="results-filters" aria-label="Filters">
