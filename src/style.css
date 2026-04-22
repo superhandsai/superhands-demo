@@ -2612,8 +2612,10 @@ a:hover {
 @keyframes pulse {
   0%, 100% {
     filter: drop-shadow(0 4px 20px rgba(118, 75, 162, 0.4));
+    transform: perspective(500px) rotateX(2deg) scale(1);
   }
   50% {
-    filter: drop-shadow(0 8px 30px rgba(102, 126, 234, 0.6)) brightness(1.05);
+    filter: drop-shadow(0 12px 50px rgba(102, 126, 234, 0.9)) brightness(1.2);
+    transform: perspective(500px) rotateX(2deg) scale(1.03);
   }
 }

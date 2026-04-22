@@ -511,7 +511,7 @@ export function HeroSearchGroup() {
           transform: 'perspective(500px) rotateX(2deg)',
           letterSpacing: '-0.03em',
           fontWeight: '900',
-          animation: 'pulse 3s ease-in-out infinite'
+          animation: 'pulse 2s ease-in-out infinite'
         }}>
           Find the best flights anywhere
         </h1>
