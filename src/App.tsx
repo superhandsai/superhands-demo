@@ -501,7 +501,18 @@ export function HeroSearchGroup() {
     <div className="hero__search-block">
       <div className="hero__search-block__lead">
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
-        <h1 id="hero-heading" className="hero__title">
+        <h1 id="hero-heading" className="hero__title" style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          color: 'transparent',
+          textShadow: '0 0 80px rgba(102, 126, 234, 0.5)',
+          filter: 'drop-shadow(0 4px 20px rgba(118, 75, 162, 0.4))',
+          transform: 'perspective(500px) rotateX(2deg)',
+          letterSpacing: '-0.03em',
+          fontWeight: '900',
+          animation: 'pulse 3s ease-in-out infinite'
+        }}>
           Find the best flights anywhere
         </h1>
       </div>
