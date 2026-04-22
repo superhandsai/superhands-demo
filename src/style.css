@@ -301,10 +301,14 @@ a:hover {
   color: var(--color-grey-100);
   flex-shrink: 0;
   gap: 10px;
+  box-shadow: 0 2px 12px rgba(96, 93, 236, 0.24);
+  transition: background 0.2s, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn--search:hover {
   background: var(--color-purple-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(96, 93, 236, 0.32);
 }
 
 .btn--search__icon {
@@ -874,14 +878,16 @@ a:hover {
   cursor: text;
   box-sizing: border-box;
   background: var(--color-white);
-  border: 2px solid var(--color-grey-200);
+  border: 1.5px solid rgba(203, 212, 230, 0.6);
   border-radius: 16px;
-  box-shadow: none;
+  box-shadow: 0 1px 3px rgba(96, 93, 236, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .flight-search__field.is-open {
   border-color: var(--color-purple);
   border-radius: 0;
+  box-shadow: 0 2px 8px rgba(96, 93, 236, 0.12);
 }
 
 .flight-search__field--narrow {
@@ -1226,11 +1232,12 @@ a:hover {
   box-sizing: border-box;
   min-height: 56px;
   padding: 7px 13px;
-  border: 2px solid var(--color-grey-200);
+  border: 1.5px solid rgba(203, 212, 230, 0.6);
   border-radius: 16px;
   background: var(--color-white);
-  box-shadow: none;
+  box-shadow: 0 1px 3px rgba(96, 93, 236, 0.04);
   cursor: text;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .flight-search__control.flight-search__control--stacked {
@@ -1246,6 +1253,7 @@ a:hover {
 
 .flight-search__control.is-open {
   border-color: var(--color-purple);
+  box-shadow: 0 2px 8px rgba(96, 93, 236, 0.12);
 }
 
 /* Mirror swap overlap: extra inset toward the seam on From (right) and To (left) */
