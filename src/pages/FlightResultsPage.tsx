@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { PageShell } from './PageShell'
 import { FlightResultCard } from '../components/FlightResultCard'
+import { CalendarPricingStrip } from '../components/CalendarPricingStrip'
+import { ResultsSkeleton } from '../components/ResultsSkeleton'
 import {
   formatIsoDate,
   generateFlights,
@@ -17,7 +19,7 @@ function parsePassengerCount(params: URLSearchParams) {
 }
 
 export function FlightResultsPage() {
-  const [params] = useSearchParams()
+  const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
 
   const from = (params.get('from') || '').toUpperCase()
@@ -32,6 +34,13 @@ export function FlightResultsPage() {
   const [maxPrice, setMaxPrice] = useState<number | null>(null)
   const [maxStops, setMaxStops] = useState<number>(direct ? 0 : 2)
   const [selectedCarriers, setSelectedCarriers] = useState<Set<string>>(new Set())
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+    const t = window.setTimeout(() => setLoading(false), 350)
+    return () => window.clearTimeout(t)
+  }, [from, to, depart, ret, trip])
 
   const allFlights = useMemo<FlightOption[]>(() => {
     if (!from || !to || !depart) return []
@@ -199,17 +208,34 @@ export function FlightResultsPage() {
         </aside>
 
         <section className="results-list">
-          <p className="results-summary">
-            Showing <strong>{sorted.length}</strong> of {allFlights.length} flights
-          </p>
-          {sorted.length === 0 ? (
-            <div className="empty-state">
-              <p>No flights match your filters. Try widening the stops or price.</p>
-            </div>
+          <CalendarPricingStrip
+            from={from}
+            to={to}
+            depart={depart}
+            returnDate={trip !== 'one-way' && ret ? ret : undefined}
+            onPick={iso => {
+              const next = new URLSearchParams(params)
+              next.set('depart', iso)
+              setParams(next)
+            }}
+          />
+          {loading ? (
+            <ResultsSkeleton />
           ) : (
-            sorted.map(f => (
-              <FlightResultCard key={f.id} flight={f} onSelect={() => selectFlight(f)} />
-            ))
+            <>
+              <p className="results-summary">
+                Showing <strong>{sorted.length}</strong> of {allFlights.length} flights
+              </p>
+              {sorted.length === 0 ? (
+                <div className="empty-state">
+                  <p>No flights match your filters. Try widening the stops or price.</p>
+                </div>
+              ) : (
+                sorted.map(f => (
+                  <FlightResultCard key={f.id} flight={f} onSelect={() => selectFlight(f)} />
+                ))
+              )}
+            </>
           )}
         </section>
       </div>

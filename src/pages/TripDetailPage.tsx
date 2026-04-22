@@ -111,7 +111,57 @@ export function TripDetailPage() {
       {booking.status === 'confirmed' ? (
         <div className="detail-card">
           <h2>Manage booking</h2>
-          <div className="manage-actions">
+          <h3>Add extras</h3>
+          <ul className="traveller-list">
+            {booking.passengers.map(p => {
+              const bags = booking.extras.checkedBagsByPassenger[p.id] ?? 0
+              return (
+                <li key={p.id}>
+                  <div>
+                    <strong>{p.firstName} {p.lastName}</strong>
+                    <span>{bags} checked bag{bags === 1 ? '' : 's'}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    onClick={() =>
+                      updateBooking(booking!.pnr, b => ({
+                        ...b,
+                        extras: {
+                          ...b.extras,
+                          checkedBagsByPassenger: {
+                            ...b.extras.checkedBagsByPassenger,
+                            [p.id]: (b.extras.checkedBagsByPassenger[p.id] ?? 0) + 1,
+                          },
+                        },
+                        totalGBP: b.totalGBP + 30,
+                      }))
+                    }
+                  >
+                    Add bag (+£30)
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+          <div className="manage-actions" style={{ marginTop: 16 }}>
+            {!booking.extras.priorityBoarding ? (
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() =>
+                  updateBooking(booking!.pnr, b => ({
+                    ...b,
+                    extras: { ...b.extras, priorityBoarding: true },
+                    totalGBP: b.totalGBP + 15,
+                  }))
+                }
+              >
+                Add priority boarding (+£15)
+              </button>
+            ) : (
+              <span className="detail-card__sub">Priority boarding added</span>
+            )}
             <button type="button" className="btn btn--secondary" disabled>
               Change flight
             </button>
@@ -119,7 +169,7 @@ export function TripDetailPage() {
               Cancel trip
             </button>
           </div>
-          <p className="detail-card__sub">
+          <p className="manage-note">
             Change and cancel fees depend on the fare rules shown at booking.
           </p>
         </div>

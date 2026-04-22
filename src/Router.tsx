@@ -20,6 +20,8 @@ import { StaysResultsPage } from './pages/StaysResultsPage'
 import { StayDetailPage } from './pages/StayDetailPage'
 import { DestinationsPage } from './pages/DestinationsPage'
 import { HelpCenterPage } from './pages/HelpCenterPage'
+import { NotificationsPage } from './pages/NotificationsPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 
 export function Router() {
   return (
@@ -48,7 +50,8 @@ export function Router() {
           <Route path="/stays/:id" element={<StayDetailPage />} />
           <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

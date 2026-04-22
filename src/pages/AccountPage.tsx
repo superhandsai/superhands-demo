@@ -277,19 +277,109 @@ function PreferencesTab() {
   )
 }
 
+interface RedemptionOption {
+  id: string
+  title: string
+  body: string
+  cost: number
+}
+
+const REDEMPTIONS: RedemptionOption[] = [
+  { id: 'voucher-10', title: '£10 travel voucher', body: 'Apply to any future booking at checkout.', cost: 500 },
+  { id: 'bag-waiver', title: 'Free checked bag', body: 'One-time waiver on a future flight.', cost: 1000 },
+  { id: 'lounge', title: 'Lounge day pass', body: 'Access to 800+ airport lounges worldwide.', cost: 2500 },
+  { id: 'seat-upgrade', title: 'Seat upgrade', body: 'Upgrade one leg to Premium on your next trip.', cost: 3500 },
+]
+
+const TIERS = [
+  { name: 'Blue', min: 0, perks: ['Earn 1 point per £1', 'Exclusive member fares'] },
+  { name: 'Silver', min: 1500, perks: ['Priority check-in', 'Free seat selection'] },
+  { name: 'Gold', min: 5000, perks: ['Lounge access (2/yr)', 'Complimentary upgrades'] },
+]
+
 function RewardsTab() {
   const { account } = useStore(sessionStore)
+  const [redeemed, setRedeemed] = useState<string | null>(null)
   if (!account) return null
   const points = account.rewardsPoints
-  const tier = points > 5000 ? 'Gold' : points > 1500 ? 'Silver' : 'Blue'
+  const currentIdx = TIERS.reduce((i, t, idx) => (points >= t.min ? idx : i), 0)
+  const current = TIERS[currentIdx]
+  const next = TIERS[currentIdx + 1]
+  const progress = next
+    ? Math.min(1, (points - current.min) / (next.min - current.min))
+    : 1
+
+  function onRedeem(item: RedemptionOption) {
+    if (points < item.cost) return
+    updateAccount(a => ({ ...a, rewardsPoints: a.rewardsPoints - item.cost }))
+    setRedeemed(item.id)
+    window.setTimeout(() => setRedeemed(null), 3000)
+  }
+
   return (
-    <div className="detail-card rewards-card">
-      <h2>Tripma Rewards</h2>
-      <p className="rewards-card__tier">Current tier · <strong>{tier}</strong></p>
-      <p className="rewards-card__points">
-        <strong>{points.toLocaleString()}</strong> points
-      </p>
-      <p className="detail-card__sub">Earn 1 point per £1 spent. Redeem on future bookings or upgrade to Flex.</p>
-    </div>
+    <>
+      <div className="detail-card rewards-card">
+        <h2>Tripma Rewards</h2>
+        <p className="rewards-card__tier">Current tier · <strong>{current.name}</strong></p>
+        <p className="rewards-card__points">
+          <strong>{points.toLocaleString()}</strong> points
+        </p>
+        <div className="tier-progress">
+          {next ? (
+            <>
+              <strong>{(next.min - points).toLocaleString()} points to {next.name}</strong>
+              <div className="tier-progress__bar">
+                <div
+                  className="tier-progress__fill"
+                  style={{ width: `${Math.round(progress * 100)}%` }}
+                />
+              </div>
+              <div className="tier-progress__labels">
+                <span>{current.name} · {current.min.toLocaleString()}</span>
+                <span>{next.name} · {next.min.toLocaleString()}</span>
+              </div>
+            </>
+          ) : (
+            <strong>You've reached our top tier. Thank you!</strong>
+          )}
+          <div className="tier-benefits">
+            {TIERS.flatMap(t => t.perks.map(p => ({ t, p }))).map(({ t, p }) => (
+              <div
+                key={`${t.name}-${p}`}
+                className={`tier-benefit ${points < t.min ? 'is-locked' : ''}`}
+              >
+                <strong>{t.name}</strong>
+                <div>{p}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="detail-card">
+        <h2>Redeem points</h2>
+        <p className="detail-card__sub">Spend points on travel perks. Redemptions are added to your wallet.</p>
+        <div className="redeem-grid">
+          {REDEMPTIONS.map(item => {
+            const affordable = points >= item.cost
+            return (
+              <div key={item.id} className="redeem-card">
+                <h4>{item.title}</h4>
+                <p>{item.body}</p>
+                <p className="redeem-card__cost">{item.cost.toLocaleString()} points</p>
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  disabled={!affordable}
+                  onClick={() => onRedeem(item)}
+                >
+                  {redeemed === item.id ? 'Added ✓' : affordable ? 'Redeem' : 'Not enough points'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </>
   )
 }

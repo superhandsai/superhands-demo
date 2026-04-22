@@ -23,6 +23,7 @@ import {
   getAirportApi,
 } from './lib/airportSearch'
 import { sessionStore, signOut } from './lib/sessionStore'
+import { notificationsStore } from './lib/notificationsStore'
 import { useStore } from './lib/useStore'
 
 type TripType = 'return' | 'one-way' | 'multi-city'
@@ -127,12 +128,28 @@ function UkFlagIcon() {
   )
 }
 
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden>
+      <path
+        d="M15 17h5l-1.4-2.03A2 2 0 0 1 18 13.8V10a6 6 0 0 0-12 0v3.8a2 2 0 0 1-.6 1.42L4 17h5m6 0a3 3 0 1 1-6 0"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const navId = useId()
   const navigate = useNavigate()
   const session = useStore(sessionStore)
   const account = session.account
+  const notifications = useStore(notificationsStore)
+  const unreadCount = notifications.filter(n => !n.read).length
 
   return (
     <header className="site-header">
@@ -183,6 +200,20 @@ export function SiteHeader() {
         </nav>
         <div className="site-header__end">
           <div className="site-header__end-cluster">
+            {account ? (
+              <Link
+                to="/notifications"
+                className="notif-bell"
+                aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ''}`}
+              >
+                <BellIcon />
+                {unreadCount > 0 ? (
+                  <span className="notif-bell__badge" aria-hidden>
+                    {unreadCount}
+                  </span>
+                ) : null}
+              </Link>
+            ) : null}
             <button
               type="button"
               className="site-header__menu-btn"
