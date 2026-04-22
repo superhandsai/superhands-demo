@@ -844,7 +844,7 @@ function FlightSearchBar() {
             <div
               className="flight-search__nearby-row"
               role="group"
-              aria-label="Nearby airports for From and To"
+              aria-label="Flight search options"
             >
               <label
                 className="flight-search__airport-option flight-search__nearby-option"
@@ -859,7 +859,6 @@ function FlightSearchBar() {
                 />
                 <span>Add nearby airports</span>
               </label>
-              <div className="flight-search__nearby-spacer" aria-hidden="true" />
               <label
                 className="flight-search__airport-option flight-search__nearby-option"
                 htmlFor={nearbyToAirportsId}
@@ -873,6 +872,16 @@ function FlightSearchBar() {
                 />
                 <span>Add nearby airports</span>
               </label>
+              <label className="flight-search__airport-option" htmlFor={directFlightsId}>
+                <input
+                  id={directFlightsId}
+                  type="checkbox"
+                  name="direct_flights"
+                  checked={directFlights}
+                  onChange={e => setDirectFlights(e.target.checked)}
+                />
+                <span>Direct flights</span>
+              </label>
             </div>
           ) : null}
         </div>
@@ -884,18 +893,6 @@ function FlightSearchBar() {
             <ArrowRightIcon className="btn--search__arrow" />
           </span>
         </button>
-        <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
-          <label className="flight-search__airport-option" htmlFor={directFlightsId}>
-            <input
-              id={directFlightsId}
-              type="checkbox"
-              name="direct_flights"
-              checked={directFlights}
-              onChange={e => setDirectFlights(e.target.checked)}
-            />
-            <span>Direct flights</span>
-          </label>
-        </div>
       </div>
     </form>
   )

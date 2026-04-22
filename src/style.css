@@ -827,10 +827,10 @@ a:hover {
   min-width: 0;
 }
 
-/* Two “Add nearby airports” checkboxes aligned with From / To columns (desktop grid matches swap column width) */
+/* Three checkboxes in a single row */
 .flight-search__nearby-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  display: flex;
+  gap: 24px;
   width: 100%;
   min-width: 0;
   align-items: center;
