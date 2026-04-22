@@ -517,7 +517,7 @@ a:hover {
   width: 100%;
   max-width: none;
   font-size: clamp(1.75rem, 4vw, 3rem);
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.05;
   text-align: left;
   letter-spacing: -0.02em;
