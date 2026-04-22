@@ -836,11 +836,11 @@ a:hover {
 
 .flight-search .btn--search {
   flex: 0 0 auto;
-  align-self: flex-start;
+  align-self: stretch;
   margin: 0;
   height: auto;
-  min-height: 80px;
-  padding: 10px 22px;
+  min-height: 56px;
+  padding: 16px 22px;
   border-radius: 16px;
 }
 
@@ -1332,8 +1332,7 @@ a:hover {
 
   .flight-search > .flight-search__passengers-field + .btn--search {
     margin-left: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-radius: 16px;
   }
 
   /* Active segment: full purple outline on all sides (seam rules above remove or grey shared edges) */
