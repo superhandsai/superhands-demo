@@ -723,7 +723,10 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
+  gap: 10px 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-grey-200);
+  margin-bottom: 20px;
 }
 
 .flight-search-bar__trip-type-field {
@@ -828,9 +831,8 @@ a:hover {
 }
 
 .flight-search__direct-flights {
-  flex: 0 0 100%;
-  order: 99;
-  align-self: flex-start;
+  flex: 0 0 auto;
+  align-self: center;
 }
 
 .flight-search .btn--search {

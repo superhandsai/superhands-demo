@@ -744,8 +744,21 @@ export function FlightSearchBar() {
     <form className="flight-search-bar" onSubmit={onSubmit}>
       <div className="flight-search-bar__trip-type">
         <TripTypeSelect value={tripType} onChange={setTripType} />
+        <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
+          <label className="flight-search__airport-option" htmlFor={directFlightsId}>
+            <input
+              id={directFlightsId}
+              type="checkbox"
+              name="direct_flights"
+              checked={directFlights}
+              onChange={e => setDirectFlights(e.target.checked)}
+            />
+            <span>Direct flights</span>
+          </label>
+        </div>
       </div>
       <div className="flight-search">
+        <DateRangeField oneWay={tripType === 'one-way'} />
         <div className="flight-search__airports-pair">
           <AirportField
             fieldKey="from"
@@ -791,7 +804,6 @@ export function FlightSearchBar() {
             onToNearbyAirportsChange={setToNearbyAirports}
           />
         </div>
-        <DateRangeField oneWay={tripType === 'one-way'} />
         <PassengersField />
         <button type="submit" className="btn btn--search">
           <span className="btn--search__text">Search</span>
@@ -799,18 +811,6 @@ export function FlightSearchBar() {
             <ArrowRightIcon className="btn--search__arrow" />
           </span>
         </button>
-        <div className="flight-search__direct-flights" role="group" aria-label="Flight search options">
-          <label className="flight-search__airport-option" htmlFor={directFlightsId}>
-            <input
-              id={directFlightsId}
-              type="checkbox"
-              name="direct_flights"
-              checked={directFlights}
-              onChange={e => setDirectFlights(e.target.checked)}
-            />
-            <span>Direct flights</span>
-          </label>
-        </div>
       </div>
     </form>
   )

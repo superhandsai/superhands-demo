@@ -85,8 +85,8 @@ const TAB_ICONS: Record<SearchPillTabId, ComponentType> = {
 }
 
 const SEARCH_TABS: readonly SearchPillTab[] = [
-  { id: 'flights', label: 'Flights' },
   { id: 'hotels', label: 'Hotels' },
+  { id: 'flights', label: 'Flights' },
   { id: 'cars', label: 'Cars' },
 ]
 
