@@ -1304,24 +1304,17 @@ a:hover {
   }
 
   .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right-color: var(--color-grey-200);
+    border-radius: 16px;
   }
 
   .flight-search__airports-pair > .flight-search__airport:last-child .flight-search__control {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-left: none;
+    border-radius: 16px;
   }
 
   .flight-search > .flight-search__date-field .flight-search__date-fields > .flight-search__field.flight-search__field--date-split {
     flex: 1 1 0;
     min-width: 0;
-    border-radius: 0;
-    border-left: none;
+    border-radius: 16px;
   }
 
   .flight-search
@@ -1334,9 +1327,7 @@ a:hover {
   .flight-search
     > .flight-search__passengers-field
     > .flight-search__field.flight-search__field--people {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    border-radius: 16px;
   }
 
   .flight-search > .flight-search__passengers-field + .btn--search {
