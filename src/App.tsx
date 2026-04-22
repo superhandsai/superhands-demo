@@ -442,7 +442,7 @@ export function HeroSearchGroup() {
   return (
     <div className="hero__search-block">
       <div className="hero__search-block__lead">
-        <SearchPills selectedTab="flights" id={pillsId} size="lg" />
+        <SearchPills selectedTab="hotels" id={pillsId} size="lg" />
         <h1 id="hero-heading" className="hero__title">
           Find the best flights anywhere
         </h1>
