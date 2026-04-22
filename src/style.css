@@ -525,6 +525,7 @@ a:hover {
   max-width: none;
   font-size: clamp(1.75rem, 4vw, 3rem);
   font-weight: 800;
+  animation: fadeInUp 1s ease-out;
   line-height: 1.05;
   text-align: left;
   letter-spacing: -0.02em;
@@ -812,7 +813,7 @@ a:hover {
 }
 
 .flight-search__direct-flights {
-  flex: 0 0 100%;
+  flex: 0 0 auto;
   order: 99;
   align-self: flex-start;
 }
@@ -1306,7 +1307,7 @@ a:hover {
   }
 
   .flight-search__direct-flights {
-    flex: 0 0 100%;
+    flex: 0 0 auto;
   }
 
   /* Swap centered on the seam: half the 44px button overlaps each field (matches design) */
@@ -2646,4 +2647,16 @@ a:hover {
   height: 40px;
   max-width: none;
   object-fit: contain;
+}
+
+/* Hero title animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
