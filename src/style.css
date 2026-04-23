@@ -2275,6 +2275,28 @@ a:hover {
 .deal-card:nth-child(3) .deal-card__body {
   padding-bottom: 14px;
   flex: 1;
+  gap: 16px;
+  justify-content: center;
+}
+
+.deal-card:nth-child(3) .deal-card__title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.deal-card:nth-child(3) .deal-card__price {
+  font-size: 20px;
+}
+
+.deal-card:nth-child(3) .deal-card__price-figures {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.deal-card:nth-child(3) .deal-card__desc {
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .deal-card__row {
