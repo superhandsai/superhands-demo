@@ -532,6 +532,7 @@ a:hover {
   background: none !important;
   -webkit-background-clip: initial !important;
   background-clip: initial !important;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .hero__search-block {
