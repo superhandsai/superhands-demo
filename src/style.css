@@ -2276,7 +2276,7 @@ a:hover {
   padding-bottom: 14px;
   flex: 1;
   gap: 16px;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .deal-card:nth-child(3) .deal-card__row {
