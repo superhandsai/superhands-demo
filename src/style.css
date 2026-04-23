@@ -2231,6 +2231,7 @@ a:hover {
   min-height: 100%;
   aspect-ratio: auto;
   flex-shrink: 0;
+  width: 50%;
 }
 
 .deal-card__image {
@@ -2252,7 +2253,7 @@ a:hover {
 }
 
 .deal-card:nth-child(3) .deal-card__image img {
-  width: 50%;
+  width: 100%;
 }
 
 .deal-card__image--mongolia img {
@@ -2273,6 +2274,7 @@ a:hover {
 
 .deal-card:nth-child(3) .deal-card__body {
   padding-bottom: 14px;
+  flex: 1;
 }
 
 .deal-card__row {
