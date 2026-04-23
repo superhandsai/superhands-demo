@@ -2251,6 +2251,10 @@ a:hover {
   transform: scale(1.04);
 }
 
+.deal-card:nth-child(3) .deal-card__image img {
+  width: 50%;
+}
+
 .deal-card__image--mongolia img {
   width: 187.86%;
   max-width: none;
