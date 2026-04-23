@@ -67,7 +67,7 @@
   cursor: pointer;
   border-radius: var(--radius-card);
   padding: 12px 20px;
-  font-size: 15px;
+  font-size: 21px;
   line-height: 1.2;
   text-align: center;
   transition: background-color 150ms ease, color 150ms ease, opacity 150ms ease;
