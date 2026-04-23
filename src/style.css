@@ -329,7 +329,7 @@ a:hover {
 }
 
 .btn--search:hover {
-  background: var(--color-purple-hover);
+  background-color: rgba(232, 231, 90, 1);
 }
 
 .btn--search__icon {
