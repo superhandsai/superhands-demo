@@ -100,14 +100,15 @@ a:hover {
   position: relative;
   z-index: 50;
   background: var(--color-white);
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--color-grey-200);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .site-header__inner {
   position: relative;
   max-width: var(--page-max);
   margin: 0 auto;
-  padding: 8px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -121,9 +122,14 @@ a:hover {
 
 .site-header__logo img {
   display: block;
-  width: calc(131px * 0.8);
+  width: 131px;
   max-width: 100%;
   height: auto;
+  transition: opacity 0.2s;
+}
+
+.site-header__logo:hover img {
+  opacity: 0.8;
 }
 
 .site-header__menu-btn {
@@ -167,18 +173,21 @@ a:hover {
 }
 
 .site-header__link {
-  padding: 10px;
+  padding: 10px 14px;
   font-size: 16px;
   color: var(--color-grey-400);
   border-radius: var(--radius-sm);
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  transition: all 0.2s;
+  font-weight: 500;
 }
 
 .site-header__link:hover {
   color: var(--color-purple);
   text-decoration: none;
+  background: var(--color-purple-on);
 }
 
 .site-header__favourites {
@@ -196,11 +205,15 @@ a:hover {
   border-radius: 12px;
   background: var(--color-white);
   text-decoration: none;
+  transition: all 0.2s;
 }
 
 .site-header__favourites:hover {
   color: var(--color-purple);
   text-decoration: none;
+  border-color: var(--color-purple);
+  background: var(--color-purple-on);
+  transform: translateY(-1px);
 }
 
 .site-header__favourites svg {
@@ -291,16 +304,21 @@ a:hover {
 .btn--header {
   box-sizing: border-box;
   background: var(--color-purple);
-  color: var(--color-grey-100);
+  color: var(--color-white);
   font-size: 16px;
+  font-weight: 600;
   border-radius: 12px;
   min-height: var(--header-control-height);
   height: var(--header-control-height);
-  padding: 0 16px;
+  padding: 0 24px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(96, 93, 236, 0.25);
 }
 
 .btn--header:hover {
   background: var(--color-purple-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(96, 93, 236, 0.35);
 }
 
 .btn--search {
@@ -528,10 +546,7 @@ a:hover {
   line-height: 1.05;
   text-align: left;
   letter-spacing: -0.02em;
-  background: var(--hero-title-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #ef4444;
 }
 
 .hero__search-block {
