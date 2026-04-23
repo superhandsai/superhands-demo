@@ -166,9 +166,27 @@ function MonthGrid({
 
 interface DateRangeFieldProps {
   oneWay?: boolean
+  departLabel?: string
+  returnLabel?: string
+  departName?: string
+  returnName?: string
+  clearDepartAriaLabel?: string
+  clearReturnAriaLabel?: string
+  dialogAriaLabel?: string
+  dialogAriaLabelOneWay?: string
 }
 
-export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
+export function DateRangeField({
+  oneWay = false,
+  departLabel = 'Depart',
+  returnLabel = 'Return',
+  departName = 'depart_date',
+  returnName = 'return_date',
+  clearDepartAriaLabel = 'Clear departure date',
+  clearReturnAriaLabel = 'Clear return date',
+  dialogAriaLabel = 'Select travel dates',
+  dialogAriaLabelOneWay = 'Select travel date',
+}: DateRangeFieldProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const dialogId = useId()
   const departLabelId = `${dialogId}-depart-label`
@@ -265,8 +283,8 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
       ref={rootRef}
       className={`flight-search__date-field ${open ? 'is-active' : ''} ${oneWay ? 'flight-search__date-field--one-way' : ''}`}
     >
-      <input type="hidden" name="depart_date" value={departKey} />
-      <input type="hidden" name="return_date" value={oneWay ? '' : returnKey} />
+      <input type="hidden" name={departName} value={departKey} />
+      <input type="hidden" name={returnName} value={oneWay ? '' : returnKey} />
       <div
         className={`flight-search__date-fields ${oneWay ? 'flight-search__date-fields--one-way' : ''}`}
       >
@@ -274,7 +292,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
           className={`flight-search__field flight-search__field--date-split flight-search__field--stacked ${open && pickIntent === 'depart' ? 'is-open' : ''}`}
         >
           <span className="flight-search__label" id={departLabelId}>
-            Depart
+            {departLabel}
           </span>
           <div className="flight-search__value-row">
             {showDepartPlaceholder ? (
@@ -297,7 +315,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
             />
             {departKey ? (
               <FieldClearButton
-                ariaLabel="Clear departure date"
+                ariaLabel={clearDepartAriaLabel}
                 onClear={() => {
                   setDepartKey('')
                   setReturnKey('')
@@ -312,7 +330,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
             className={`flight-search__field flight-search__field--date-split flight-search__field--stacked ${open && pickIntent === 'return' ? 'is-open' : ''}`}
           >
             <span className="flight-search__label" id={returnLabelId}>
-              Return
+              {returnLabel}
             </span>
             <div className="flight-search__value-row">
               {showReturnPlaceholder ? (
@@ -335,7 +353,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
               />
               {returnKey ? (
                 <FieldClearButton
-                  ariaLabel="Clear return date"
+                  ariaLabel={clearReturnAriaLabel}
                   onClear={() => {
                     setReturnKey('')
                     setHoverKey(null)
@@ -352,7 +370,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
           className="flight-search__date-popover"
           role="dialog"
           aria-modal="true"
-          aria-label={oneWay ? 'Select travel date' : 'Select travel dates'}
+          aria-label={oneWay ? dialogAriaLabelOneWay : dialogAriaLabel}
         >
           <div className="date-range-picker">
             <div className="date-range-picker__months">

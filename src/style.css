@@ -1344,6 +1344,32 @@ a:hover {
     border-bottom-left-radius: 0;
   }
 
+  /* Plain text fields used in hotel/car search rows participate in the connected row. */
+  .flight-search > .flight-search__field {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .flight-search > .flight-search__field:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+  }
+
+  .flight-search > .flight-search__field:has(+ .flight-search__field),
+  .flight-search > .flight-search__field:has(+ .flight-search__date-field),
+  .flight-search > .flight-search__field:has(+ .flight-search__passengers-field) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .flight-search > .flight-search__field + .btn--search,
+  .flight-search > .flight-search__date-field + .btn--search {
+    margin-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
   /* Active segment: full purple outline on all sides (seam rules above remove or grey shared edges) */
   .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control.is-open,
   .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control.flight-search__control--stacked.is-open {

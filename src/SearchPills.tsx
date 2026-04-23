@@ -93,6 +93,7 @@ const SEARCH_TABS: readonly SearchPillTab[] = [
 export interface SearchPillsProps {
   tabs?: readonly SearchPillTab[]
   selectedTab?: SearchPillTabId
+  onSelect?: (tab: SearchPillTabId) => void
   id?: string
   size?: SearchPillSize
 }
@@ -100,30 +101,55 @@ export interface SearchPillsProps {
 export function SearchPills({
   tabs = SEARCH_TABS,
   selectedTab,
+  onSelect,
   id,
   size = 'md',
 }: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
+  const interactive = Boolean(onSelect)
 
   return (
     <div
       id={pillsId}
       className={`search-pills ${size !== 'md' ? `search-pills--${size}` : ''}`}
-      role="group"
+      role={interactive ? 'tablist' : 'group'}
       aria-label="What are you booking?"
     >
       {tabs.map(tab => {
         const Icon = TAB_ICONS[tab.id]
+        const selected = selectedTab === tab.id
+        const pillClass = `search-pills__pill ${selected ? 'is-selected' : ''}`
+        const inner = (
+          <>
+            {Icon ? <Icon /> : null}
+            <span className="search-pills__pill-label">{tab.label}</span>
+          </>
+        )
+        if (interactive) {
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              id={`${pillsId}-${tab.id}`}
+              role="tab"
+              className={pillClass}
+              aria-selected={selected}
+              aria-controls={`${pillsId}-panel`}
+              onClick={() => onSelect?.(tab.id)}
+            >
+              {inner}
+            </button>
+          )
+        }
         return (
           <span
             key={tab.id}
             id={`${pillsId}-${tab.id}`}
-            className={`search-pills__pill ${selectedTab === tab.id ? 'is-selected' : ''}`}
-            aria-current={selectedTab === tab.id ? 'page' : undefined}
+            className={pillClass}
+            aria-current={selected ? 'page' : undefined}
           >
-            {Icon ? <Icon /> : null}
-            <span className="search-pills__pill-label">{tab.label}</span>
+            {inner}
           </span>
         )
       })}

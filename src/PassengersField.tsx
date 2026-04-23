@@ -70,7 +70,21 @@ function StepperRow({
   )
 }
 
-export function PassengersField() {
+interface PassengersFieldProps {
+  label?: string
+  adultsTitle?: string
+  adultsHint?: string
+  childrenTitle?: string
+  childrenHint?: string
+}
+
+export function PassengersField({
+  label = 'Travellers',
+  adultsTitle = 'Adults',
+  adultsHint = 'Aged 18+',
+  childrenTitle = 'Children',
+  childrenHint = 'Aged 0 to 17',
+}: PassengersFieldProps = {}) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const baseId = useId()
   const travellersLabelId = `${baseId}-travellers-label`
@@ -105,7 +119,7 @@ export function PassengersField() {
         className={`flight-search__field flight-search__field--people flight-search__field--stacked ${open ? 'is-open' : ''}`}
       >
         <span className="flight-search__label" id={travellersLabelId}>
-          Travellers
+          {label}
         </span>
         <div className="flight-search__value-row">
           <input
@@ -129,12 +143,12 @@ export function PassengersField() {
           className="flight-search__passengers-popover"
           role="dialog"
           aria-modal="true"
-          aria-label="Travellers"
+          aria-label={label}
         >
           <div className="passengers-picker">
             <StepperRow
-              title="Adults"
-              hint="Aged 18+"
+              title={adultsTitle}
+              hint={adultsHint}
               value={adults}
               min={ADULT_MIN}
               max={ADULT_MAX}
@@ -144,8 +158,8 @@ export function PassengersField() {
               onInc={() => setAdults(a => Math.min(ADULT_MAX, a + 1))}
             />
             <StepperRow
-              title="Children"
-              hint="Aged 0 to 17"
+              title={childrenTitle}
+              hint={childrenHint}
               value={children}
               min={CHILD_MIN}
               max={CHILD_MAX}

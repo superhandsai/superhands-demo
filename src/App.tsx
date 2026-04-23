@@ -13,7 +13,7 @@ import { tripma } from './assets/tripma/urls'
 import { DateRangeField } from './DateRangeField'
 import { FieldClearButton } from './FieldClearButton'
 import { PassengersField } from './PassengersField'
-import { SearchPills } from './SearchPills'
+import { SearchPills, type SearchPillTabId } from './SearchPills'
 import {
   type Airport,
   type AirportApi,
@@ -498,23 +498,40 @@ export function AirportField({
   )
 }
 
+type HeroSearchTab = Extract<SearchPillTabId, 'flights' | 'hotels' | 'cars'>
+
+const HERO_TITLES: Record<HeroSearchTab, string> = {
+  flights: 'Find the best flights anywhere',
+  hotels: 'Find a great place to stay',
+  cars: 'Book a car for your next trip',
+}
+
 export function HeroSearchGroup() {
   const pillsId = useId()
+  const [tab, setTab] = useState<HeroSearchTab>('flights')
 
   return (
     <div className="hero__search-block">
       <div className="hero__search-block__lead">
-        <SearchPills selectedTab="flights" id={pillsId} size="lg" />
+        <SearchPills
+          selectedTab={tab}
+          onSelect={id => setTab(id as HeroSearchTab)}
+          id={pillsId}
+          size="lg"
+        />
         <h1 id="hero-heading" className="hero__title">
-          Find the best flights anywhere
+          {HERO_TITLES[tab]}
         </h1>
       </div>
       <div
+        id={`${pillsId}-panel`}
         role="region"
-        aria-labelledby={`${pillsId}-flights`}
+        aria-labelledby={`${pillsId}-${tab}`}
         className="hero__search-panel"
       >
-        <FlightSearchBar />
+        {tab === 'flights' ? <FlightSearchBar /> : null}
+        {tab === 'hotels' ? <HotelSearchBar /> : null}
+        {tab === 'cars' ? <CarSearchBar /> : null}
       </div>
     </div>
   )
@@ -809,6 +826,170 @@ export function FlightSearchBar() {
               onChange={e => setDirectFlights(e.target.checked)}
             />
             <span>Direct flights</span>
+          </label>
+        </div>
+      </div>
+    </form>
+  )
+}
+
+interface PlainTextFieldProps {
+  name: string
+  label: string
+  hint: string
+  value: string
+  onChange: (value: string) => void
+  autoFocus?: boolean
+}
+
+function PlainTextField({
+  name,
+  label,
+  hint,
+  value,
+  onChange,
+  autoFocus,
+}: PlainTextFieldProps) {
+  const id = useId()
+  const labelId = `${id}-label`
+  const showHint = !value
+  return (
+    <label className="flight-search__field flight-search__field--stacked">
+      <span className="flight-search__label" id={labelId}>
+        {label}
+      </span>
+      <div className="flight-search__value-row">
+        {showHint ? (
+          <span className="flight-search__hint" aria-hidden="true">
+            {hint}
+          </span>
+        ) : null}
+        <input
+          type="text"
+          name={name}
+          autoComplete="off"
+          autoFocus={autoFocus}
+          className={`flight-search__input flight-search__input--stacked ${showHint ? 'is-empty' : ''}`}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          aria-labelledby={labelId}
+        />
+        {value ? (
+          <FieldClearButton
+            ariaLabel={`Clear ${label}`}
+            onClear={() => onChange('')}
+          />
+        ) : null}
+      </div>
+    </label>
+  )
+}
+
+export function HotelSearchBar() {
+  const navigate = useNavigate()
+  const [destination, setDestination] = useState('')
+
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const data = new FormData(e.currentTarget)
+    const params = new URLSearchParams()
+    const q = String(data.get('destination') || '').trim()
+    const checkIn = String(data.get('check_in') || '').trim()
+    const checkOut = String(data.get('check_out') || '').trim()
+    const guests = String(
+      Number(data.get('adults') || 0) + Number(data.get('children') || 0)
+    )
+    if (q) params.set('q', q)
+    if (checkIn) params.set('in', checkIn)
+    if (checkOut) params.set('out', checkOut)
+    params.set('guests', guests)
+    navigate(`/stays/results?${params.toString()}`)
+  }
+
+  return (
+    <form className="flight-search-bar" onSubmit={onSubmit}>
+      <div className="flight-search">
+        <PlainTextField
+          name="destination"
+          label="Where to"
+          hint="City, region, or hotel"
+          value={destination}
+          onChange={setDestination}
+        />
+        <DateRangeField
+          departLabel="Check in"
+          returnLabel="Check out"
+          departName="check_in"
+          returnName="check_out"
+          clearDepartAriaLabel="Clear check-in date"
+          clearReturnAriaLabel="Clear check-out date"
+          dialogAriaLabel="Select stay dates"
+        />
+        <PassengersField label="Guests" />
+        <button type="submit" className="btn btn--search">
+          <span className="btn--search__text">Search</span>
+          <span className="btn--search__icon" aria-hidden>
+            <ArrowRightIcon className="btn--search__arrow" />
+          </span>
+        </button>
+      </div>
+    </form>
+  )
+}
+
+export function CarSearchBar() {
+  const [pickUp, setPickUp] = useState('')
+  const [dropOff, setDropOff] = useState('')
+  const [sameLocation, setSameLocation] = useState(true)
+  const sameId = useId()
+
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+  }
+
+  return (
+    <form className="flight-search-bar" onSubmit={onSubmit}>
+      <div className="flight-search">
+        <PlainTextField
+          name="pick_up"
+          label="Pick-up location"
+          hint="Airport, city, or address"
+          value={pickUp}
+          onChange={setPickUp}
+        />
+        {!sameLocation ? (
+          <PlainTextField
+            name="drop_off"
+            label="Drop-off location"
+            hint="Airport, city, or address"
+            value={dropOff}
+            onChange={setDropOff}
+          />
+        ) : null}
+        <DateRangeField
+          departLabel="Pick-up"
+          returnLabel="Drop-off"
+          departName="pick_up_date"
+          returnName="drop_off_date"
+          clearDepartAriaLabel="Clear pick-up date"
+          clearReturnAriaLabel="Clear drop-off date"
+          dialogAriaLabel="Select rental dates"
+        />
+        <button type="submit" className="btn btn--search">
+          <span className="btn--search__text">Search</span>
+          <span className="btn--search__icon" aria-hidden>
+            <ArrowRightIcon className="btn--search__arrow" />
+          </span>
+        </button>
+        <div className="flight-search__direct-flights" role="group" aria-label="Rental options">
+          <label className="flight-search__airport-option" htmlFor={sameId}>
+            <input
+              id={sameId}
+              type="checkbox"
+              checked={sameLocation}
+              onChange={e => setSameLocation(e.target.checked)}
+            />
+            <span>Return to same location</span>
           </label>
         </div>
       </div>
