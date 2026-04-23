@@ -2223,6 +2223,10 @@ a:hover {
   transform: translateY(-3px);
 }
 
+.deal-card:nth-child(3) {
+  flex-direction: row;
+}
+
 .deal-card__image {
   position: relative;
   aspect-ratio: 4 / 3;
