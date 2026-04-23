@@ -2025,9 +2025,11 @@ a:hover {
   .flight-search__airports-pair,
   .flight-search__airport,
   .flight-search__date-field,
+  .flight-search__passengers-field,
   .flight-search__passengers-and-options {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     width: 100%;
+    min-width: 0;
   }
 
   .flight-search__date-fields {
