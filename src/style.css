@@ -2279,6 +2279,12 @@ a:hover {
   justify-content: center;
 }
 
+.deal-card:nth-child(3) .deal-card__row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 .deal-card:nth-child(3) .deal-card__title {
   font-size: 24px;
   font-weight: 700;
