@@ -528,10 +528,10 @@ a:hover {
   line-height: 1.05;
   text-align: left;
   letter-spacing: -0.02em;
-  background: var(--hero-title-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: red !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
 }
 
 .hero__search-block {
