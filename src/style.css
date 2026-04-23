@@ -710,6 +710,10 @@ a:hover {
   height: 22px;
 }
 
+.search-pills--lg .search-pills__pill-label {
+  font-size: 11px;
+}
+
 /* Flight search bar (trip type + row of fields) */
 .flight-search-bar {
   width: 100%;
