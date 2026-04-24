@@ -902,7 +902,7 @@ export function FlightSearchBar() {
           type="submit"
           className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
         >
-          <span className="font-semibold">Search</span>
+          <span className="font-thin">Search</span>
           <span className="flex w-6 h-6 flex-shrink-0 items-center justify-center" aria-hidden>
             <ArrowRightIcon className="block" />
           </span>
