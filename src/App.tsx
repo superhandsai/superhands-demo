@@ -592,8 +592,8 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[46px]"
+          style={{ fontSize: 'clamp(1.75rem, 4vw, 2.875rem)' }}
         >
           Find the best flights anywhere
         </h1>
