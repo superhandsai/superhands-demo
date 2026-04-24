@@ -789,7 +789,7 @@ function FlightSearchBar() {
         <DateRangeField oneWay={tripType === 'one-way'} />
         <PassengersField />
         <button type="submit" className="btn btn--search">
-          <span className="btn--search__text">Search</span>
+          <span className="btn--search__text text-[25px]">Search</span>
           <span className="btn--search__icon" aria-hidden>
             <ArrowRightIcon className="btn--search__arrow" />
           </span>
