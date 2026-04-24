@@ -125,7 +125,7 @@ export function PassengersField() {
           <input
             id={baseId}
             type="text"
-            className="relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none text-grey-900 cursor-pointer focus:outline-none"
+            className="relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[26px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none text-grey-900 cursor-pointer focus:outline-none"
             readOnly
             value={summary}
             aria-labelledby={travellersLabelId}
