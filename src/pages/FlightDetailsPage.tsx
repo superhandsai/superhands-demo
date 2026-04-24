@@ -40,25 +40,25 @@ const FARE_FEATURES: Record<FareType, Array<{ label: string; included: boolean }
 
 function SegmentDetail({ segment }: { segment: FlightSegment }) {
   return (
-    <div className="segment-detail">
-      <div className="segment-detail__row">
-        <div className="segment-detail__time">
-          <strong>{segment.departTime}</strong>
-          <span>{formatIsoDate(segment.departDate)}</span>
+    <div className="grid grid-cols-[120px_1fr] grid-rows-[auto_auto_auto_auto] gap-y-1 gap-x-4 py-3">
+      <div className="contents">
+        <div className="flex flex-col">
+          <strong className="text-[20px] text-grey-900">{segment.departTime}</strong>
+          <span className="text-xs text-grey-600">{formatIsoDate(segment.departDate)}</span>
         </div>
-        <div className="segment-detail__place">{segment.from}</div>
+        <div className="self-center font-semibold text-grey-900">{segment.from}</div>
       </div>
-      <div className="segment-detail__bar">
-        <span className="segment-detail__duration">{formatDurationMins(segment.durationMins)}</span>
+      <div className="col-span-full border-l-2 border-purple ml-2.5 py-1 pl-4 text-grey-600 text-xs">
+        <span>{formatDurationMins(segment.durationMins)}</span>
       </div>
-      <div className="segment-detail__row">
-        <div className="segment-detail__time">
-          <strong>{segment.arriveTime}</strong>
-          <span>{formatIsoDate(segment.arriveDate)}</span>
+      <div className="contents">
+        <div className="flex flex-col">
+          <strong className="text-[20px] text-grey-900">{segment.arriveTime}</strong>
+          <span className="text-xs text-grey-600">{formatIsoDate(segment.arriveDate)}</span>
         </div>
-        <div className="segment-detail__place">{segment.to}</div>
+        <div className="self-center font-semibold text-grey-900">{segment.to}</div>
       </div>
-      <p className="segment-detail__meta">
+      <p className="col-span-full text-xs text-grey-600 m-0">
         {segment.carrier} · {segment.flightNumber}
       </p>
     </div>
@@ -87,9 +87,14 @@ export function FlightDetailsPage() {
   if (!flight) {
     return (
       <PageShell title="Flight not found" breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Flights' }]}>
-        <div className="empty-state">
+        <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
           <p>We couldn't find that flight. It might have been re-priced.</p>
-          <Link className="btn btn--primary" to="/">Back to home</Link>
+          <Link
+            className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+            to="/"
+          >
+            Back to home
+          </Link>
         </div>
       </PageShell>
     )
@@ -116,37 +121,37 @@ export function FlightDetailsPage() {
       title={`${flight.outbound[0].from} → ${flight.outbound[flight.outbound.length - 1].to}`}
       subtitle={`${flight.outbound[0].carrier} · Total flight time ${formatDurationMins(flight.totalDurationMins)}`}
     >
-      <div className="flight-details-layout">
-        <section className="flight-details-main">
-          <div className="detail-card">
-            <h2>Outbound</h2>
+      <div className="grid grid-cols-[1fr_340px] gap-6 items-start max-[900px]:grid-cols-1">
+        <section>
+          <div className="bg-white rounded-card p-6 shadow-card mb-4">
+            <h2 className="m-0 mb-2 text-xl text-grey-900">Outbound</h2>
             {flight.outbound.map((s, i) => (
               <div key={i}>
                 <SegmentDetail segment={s} />
                 {i < flight.outbound.length - 1 ? (
-                  <div className="segment-layover">Layover in {s.to}</div>
+                  <div className="py-2.5 px-3 bg-purple-on text-grey-900 rounded-sm my-2 text-sm">Layover in {s.to}</div>
                 ) : null}
               </div>
             ))}
           </div>
 
           {flight.return ? (
-            <div className="detail-card">
-              <h2>Return</h2>
+            <div className="bg-white rounded-card p-6 shadow-card mb-4">
+              <h2 className="m-0 mb-2 text-xl text-grey-900">Return</h2>
               {flight.return.map((s, i) => (
                 <div key={i}>
                   <SegmentDetail segment={s} />
                   {i < flight.return!.length - 1 ? (
-                    <div className="segment-layover">Layover in {s.to}</div>
+                    <div className="py-2.5 px-3 bg-purple-on text-grey-900 rounded-sm my-2 text-sm">Layover in {s.to}</div>
                   ) : null}
                 </div>
               ))}
             </div>
           ) : null}
 
-          <div className="detail-card">
-            <h2>Choose your fare</h2>
-            <div className="fare-grid">
+          <div className="bg-white rounded-card p-6 shadow-card mb-4">
+            <h2 className="m-0 mb-2 text-xl text-grey-900">Choose your fare</h2>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               {FARE_TYPES.map(key => {
                 const info = FARE_PRICING[key]
                 const price = Math.round(flight.priceGBP * info.multiplier)
@@ -155,19 +160,26 @@ export function FlightDetailsPage() {
                   <button
                     type="button"
                     key={key}
-                    className={`fare-card ${isSelected ? 'is-selected' : ''}`}
+                    className={`text-left bg-white border-2 rounded-card p-4 cursor-pointer transition-[border-color,box-shadow] font-sans text-grey-900 hover:border-purple ${
+                      isSelected
+                        ? 'border-purple shadow-[0_0_0_3px_var(--color-purple-on)]'
+                        : 'border-grey-200'
+                    }`}
                     onClick={() => setFare(key)}
                     aria-pressed={isSelected}
                   >
-                    <header className="fare-card__head">
-                      <h3>{info.label}</h3>
-                      <p className="fare-card__price">£{price.toLocaleString()}</p>
-                      <p className="fare-card__pp">per person</p>
+                    <header>
+                      <h3 className="m-0 text-base">{info.label}</h3>
+                      <p className="text-[22px] mt-1 mb-0 font-bold">£{price.toLocaleString()}</p>
+                      <p className="text-xs text-grey-600 m-0">per person</p>
                     </header>
-                    <p className="fare-card__desc">{info.description}</p>
-                    <ul className="fare-card__features">
+                    <p className="text-sm text-grey-600 my-2.5">{info.description}</p>
+                    <ul className="list-none p-0 m-0 flex flex-col gap-1 text-xs">
                       {FARE_FEATURES[key].map(f => (
-                        <li key={f.label} className={f.included ? 'is-included' : 'is-excluded'}>
+                        <li
+                          key={f.label}
+                          className={f.included ? 'text-grey-900' : 'text-grey-400 line-through'}
+                        >
                           <span aria-hidden>{f.included ? '✓' : '—'}</span> {f.label}
                         </li>
                       ))}
@@ -179,30 +191,34 @@ export function FlightDetailsPage() {
           </div>
         </section>
 
-        <aside className="flight-details-side">
-          <div className="summary-card">
-            <h3>Summary</h3>
-            <div className="summary-card__row">
+        <aside>
+          <div className="bg-white rounded-card p-5 shadow-card sticky top-4">
+            <h3 className="m-0 mb-1.5 text-base text-grey-900">Summary</h3>
+            <div className="flex justify-between py-1.5 text-sm">
               <span>Fare</span>
               <strong>{FARE_PRICING[fare].label}</strong>
             </div>
-            <div className="summary-card__row">
+            <div className="flex justify-between py-1.5 text-sm">
               <span>Travellers</span>
               <strong>{pax} × adult{adults === 1 && children === 0 ? '' : 's'}{children > 0 ? `, ${children} child${children > 1 ? 'ren' : ''}` : ''}</strong>
             </div>
-            <div className="summary-card__row">
+            <div className="flex justify-between py-1.5 text-sm">
               <span>Price per person</span>
               <strong>£{perPerson.toLocaleString()}</strong>
             </div>
-            <hr />
-            <div className="summary-card__row summary-card__row--total">
+            <hr className="border-0 border-t border-grey-200 my-2.5" />
+            <div className="flex justify-between py-1.5 text-lg pt-3">
               <span>Total</span>
-              <strong>£{total.toLocaleString()}</strong>
+              <strong className="text-grey-900">£{total.toLocaleString()}</strong>
             </div>
-            <button type="button" className="btn btn--primary summary-card__cta" onClick={onContinue}>
+            <button
+              type="button"
+              className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover w-full mt-3"
+              onClick={onContinue}
+            >
               Continue
             </button>
-            <p className="summary-card__small">Free cancellation within 24 hours of booking.</p>
+            <p className="text-xs text-grey-600 my-2">Free cancellation within 24 hours of booking.</p>
           </div>
         </aside>
       </div>

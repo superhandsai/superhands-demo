@@ -24,6 +24,16 @@ function newId(): string {
   return Math.random().toString(36).slice(2, 10)
 }
 
+const DETAIL_CARD = 'bg-white rounded-card p-6 shadow-card mb-4'
+const DETAIL_CARD_SUB = 'mt-0 mb-4 text-grey-600 text-sm'
+const FIELD = 'flex flex-col gap-1.5 text-sm text-grey-900'
+const FIELD_SPAN = 'text-grey-600 font-semibold'
+const FIELD_INPUT = 'font-sans text-[15px] py-2.5 px-3 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-[1px]'
+const FIELD_GRID = 'grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4'
+const BTN_PRIMARY = 'font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover disabled:cursor-not-allowed disabled:opacity-60'
+const LINK_MORE = 'self-start mt-1 bg-transparent border-0 text-purple cursor-pointer p-0 text-xs'
+const TOGGLE_ROW = 'flex gap-3 items-start py-3 border-t border-grey-200'
+
 export function AccountPage() {
   const session = useStore(sessionStore)
   const [tab, setTab] = useState<Tab>('profile')
@@ -37,12 +47,16 @@ export function AccountPage() {
       subtitle={account.email}
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Account' }]}
     >
-      <nav className="account-tabs" aria-label="Account sections">
+      <nav className="flex gap-2 mb-4 overflow-x-auto" aria-label="Account sections">
         {TABS.map(t => (
           <button
             key={t.id}
             type="button"
-            className={`account-tab ${tab === t.id ? 'is-active' : ''}`}
+            className={`py-2.5 px-4 rounded-card cursor-pointer font-sans font-semibold border ${
+              tab === t.id
+                ? 'bg-purple text-white border-purple'
+                : 'bg-white border-grey-200 text-grey-600'
+            }`}
             onClick={() => setTab(t.id)}
             aria-pressed={tab === t.id}
           >
@@ -64,30 +78,33 @@ function ProfileTab() {
   const { account } = useStore(sessionStore)
   if (!account) return null
   return (
-    <div className="detail-card">
-      <h2>Profile</h2>
-      <div className="field-grid">
-        <label className="field">
-          <span>First name</span>
+    <div className={DETAIL_CARD}>
+      <h2 className="m-0 mb-2 text-xl text-grey-900">Profile</h2>
+      <div className={FIELD_GRID}>
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>First name</span>
           <input
+            className={FIELD_INPUT}
             value={account.firstName}
             onChange={e => updateAccount(a => ({ ...a, firstName: e.target.value }))}
           />
         </label>
-        <label className="field">
-          <span>Last name</span>
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>Last name</span>
           <input
+            className={FIELD_INPUT}
             value={account.lastName}
             onChange={e => updateAccount(a => ({ ...a, lastName: e.target.value }))}
           />
         </label>
-        <label className="field">
-          <span>Email</span>
-          <input value={account.email} disabled />
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>Email</span>
+          <input className={FIELD_INPUT} value={account.email} disabled />
         </label>
-        <label className="field">
-          <span>Phone</span>
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>Phone</span>
           <input
+            className={FIELD_INPUT}
             value={account.phone ?? ''}
             onChange={e => updateAccount(a => ({ ...a, phone: e.target.value }))}
             autoComplete="tel"
@@ -122,35 +139,35 @@ function TravellersTab() {
 
   return (
     <>
-      <div className="detail-card">
-        <h2>Saved travellers</h2>
+      <div className={DETAIL_CARD}>
+        <h2 className="m-0 mb-2 text-xl text-grey-900">Saved travellers</h2>
         {account.savedTravellers.length === 0 ? (
-          <p className="detail-card__sub">No saved travellers yet. Add frequent travellers to speed up checkout.</p>
+          <p className={DETAIL_CARD_SUB}>No saved travellers yet. Add frequent travellers to speed up checkout.</p>
         ) : (
-          <ul className="traveller-list">
+          <ul className="list-none p-0 m-0 flex flex-col gap-2">
             {account.savedTravellers.map(t => (
-              <li key={t.id}>
-                <strong>{t.firstName} {t.lastName}</strong>
-                <span>{t.dob}{t.passportNumber ? ` · passport ${t.passportNumber}` : ''}</span>
-                <button type="button" className="link-more" onClick={() => onRemove(t.id)}>Remove</button>
+              <li key={t.id} className="flex flex-col py-2.5 border-b border-grey-200">
+                <strong className="text-grey-900">{t.firstName} {t.lastName}</strong>
+                <span className="text-grey-600 text-xs">{t.dob}{t.passportNumber ? ` · passport ${t.passportNumber}` : ''}</span>
+                <button type="button" className={LINK_MORE} onClick={() => onRemove(t.id)}>Remove</button>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <form className="detail-card" onSubmit={onAdd}>
-        <h3>Add a traveller</h3>
-        <div className="field-grid">
-          <label className="field"><span>First name</span>
-            <input value={draft.firstName} onChange={e => setDraft({ ...draft, firstName: e.target.value })} /></label>
-          <label className="field"><span>Last name</span>
-            <input value={draft.lastName} onChange={e => setDraft({ ...draft, lastName: e.target.value })} /></label>
-          <label className="field"><span>Date of birth</span>
-            <input type="date" value={draft.dob} onChange={e => setDraft({ ...draft, dob: e.target.value })} /></label>
-          <label className="field"><span>Passport number</span>
-            <input value={draft.passportNumber ?? ''} onChange={e => setDraft({ ...draft, passportNumber: e.target.value })} /></label>
+      <form className={DETAIL_CARD} onSubmit={onAdd}>
+        <h3 className="mt-4 mb-2 text-base text-grey-900">Add a traveller</h3>
+        <div className={FIELD_GRID}>
+          <label className={FIELD}><span className={FIELD_SPAN}>First name</span>
+            <input className={FIELD_INPUT} value={draft.firstName} onChange={e => setDraft({ ...draft, firstName: e.target.value })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Last name</span>
+            <input className={FIELD_INPUT} value={draft.lastName} onChange={e => setDraft({ ...draft, lastName: e.target.value })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Date of birth</span>
+            <input className={FIELD_INPUT} type="date" value={draft.dob} onChange={e => setDraft({ ...draft, dob: e.target.value })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Passport number</span>
+            <input className={FIELD_INPUT} value={draft.passportNumber ?? ''} onChange={e => setDraft({ ...draft, passportNumber: e.target.value })} /></label>
         </div>
-        <button type="submit" className="btn btn--primary">Save traveller</button>
+        <button type="submit" className={BTN_PRIMARY}>Save traveller</button>
       </form>
     </>
   )
@@ -180,39 +197,39 @@ function PaymentTab() {
 
   return (
     <>
-      <div className="detail-card">
-        <h2>Payment methods</h2>
+      <div className={DETAIL_CARD}>
+        <h2 className="m-0 mb-2 text-xl text-grey-900">Payment methods</h2>
         {account.paymentMethods.length === 0 ? (
-          <p className="detail-card__sub">No cards saved yet.</p>
+          <p className={DETAIL_CARD_SUB}>No cards saved yet.</p>
         ) : (
-          <ul className="payment-list">
+          <ul className="list-none p-0 m-0 flex flex-col gap-2">
             {account.paymentMethods.map(p => (
-              <li key={p.id}>
-                <strong>{p.brand} •••• {p.last4}</strong>
-                <span>{p.nameOnCard} · Exp {String(p.expiryMonth).padStart(2, '0')}/{p.expiryYear}</span>
-                <button type="button" className="link-more" onClick={() => onRemove(p.id)}>Remove</button>
+              <li key={p.id} className="flex flex-col py-2.5 border-b border-grey-200">
+                <strong className="text-grey-900">{p.brand} •••• {p.last4}</strong>
+                <span className="text-grey-600 text-xs">{p.nameOnCard} · Exp {String(p.expiryMonth).padStart(2, '0')}/{p.expiryYear}</span>
+                <button type="button" className={LINK_MORE} onClick={() => onRemove(p.id)}>Remove</button>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <form className="detail-card" onSubmit={onAdd}>
-        <h3>Add a card</h3>
-        <div className="field-grid">
-          <label className="field"><span>Brand</span>
-            <select value={draft.brand} onChange={e => setDraft({ ...draft, brand: e.target.value as PaymentMethod['brand'] })}>
+      <form className={DETAIL_CARD} onSubmit={onAdd}>
+        <h3 className="mt-4 mb-2 text-base text-grey-900">Add a card</h3>
+        <div className={FIELD_GRID}>
+          <label className={FIELD}><span className={FIELD_SPAN}>Brand</span>
+            <select className={FIELD_INPUT} value={draft.brand} onChange={e => setDraft({ ...draft, brand: e.target.value as PaymentMethod['brand'] })}>
               <option>Visa</option><option>Mastercard</option><option>Amex</option>
             </select></label>
-          <label className="field"><span>Last 4 digits</span>
-            <input value={draft.last4} maxLength={4} onChange={e => setDraft({ ...draft, last4: e.target.value.replace(/\D/g, '').slice(0, 4) })} /></label>
-          <label className="field"><span>Name on card</span>
-            <input value={draft.nameOnCard} onChange={e => setDraft({ ...draft, nameOnCard: e.target.value })} /></label>
-          <label className="field"><span>Exp month</span>
-            <input type="number" value={draft.expiryMonth} min={1} max={12} onChange={e => setDraft({ ...draft, expiryMonth: Number(e.target.value) })} /></label>
-          <label className="field"><span>Exp year</span>
-            <input type="number" value={draft.expiryYear} min={2026} max={2040} onChange={e => setDraft({ ...draft, expiryYear: Number(e.target.value) })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Last 4 digits</span>
+            <input className={FIELD_INPUT} value={draft.last4} maxLength={4} onChange={e => setDraft({ ...draft, last4: e.target.value.replace(/\D/g, '').slice(0, 4) })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Name on card</span>
+            <input className={FIELD_INPUT} value={draft.nameOnCard} onChange={e => setDraft({ ...draft, nameOnCard: e.target.value })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Exp month</span>
+            <input className={FIELD_INPUT} type="number" value={draft.expiryMonth} min={1} max={12} onChange={e => setDraft({ ...draft, expiryMonth: Number(e.target.value) })} /></label>
+          <label className={FIELD}><span className={FIELD_SPAN}>Exp year</span>
+            <input className={FIELD_INPUT} type="number" value={draft.expiryYear} min={2026} max={2040} onChange={e => setDraft({ ...draft, expiryYear: Number(e.target.value) })} /></label>
         </div>
-        <button type="submit" className="btn btn--primary">Save card</button>
+        <button type="submit" className={BTN_PRIMARY}>Save card</button>
       </form>
     </>
   )
@@ -223,12 +240,13 @@ function PreferencesTab() {
   if (!account) return null
   const p = account.preferences
   return (
-    <div className="detail-card">
-      <h2>Travel preferences</h2>
-      <div className="field-grid">
-        <label className="field">
-          <span>Seat preference</span>
+    <div className={DETAIL_CARD}>
+      <h2 className="m-0 mb-2 text-xl text-grey-900">Travel preferences</h2>
+      <div className={FIELD_GRID}>
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>Seat preference</span>
           <select
+            className={FIELD_INPUT}
             value={p.seatPreference}
             onChange={e => updateAccount(a => ({ ...a, preferences: { ...a.preferences, seatPreference: e.target.value as typeof p.seatPreference } }))}
           >
@@ -237,9 +255,10 @@ function PreferencesTab() {
             <option value="aisle">Aisle</option>
           </select>
         </label>
-        <label className="field">
-          <span>Meal preference</span>
+        <label className={FIELD}>
+          <span className={FIELD_SPAN}>Meal preference</span>
           <select
+            className={FIELD_INPUT}
             value={p.mealPreference}
             onChange={e => updateAccount(a => ({ ...a, preferences: { ...a.preferences, mealPreference: e.target.value as typeof p.mealPreference } }))}
           >
@@ -252,26 +271,28 @@ function PreferencesTab() {
           </select>
         </label>
       </div>
-      <label className="toggle-row">
+      <label className={TOGGLE_ROW}>
         <input
           type="checkbox"
+          className="mt-[3px]"
           checked={p.newsletter}
           onChange={e => updateAccount(a => ({ ...a, preferences: { ...a.preferences, newsletter: e.target.checked } }))}
         />
         <div>
-          <strong>Tripma newsletter</strong>
-          <span>Monthly picks and occasional deals. Unsubscribe any time.</span>
+          <strong className="block text-grey-900">Tripma newsletter</strong>
+          <span className="text-grey-600 text-sm">Monthly picks and occasional deals. Unsubscribe any time.</span>
         </div>
       </label>
-      <label className="toggle-row">
+      <label className={TOGGLE_ROW}>
         <input
           type="checkbox"
+          className="mt-[3px]"
           checked={p.priceAlerts}
           onChange={e => updateAccount(a => ({ ...a, preferences: { ...a.preferences, priceAlerts: e.target.checked } }))}
         />
         <div>
-          <strong>Price alerts</strong>
-          <span>We'll email when your watched routes drop in price.</span>
+          <strong className="block text-grey-900">Price alerts</strong>
+          <span className="text-grey-600 text-sm">We'll email when your watched routes drop in price.</span>
         </div>
       </label>
     </div>
@@ -324,23 +345,23 @@ function RewardsTab() {
 
   return (
     <>
-      <div className="detail-card rewards-card">
-        <h2>Tripma Rewards</h2>
-        <p className="rewards-card__tier">Current tier · <strong>{current.name}</strong></p>
-        <p className="rewards-card__points">
-          <strong>{points.toLocaleString()}</strong> points
+      <div className={DETAIL_CARD}>
+        <h2 className="m-0 mb-2 text-xl text-grey-900">Tripma Rewards</h2>
+        <p className="text-sm text-grey-600">Current tier · <strong>{current.name}</strong></p>
+        <p>
+          <strong className="text-[40px] text-purple">{points.toLocaleString()}</strong> points
         </p>
-        <div className="tier-progress">
+        <div className="bg-white border border-grey-200 rounded-[14px] py-5 px-6">
           {next ? (
             <>
               <strong>{(next.min - points).toLocaleString()} points to {next.name}</strong>
-              <div className="tier-progress__bar">
+              <div className="h-2 bg-grey-200 rounded-full overflow-hidden my-3 mb-2">
                 <div
-                  className="tier-progress__fill"
+                  className="h-full bg-tier-fill"
                   style={{ width: `${Math.round(progress * 100)}%` }}
                 />
               </div>
-              <div className="tier-progress__labels">
+              <div className="flex justify-between text-xs text-grey-600">
                 <span>{current.name} · {current.min.toLocaleString()}</span>
                 <span>{next.name} · {next.min.toLocaleString()}</span>
               </div>
@@ -348,11 +369,13 @@ function RewardsTab() {
           ) : (
             <strong>You've reached our top tier. Thank you!</strong>
           )}
-          <div className="tier-benefits">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3 mt-4">
             {TIERS.flatMap(t => t.perks.map(p => ({ t, p }))).map(({ t, p }) => (
               <div
                 key={`${t.name}-${p}`}
-                className={`tier-benefit ${points < t.min ? 'is-locked' : ''}`}
+                className={`bg-grey-100 py-3 px-3.5 rounded-[10px] text-xs ${
+                  points < t.min ? 'text-grey-400' : 'text-grey-900'
+                }`}
               >
                 <strong>{t.name}</strong>
                 <div>{p}</div>
@@ -362,20 +385,23 @@ function RewardsTab() {
         </div>
       </div>
 
-      <div className="detail-card">
-        <h2>Redeem points</h2>
-        <p className="detail-card__sub">Spend points on travel perks. Redemptions are added to your wallet.</p>
-        <div className="redeem-grid">
+      <div className={DETAIL_CARD}>
+        <h2 className="m-0 mb-2 text-xl text-grey-900">Redeem points</h2>
+        <p className={DETAIL_CARD_SUB}>Spend points on travel perks. Redemptions are added to your wallet.</p>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 mt-4">
           {REDEMPTIONS.map(item => {
             const affordable = points >= item.cost
             return (
-              <div key={item.id} className="redeem-card">
-                <h4>{item.title}</h4>
-                <p>{item.body}</p>
-                <p className="redeem-card__cost">{item.cost.toLocaleString()} points</p>
+              <div
+                key={item.id}
+                className="bg-white border border-grey-200 rounded-[14px] py-[18px] px-5 flex flex-col gap-1.5"
+              >
+                <h4 className="m-0 text-[15px] text-grey-900">{item.title}</h4>
+                <p className="m-0 text-grey-600 text-xs">{item.body}</p>
+                <p className="font-bold text-purple">{item.cost.toLocaleString()} points</p>
                 <button
                   type="button"
-                  className="btn btn--primary"
+                  className={`${BTN_PRIMARY} mt-2`}
                   disabled={!affordable}
                   onClick={() => onRedeem(item)}
                 >

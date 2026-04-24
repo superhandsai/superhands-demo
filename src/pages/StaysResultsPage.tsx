@@ -41,32 +41,48 @@ export function StaysResultsPage() {
       subtitle={`${guests} guests${checkIn && checkOut ? ` · ${checkIn} – ${checkOut}` : ''}`}
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Stays', to: '/stays' }, { label: 'Results' }]}
     >
-      <div className="results-layout">
-        <aside className="results-filters">
-          <div className="filter-panel">
-            <h3>Sort</h3>
-            <select value={sort} onChange={e => setSort(e.target.value as SortKey)}>
+      <div className="grid grid-cols-[260px_1fr] gap-6 items-start max-[900px]:grid-cols-1">
+        <aside className="flex flex-col gap-4 sticky top-4">
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="mt-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Sort</h3>
+            <select
+              className="w-full p-2 border border-grey-200 rounded-sm"
+              value={sort}
+              onChange={e => setSort(e.target.value as SortKey)}
+            >
               <option value="recommended">Recommended</option>
               <option value="price-asc">Price (low to high)</option>
               <option value="price-desc">Price (high to low)</option>
               <option value="rating">Rating</option>
             </select>
           </div>
-          <div className="filter-panel">
-            <h3>Type</h3>
-            <label className="filter-radio">
-              <input type="radio" name="type" checked={!typeFilter} onChange={() => setTypeFilter('')} />
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="mt-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Type</h3>
+            <label className="flex gap-2 items-center text-grey-900 text-sm">
+              <input
+                type="radio"
+                name="type"
+                checked={!typeFilter}
+                onChange={() => setTypeFilter('')}
+              />
               Any
             </label>
             {types.map(t => (
-              <label key={t} className="filter-radio">
-                <input type="radio" name="type" checked={typeFilter === t} onChange={() => setTypeFilter(t)} />
+              <label key={t} className="flex gap-2 items-center text-grey-900 text-sm">
+                <input
+                  type="radio"
+                  name="type"
+                  checked={typeFilter === t}
+                  onChange={() => setTypeFilter(t)}
+                />
                 {t}
               </label>
             ))}
           </div>
-          <div className="filter-panel">
-            <h3>Max nightly price</h3>
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="mt-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">
+              Max nightly price
+            </h3>
             <input
               type="range"
               min={0}
@@ -75,30 +91,42 @@ export function StaysResultsPage() {
               value={maxPrice ?? 500}
               onChange={e => setMaxPrice(Number(e.target.value))}
             />
-            <div className="filter-price-row">
+            <div className="flex justify-between text-[13px] text-grey-600 mt-1.5">
               <span>£0</span>
               <strong>£{maxPrice ?? 500}</strong>
               <span>£500+</span>
             </div>
           </div>
         </aside>
-        <section className="results-list">
-          <p className="results-summary">{results.length} stays</p>
-          <div className="stay-grid">
+        <section>
+          <p className="m-0 mb-3 text-grey-600">{results.length} stays</p>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
             {results.map(s => (
-              <Link key={s.id} className="stay-card" to={`/stays/${s.id}`}>
-                <img src={s.image} alt="" />
-                <div className="stay-card__body">
-                  <p className="stay-card__loc">{s.location}, {s.country}</p>
-                  <h3>{s.name}</h3>
-                  <p className="stay-card__meta">{s.type} · ★ {s.rating} ({s.reviewCount})</p>
-                  <p className="stay-card__price"><strong>£{s.nightlyGBP}</strong> / night</p>
+              <Link
+                key={s.id}
+                className="block bg-white rounded-card shadow-card overflow-hidden text-inherit no-underline transition-shadow hover:shadow-card-hover hover:no-underline"
+                to={`/stays/${s.id}`}
+              >
+                <img className="w-full h-[180px] object-cover" src={s.image} alt="" />
+                <div className="p-4">
+                  <p className="text-grey-600 text-[13px] m-0">
+                    {s.location}, {s.country}
+                  </p>
+                  <h3 className="text-grey-900 mt-1 mb-1.5 text-base">{s.name}</h3>
+                  <p className="text-grey-600 text-[13px] my-1">
+                    {s.type} · ★ {s.rating} ({s.reviewCount})
+                  </p>
+                  <p className="text-grey-900 mt-2 mb-0">
+                    <strong>£{s.nightlyGBP}</strong> / night
+                  </p>
                 </div>
               </Link>
             ))}
           </div>
           {results.length === 0 ? (
-            <div className="empty-state"><p>No matching stays. Try widening the filters.</p></div>
+            <div className="bg-white p-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
+              <p>No matching stays. Try widening the filters.</p>
+            </div>
           ) : null}
         </section>
       </div>

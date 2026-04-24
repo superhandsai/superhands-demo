@@ -107,9 +107,14 @@ export function FlightResultsPage() {
         title="Start a flight search"
         subtitle="Tell us where you want to go and we'll build an itinerary."
       >
-        <div className="empty-state">
+        <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
           <p>We couldn't find a search to show. Head back to the home page and try again.</p>
-          <Link className="btn btn--primary" to="/">Back to home</Link>
+          <Link
+            className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+            to="/"
+          >
+            Back to home
+          </Link>
         </div>
       </PageShell>
     )
@@ -133,7 +138,7 @@ export function FlightResultsPage() {
         <>
           <button
             type="button"
-            className="btn btn--secondary"
+            className="font-sans font-bold cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-white text-purple border border-purple hover:bg-purple-on disabled:cursor-not-allowed disabled:opacity-60"
             onClick={() => {
               const cheapest = allFlights[0]
               if (!cheapest) return
@@ -154,17 +159,26 @@ export function FlightResultsPage() {
           >
             Watch this search
           </button>
-          <Link className="btn btn--secondary" to="/">New search</Link>
+          <Link
+            className="font-sans font-bold cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-white text-purple border border-purple hover:bg-purple-on"
+            to="/"
+          >
+            New search
+          </Link>
         </>
       }
     >
-      <div className="results-layout">
-        <aside className="results-filters" aria-label="Filters">
-          <div className="filter-panel">
-            <h3>Sort</h3>
-            <label className="filter-row">
+      <div className="grid grid-cols-[260px_1fr] gap-6 items-start max-[900px]:grid-cols-1">
+        <aside className="flex flex-col gap-4 sticky top-4" aria-label="Filters">
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="m-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Sort</h3>
+            <label className="flex flex-col gap-1.5">
               <span>Sort by</span>
-              <select value={sort} onChange={e => setSort(e.target.value as SortKey)}>
+              <select
+                value={sort}
+                onChange={e => setSort(e.target.value as SortKey)}
+                className="w-full p-2 border border-grey-200 rounded-sm"
+              >
                 <option value="price">Price (low to high)</option>
                 <option value="duration">Duration</option>
                 <option value="depart">Departure time</option>
@@ -173,11 +187,11 @@ export function FlightResultsPage() {
             </label>
           </div>
 
-          <div className="filter-panel">
-            <h3>Stops</h3>
-            <div className="filter-radios">
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="m-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Stops</h3>
+            <div className="flex flex-col gap-1.5">
               {[0, 1, 2].map(n => (
-                <label key={n} className="filter-radio">
+                <label key={n} className="flex gap-2 items-center text-grey-900 text-sm">
                   <input
                     type="radio"
                     name="max-stops"
@@ -191,8 +205,8 @@ export function FlightResultsPage() {
             </div>
           </div>
 
-          <div className="filter-panel">
-            <h3>Max price</h3>
+          <div className="bg-white rounded-card p-4 shadow-card">
+            <h3 className="m-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Max price</h3>
             <input
               type="range"
               min={0}
@@ -202,14 +216,14 @@ export function FlightResultsPage() {
               onChange={e => setMaxPrice(Number(e.target.value))}
               aria-label="Maximum price"
             />
-            <div className="filter-price-row">
+            <div className="flex justify-between text-[13px] text-grey-600 mt-1.5">
               <span>£0</span>
               <strong>£{maxPrice ?? maxPriceCap}</strong>
               <span>£{maxPriceCap}</span>
             </div>
             <button
               type="button"
-              className="link-more"
+              className="bg-transparent border-0 p-0 text-purple cursor-pointer hover:underline disabled:cursor-not-allowed disabled:opacity-60"
               onClick={() => setMaxPrice(null)}
               disabled={maxPrice === null}
             >
@@ -218,11 +232,11 @@ export function FlightResultsPage() {
           </div>
 
           {carriers.length > 0 ? (
-            <div className="filter-panel">
-              <h3>Airlines</h3>
-              <div className="filter-checks">
+            <div className="bg-white rounded-card p-4 shadow-card">
+              <h3 className="m-0 mb-3 text-sm uppercase tracking-[0.06em] text-grey-600">Airlines</h3>
+              <div className="flex flex-col gap-1.5">
                 {carriers.map(c => (
-                  <label key={c.code} className="filter-check">
+                  <label key={c.code} className="flex gap-2 items-center text-grey-900 text-sm">
                     <input
                       type="checkbox"
                       checked={selectedCarriers.has(c.code)}
@@ -236,7 +250,7 @@ export function FlightResultsPage() {
           ) : null}
         </aside>
 
-        <section className="results-list">
+        <section>
           <CalendarPricingStrip
             from={from}
             to={to}
@@ -252,11 +266,11 @@ export function FlightResultsPage() {
             <ResultsSkeleton />
           ) : (
             <>
-              <p className="results-summary">
+              <p className="m-0 mb-3 text-grey-600">
                 Showing <strong>{sorted.length}</strong> of {allFlights.length} flights
               </p>
               {sorted.length === 0 ? (
-                <div className="empty-state">
+                <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
                   <p>No flights match your filters. Try widening the stops or price.</p>
                 </div>
               ) : (

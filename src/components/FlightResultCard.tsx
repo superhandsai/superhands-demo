@@ -18,22 +18,22 @@ function FlightLegSummary({ segments, label }: FlightLegSummaryProps) {
   const layovers = segments.slice(0, -1).map(s => s.to).join(' · ')
 
   return (
-    <div className="flight-leg">
-      <span className="flight-leg__label">{label}</span>
-      <div className="flight-leg__row">
-        <div className="flight-leg__times">
+    <div className="py-2.5 border-b border-dashed border-grey-200 last:border-b-0">
+      <span className="text-xs uppercase tracking-[0.06em] text-grey-600 block mb-1">{label}</span>
+      <div className="flex justify-between gap-3 flex-wrap">
+        <div className="flex items-baseline gap-2.5 text-xl text-grey-900">
           <strong>{first.departTime}</strong>
-          <span className="flight-leg__arrow">→</span>
+          <span className="text-grey-400 text-base">→</span>
           <strong>{last.arriveTime}</strong>
           {last.arriveDate !== first.departDate ? (
-            <sup className="flight-leg__next-day"> +1</sup>
+            <sup className="text-xs text-purple font-semibold"> +1</sup>
           ) : null}
         </div>
-        <div className="flight-leg__meta">
+        <div className="text-[13px] text-grey-600 flex gap-1.5 flex-wrap">
           <span>{first.from} — {last.to}</span>
-          <span className="flight-leg__sep">·</span>
+          <span className="text-grey-300">·</span>
           <span>{formatDurationMins(totalMins)}</span>
-          <span className="flight-leg__sep">·</span>
+          <span className="text-grey-300">·</span>
           <span>
             {stops === 0 ? 'Direct' : `${stops} stop${stops > 1 ? 's' : ''}`}
             {layovers ? ` via ${layovers}` : ''}
@@ -55,12 +55,12 @@ export function FlightResultCard({ flight, onSelect }: FlightResultCardProps) {
   const ret = flight.return
   const returnLast = ret ? ret[ret.length - 1] : null
   return (
-    <article className="flight-card">
-      <div className="flight-card__main">
-        <div className="flight-card__airline">
-          <span className="flight-card__airline-name">{first.carrier}</span>
-          <span className="flight-card__airline-code">{first.flightNumber}</span>
-          <span className="flight-card__save">
+    <article className="bg-white rounded-card shadow-card hover:shadow-card-hover transition-[box-shadow] duration-150 py-5 px-6 mb-3 grid grid-cols-[1fr_220px] gap-5 max-[720px]:grid-cols-1">
+      <div>
+        <div className="flex justify-between mb-3 text-sm text-grey-600">
+          <span className="font-bold text-grey-900">{first.carrier}</span>
+          <span>{first.flightNumber}</span>
+          <span className="ml-auto">
             <SaveButton
               kind="flight"
               flight={{
@@ -78,20 +78,24 @@ export function FlightResultCard({ flight, onSelect }: FlightResultCardProps) {
         <FlightLegSummary segments={flight.outbound} label="Outbound" />
         {flight.return ? <FlightLegSummary segments={flight.return} label="Return" /> : null}
       </div>
-      <aside className="flight-card__side">
-        <p className="flight-card__price">
-          <span className="flight-card__price-prefix">from</span>
-          <strong>£{flight.priceGBP.toLocaleString()}</strong>
-          <span className="flight-card__price-pp">per person</span>
+      <aside className="border-l border-grey-200 pl-5 flex flex-col justify-between items-end gap-2 text-right max-[720px]:border-l-0 max-[720px]:pl-0 max-[720px]:items-stretch max-[720px]:border-t max-[720px]:border-solid max-[720px]:border-grey-200 max-[720px]:pt-3">
+        <p className="m-0">
+          <span className="text-[13px] text-grey-600 block">from</span>
+          <strong className="text-2xl text-grey-900">£{flight.priceGBP.toLocaleString()}</strong>
+          <span className="text-[13px] text-grey-600 block">per person</span>
         </p>
-        <p className="flight-card__seats">
+        <p className="text-[13px] text-grey-600 m-0">
           {flight.seatsRemaining <= 5 ? (
-            <span className="text-accent">Only {flight.seatsRemaining} seats left</span>
+            <span className="text-purple">Only {flight.seatsRemaining} seats left</span>
           ) : (
             <>{flight.seatsRemaining} seats available</>
           )}
         </p>
-        <button type="button" className="btn btn--primary" onClick={onSelect}>
+        <button
+          type="button"
+          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] inline-flex items-center justify-center gap-2 transition-colors bg-purple text-white hover:bg-purple-hover disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={onSelect}
+        >
           Select
         </button>
       </aside>

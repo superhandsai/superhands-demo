@@ -103,28 +103,38 @@ export function CommandPalette() {
   if (!open || typeof document === 'undefined') return null
 
   return createPortal(
-    <div className="cmdk-overlay" role="dialog" aria-modal="true" aria-label="Quick search">
-      <button type="button" className="cmdk-scrim" aria-label="Close" onClick={() => setOpen(false)} />
-      <div className="cmdk">
+    <div
+      className="fixed inset-0 z-[1300] flex items-start justify-center pt-[15vh]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Quick search"
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-[rgba(13,13,59,0.4)] border-0 cursor-pointer"
+        aria-label="Close"
+        onClick={() => setOpen(false)}
+      />
+      <div className="relative bg-white rounded-2xl w-[min(560px,calc(100vw-32px))] shadow-modal overflow-hidden flex flex-col">
         <input
           ref={inputRef}
           value={q}
           onChange={e => setQ(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder="Search routes, trips, pages…"
-          className="cmdk__input"
+          className="border-0 py-4 px-5 text-base font-[inherit] border-b border-grey-200 focus:outline-none"
           aria-label="Search"
         />
-        <ul className="cmdk__list" role="listbox">
+        <ul className="list-none p-2 m-0 max-h-[360px] overflow-y-auto" role="listbox">
           {items.length === 0 ? (
-            <li className="cmdk__empty">No results</li>
+            <li className="py-5 px-5 text-center text-grey-600">No results</li>
           ) : (
             items.map((c, i) => (
               <li
                 key={c.id}
                 role="option"
                 aria-selected={i === cursor}
-                className={`cmdk__item ${i === cursor ? 'is-active' : ''}`}
+                className={`flex justify-between items-center py-[10px] px-3 rounded-lg cursor-pointer text-grey-900 ${i === cursor ? 'bg-grey-100' : ''}`}
                 onMouseEnter={() => setCursor(i)}
                 onMouseDown={e => {
                   e.preventDefault()
@@ -132,15 +142,18 @@ export function CommandPalette() {
                 }}
               >
                 <span>{c.label}</span>
-                {c.hint ? <small>{c.hint}</small> : null}
+                {c.hint ? <small className="text-grey-600 capitalize">{c.hint}</small> : null}
               </li>
             ))
           )}
         </ul>
-        <footer className="cmdk__footer">
-          <span><kbd>↵</kbd> open</span>
-          <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
-          <span><kbd>esc</kbd> close</span>
+        <footer className="flex gap-3 py-[10px] px-4 border-t border-grey-200 text-xs text-grey-600">
+          <span><kbd className="bg-grey-100 border border-grey-200 rounded-sm py-px px-1.5 mr-1 font-[inherit] text-[11px]">↵</kbd> open</span>
+          <span>
+            <kbd className="bg-grey-100 border border-grey-200 rounded-sm py-px px-1.5 mr-1 font-[inherit] text-[11px]">↑</kbd>
+            <kbd className="bg-grey-100 border border-grey-200 rounded-sm py-px px-1.5 mr-1 font-[inherit] text-[11px]">↓</kbd> move
+          </span>
+          <span><kbd className="bg-grey-100 border border-grey-200 rounded-sm py-px px-1.5 mr-1 font-[inherit] text-[11px]">esc</kbd> close</span>
         </footer>
       </div>
     </div>,

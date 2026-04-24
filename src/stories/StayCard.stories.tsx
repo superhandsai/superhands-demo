@@ -26,7 +26,7 @@ export const Maldives: Story = {
     image: tripma.stayMaldives,
     title: (
       <>
-        Stay among the atolls in <span className="text-accent">Maldives</span>
+        Stay among the atolls in <span className="text-purple">Maldives</span>
       </>
     ),
     description:
@@ -39,7 +39,7 @@ export const Morocco: Story = {
     image: tripma.stayMorocco,
     title: (
       <>
-        Experience the Ourika Valley in <span className="text-accent">Morocco</span>
+        Experience the Ourika Valley in <span className="text-purple">Morocco</span>
       </>
     ),
     description:
@@ -52,7 +52,7 @@ export const Mongolia: Story = {
     image: tripma.stayMongolia,
     title: (
       <>
-        Live traditionally in <span className="text-accent">Mongolia</span>
+        Live traditionally in <span className="text-purple">Mongolia</span>
       </>
     ),
     description:
@@ -66,7 +66,7 @@ export const ShortDescription: Story = {
     image: tripma.stayMaldives,
     title: (
       <>
-        Relax in <span className="text-accent">Bali</span>
+        Relax in <span className="text-purple">Bali</span>
       </>
     ),
     description: 'Tropical paradise awaits.',
@@ -78,7 +78,7 @@ export const LongDescription: Story = {
     image: tripma.stayMorocco,
     title: (
       <>
-        Discover the history of <span className="text-accent">Rome</span>
+        Discover the history of <span className="text-purple">Rome</span>
       </>
     ),
     description:
@@ -97,7 +97,10 @@ export const PlainTitle: Story = {
 export const GridOfThree: Story = {
   decorators: [
     Story => (
-      <div className="card-grid card-grid--stays" style={{ maxWidth: 1312 }}>
+      <div
+        className="grid gap-10 w-full grid-cols-3 cursor-pointer max-lg:grid-cols-2 max-md:grid-cols-1"
+        style={{ maxWidth: 1312 }}
+      >
         <Story />
       </div>
     ),
@@ -108,7 +111,7 @@ export const GridOfThree: Story = {
         image={tripma.stayMaldives}
         title={
           <>
-            Stay among the atolls in <span className="text-accent">Maldives</span>
+            Stay among the atolls in <span className="text-purple">Maldives</span>
           </>
         }
         description="From the 2nd century AD, the islands were known as the 'Money Isles' due to the abundance of cowry shells."
@@ -117,7 +120,7 @@ export const GridOfThree: Story = {
         image={tripma.stayMorocco}
         title={
           <>
-            Experience the Ourika Valley in <span className="text-accent">Morocco</span>
+            Experience the Ourika Valley in <span className="text-purple">Morocco</span>
           </>
         }
         description="Morocco's Hispano-Moorish architecture blends influences from Berber culture and Spain."
@@ -126,7 +129,7 @@ export const GridOfThree: Story = {
         image={tripma.stayMongolia}
         title={
           <>
-            Live traditionally in <span className="text-accent">Mongolia</span>
+            Live traditionally in <span className="text-purple">Mongolia</span>
           </>
         }
         description="Traditional Mongolian yurts consists of an angled latticework of wood or bamboo."

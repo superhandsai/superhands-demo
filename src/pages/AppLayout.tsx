@@ -6,7 +6,7 @@ import { CommandPalette } from '../components/CommandPalette'
 
 export function AppLayout() {
   return (
-    <div className="tripma">
+    <div className="min-h-[100svh] flex flex-col bg-white">
       <SiteHeader />
       <Outlet />
       <SiteFooter />

@@ -16,20 +16,23 @@ type Story = StoryObj
 export const Default: Story = {
   render: () => (
     <section
-      className="band band--testimonials"
+      className="pt-20 pb-6 flex flex-col gap-6"
       style={{ maxWidth: 1312, margin: '0 auto' }}
     >
-      <h2 className="testimonials__title">
-        What <span className="text-accent">Tripma</span> users are saying
+      <h2
+        className="m-0 mb-6 w-full font-bold text-grey-600 leading-[1.2] text-left max-w-[min(100%,42rem)]"
+        style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)' }}
+      >
+        What <span className="text-purple">Tripma</span> users are saying
       </h2>
-      <div className="testimonial-grid">
+      <div className="grid grid-cols-3 gap-10 items-start max-lg:grid-cols-1 max-lg:gap-8">
         <Testimonial
           avatar={tripma.avatar1}
           name="Yifei Chen"
           stars={5}
           meta={
             <>
-              Seoul, South Korea <span className="text-muted-sep">|</span> April 2026
+              Seoul, South Korea <span className="text-grey-300">|</span> April 2026
             </>
           }
         >
@@ -43,7 +46,7 @@ export const Default: Story = {
           stars={4}
           meta={
             <>
-              Honolulu, Hawaii <span className="text-muted-sep">|</span> February 2026
+              Honolulu, Hawaii <span className="text-grey-300">|</span> February 2026
             </>
           }
         >
@@ -57,7 +60,7 @@ export const Default: Story = {
           stars={5}
           meta={
             <>
-              Berlin, Germany <span className="text-muted-sep">|</span> April 2026
+              Berlin, Germany <span className="text-grey-300">|</span> April 2026
             </>
           }
         >

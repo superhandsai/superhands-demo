@@ -86,6 +86,8 @@ interface MonthGridProps {
   headTrailing?: ReactNode
 }
 
+type RangeKind = 'start-end' | 'start' | 'end' | 'within' | 'none'
+
 function MonthGrid({
   year,
   monthIndex,
@@ -105,44 +107,76 @@ function MonthGrid({
   })
   const cells = monthCells(year, monthIndex)
 
-  function rangeClass(key: string): string {
-    if (!departKey) return ''
+  function rangeKind(key: string): RangeKind {
+    if (!departKey) return 'none'
     const end = returnKey || hoverKey
     if (!end) {
-      if (key === departKey) return 'is-start is-end'
-      return ''
+      if (key === departKey) return 'start-end'
+      return 'none'
     }
     const order = [departKey, end].sort()
     const lo = order[0]
     const hi = order[1]
-    if (key < lo || key > hi) return ''
-    if (key === lo && key === hi) return 'is-start is-end'
-    if (key === lo) return 'is-start'
-    if (key === hi) return 'is-end'
-    return 'is-within'
+    if (key < lo || key > hi) return 'none'
+    if (key === lo && key === hi) return 'start-end'
+    if (key === lo) return 'start'
+    if (key === hi) return 'end'
+    return 'within'
   }
 
   return (
-    <div className="date-range-picker__month">
-      <div className="date-range-picker__month-head">
-        <span className="date-range-picker__month-head-side">{headLeading}</span>
-        <span className="date-range-picker__month-title">{label}</span>
-        <span className="date-range-picker__month-head-side">{headTrailing}</span>
+    <div>
+      <div className="flex items-center gap-2 min-h-9 mb-[10px]">
+        <span className="flex-[0_0_36px] flex items-center justify-center">{headLeading}</span>
+        <span className="flex-1 min-w-0 text-center font-bold text-[14px] text-grey-900">{label}</span>
+        <span className="flex-[0_0_36px] flex items-center justify-center">{headTrailing}</span>
       </div>
-      <div className="date-range-picker__weekdays" aria-hidden>
+      <div className="grid grid-cols-7 mb-[6px]" aria-hidden>
         {WEEKDAYS.map((d, i) => (
-          <span key={i} className="date-range-picker__weekday">
+          <span key={i} className="text-center text-[11px] font-bold text-grey-400 tracking-[0.02em]">
             {d}
           </span>
         ))}
       </div>
-      <div className="date-range-picker__days" role="grid">
+      <div className="grid grid-cols-7" role="grid">
         {cells.map(({ date, outside }, i) => {
           const key = dateKey(date)
           const t0 = date.getTime()
           const disabled = t0 < today.getTime()
           const isToday = key === dateKey(today)
-          const rc = !outside && !disabled ? rangeClass(key) : ''
+          const rk = !outside && !disabled ? rangeKind(key) : 'none'
+          const isStart = rk === 'start' || rk === 'start-end'
+          const isEnd = rk === 'end' || rk === 'start-end'
+          const isWithin = rk === 'within'
+
+          // Day-cell background (for range shading)
+          let cellBg = ''
+          if (isWithin) {
+            cellBg = 'bg-[rgba(96,93,236,0.12)]'
+          } else if (isStart && !isEnd) {
+            cellBg = 'bg-[linear-gradient(to_right,transparent_50%,rgba(96,93,236,0.12)_50%)]'
+          } else if (isEnd && !isStart) {
+            cellBg = 'bg-[linear-gradient(to_right,rgba(96,93,236,0.12)_50%,transparent_50%)]'
+          }
+
+          // Day-num circle
+          let numClasses =
+            'relative z-[1] flex items-center justify-center w-10 h-10 mx-auto rounded-full'
+          if (isStart || isEnd) {
+            numClasses += ' bg-purple text-purple-on font-bold'
+          } else if (isToday && !disabled) {
+            numClasses += ' shadow-[inset_0_0_0_1.5px_var(--color-grey-300)]'
+          }
+
+          const buttonClasses = [
+            'relative m-0 p-0 h-10 border-none font-sans text-[14px]',
+            disabled ? 'text-grey-200 cursor-default' : 'text-grey-900 cursor-pointer',
+            outside ? 'invisible pointer-events-none' : '',
+            cellBg,
+          ]
+            .filter(Boolean)
+            .join(' ')
+
           return (
             <button
               key={`${key}-${i}`}
@@ -150,12 +184,20 @@ function MonthGrid({
               role="gridcell"
               disabled={outside || disabled}
               tabIndex={-1}
-              className={`date-range-picker__day ${outside ? 'is-outside' : ''} ${disabled ? 'is-disabled' : ''} ${isToday ? 'is-today' : ''} ${rc}`.trim()}
+              className={buttonClasses}
               onMouseEnter={() => !outside && !disabled && onHover(key)}
               onMouseLeave={onLeave}
               onClick={() => !outside && !disabled && onPick(key)}
             >
-              <span className="date-range-picker__day-num">{date.getDate()}</span>
+              <span
+                className={
+                  disabled
+                    ? 'relative z-[1] flex items-center justify-center w-10 h-10 mx-auto rounded-full bg-transparent text-inherit font-normal'
+                    : numClasses
+                }
+              >
+                {date.getDate()}
+              </span>
             </button>
           )
         })}
@@ -260,32 +302,56 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
     setOpen(true)
   }
 
+  // Base classes for each stacked date field (label above input).
+  // Default (mobile): border-2 grey-200 rounded-16, bg-white, min-h-20, px-13 py-9, stacked (flex-col justify-center gap-2px), cursor-pointer
+  // Desktop (md:) inside date-fields row (non one-way): rounded-none, border-left-none
+  // When open: border-purple; desktop adds inset shadow for seam; mobile keeps rounded-16
+  const dateFieldBase =
+    'relative group flex-1 min-w-0 flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] py-[9px] cursor-pointer bg-white border-2 rounded-[16px] box-border'
+
+  // Desktop overrides: when not one-way, split fields are in a row with seam-merged borders.
+  const dateFieldDesktopJoin = oneWay ? '' : 'md:rounded-none md:border-l-0'
+
+  function splitFieldBorder(thisOpen: boolean): string {
+    if (thisOpen) {
+      return oneWay
+        ? 'border-purple max-md:rounded-[16px]'
+        : 'border-purple md:shadow-[inset_2px_0_0_var(--color-purple)] md:relative md:z-[3] max-md:rounded-[16px]'
+    }
+    return 'border-grey-200'
+  }
+
   return (
     <div
       ref={rootRef}
-      className={`flight-search__date-field ${open ? 'is-active' : ''} ${oneWay ? 'flight-search__date-field--one-way' : ''}`}
+      className={`relative flex flex-col flex-[1_1_280px] min-w-0 max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0 ${
+        open ? 'z-[25]' : ''
+      } ${oneWay ? 'md:flex-[1_1_0]' : 'md:flex-[2_1_0]'}`}
     >
       <input type="hidden" name="depart_date" value={departKey} />
       <input type="hidden" name="return_date" value={oneWay ? '' : returnKey} />
       <div
-        className={`flight-search__date-fields ${oneWay ? 'flight-search__date-fields--one-way' : ''}`}
+        className={`flex flex-[0_0_auto] items-stretch self-stretch w-full box-border gap-0 min-w-0 max-md:flex-row max-md:items-stretch max-md:gap-2`}
       >
-        <label
-          className={`flight-search__field flight-search__field--date-split flight-search__field--stacked ${open && pickIntent === 'depart' ? 'is-open' : ''}`}
-        >
-          <span className="flight-search__label" id={departLabelId}>
+        <label className={`${dateFieldBase} ${dateFieldDesktopJoin} ${splitFieldBorder(open && pickIntent === 'depart')} max-md:flex-1 max-md:min-w-0`}>
+          <span className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]" id={departLabelId}>
             Depart
           </span>
-          <div className="flight-search__value-row">
+          <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
             {showDepartPlaceholder ? (
-              <span className="flight-search__hint" aria-hidden="true">
+              <span
+                className="absolute left-0 right-0 top-1/2 -translate-y-1/2 text-[18px] leading-[1.25] text-grey-400 pointer-events-none whitespace-nowrap overflow-hidden text-ellipsis text-left"
+                aria-hidden="true"
+              >
                 Add date
               </span>
             ) : null}
             <input
               id={departInputId}
               type="text"
-              className={`flight-search__input flight-search__input--stacked ${showDepartPlaceholder ? 'is-empty' : ''}`}
+              className={`relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none cursor-pointer focus:outline-none ${
+                showDepartPlaceholder ? 'text-transparent caret-grey-900' : 'text-grey-900'
+              } ${departKey ? 'pr-8' : ''}`}
               readOnly
               value={departDisplay}
               aria-labelledby={departLabelId}
@@ -309,21 +375,29 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
         </label>
         {!oneWay ? (
           <label
-            className={`flight-search__field flight-search__field--date-split flight-search__field--stacked ${open && pickIntent === 'return' ? 'is-open' : ''}`}
+            className={`${dateFieldBase} md:rounded-none md:border-l-0 ${splitFieldBorder(open && pickIntent === 'return')} max-md:flex-1 max-md:min-w-0`}
           >
-            <span className="flight-search__label" id={returnLabelId}>
+            <span
+              className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]"
+              id={returnLabelId}
+            >
               Return
             </span>
-            <div className="flight-search__value-row">
+            <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
               {showReturnPlaceholder ? (
-                <span className="flight-search__hint" aria-hidden="true">
+                <span
+                  className="absolute left-0 right-0 top-1/2 -translate-y-1/2 text-[18px] leading-[1.25] text-grey-400 pointer-events-none whitespace-nowrap overflow-hidden text-ellipsis text-left"
+                  aria-hidden="true"
+                >
                   Add date
                 </span>
               ) : null}
               <input
                 id={returnInputId}
                 type="text"
-                className={`flight-search__input flight-search__input--stacked ${showReturnPlaceholder ? 'is-empty' : ''}`}
+                className={`relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none cursor-pointer focus:outline-none ${
+                  showReturnPlaceholder ? 'text-transparent caret-grey-900' : 'text-grey-900'
+                } ${returnKey ? 'pr-8' : ''}`}
                 readOnly
                 value={returnDisplay}
                 aria-labelledby={returnLabelId}
@@ -349,13 +423,13 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
       {open && (
         <div
           id={`${dialogId}-popover`}
-          className="flight-search__date-popover"
+          className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 z-[35] w-[min(640px,calc(100vw-32px))] pt-4 px-5 pb-5 bg-white border border-grey-200 rounded-[16px] shadow-search max-md:left-0 max-md:right-0 max-md:w-auto max-md:max-w-none max-md:translate-x-0"
           role="dialog"
           aria-modal="true"
           aria-label={oneWay ? 'Select travel date' : 'Select travel dates'}
         >
-          <div className="date-range-picker">
-            <div className="date-range-picker__months">
+          <div>
+            <div className="grid grid-cols-2 gap-x-7 gap-y-5 max-md:grid-cols-1">
               <MonthGrid
                 year={leftMonth.year}
                 monthIndex={leftMonth.month}
@@ -369,7 +443,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
                 headLeading={
                   <button
                     type="button"
-                    className="date-range-picker__nav-btn"
+                    className="flex items-center justify-center w-9 h-9 p-0 border-none rounded-full bg-transparent text-[22px] leading-none text-grey-900 cursor-pointer hover:bg-grey-100 focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
                     aria-label="Previous months"
                     onClick={() => shiftMonths(-1)}
                   >
@@ -390,7 +464,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
                 headTrailing={
                   <button
                     type="button"
-                    className="date-range-picker__nav-btn"
+                    className="flex items-center justify-center w-9 h-9 p-0 border-none rounded-full bg-transparent text-[22px] leading-none text-grey-900 cursor-pointer hover:bg-grey-100 focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
                     aria-label="Next months"
                     onClick={() => shiftMonths(1)}
                   >
@@ -399,10 +473,10 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
                 }
               />
             </div>
-            <div className="date-range-picker__footer">
+            <div className="flex justify-between items-center mt-4 -mx-5 px-5 pt-[14px] border-t border-grey-200">
               <button
                 type="button"
-                className="date-range-picker__clear"
+                className="px-3 py-2 border-none rounded-lg bg-transparent font-sans text-[15px] font-semibold text-grey-600 cursor-pointer hover:text-grey-900 focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 focus-visible:rounded-[4px]"
                 onClick={() => {
                   setDepartKey('')
                   setReturnKey('')
@@ -411,7 +485,11 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
               >
                 Clear dates
               </button>
-              <button type="button" className="date-range-picker__done" onClick={() => setOpen(false)}>
+              <button
+                type="button"
+                className="px-5 py-[10px] border-none rounded-[12px] bg-purple font-sans text-[15px] font-bold text-purple-on cursor-pointer hover:bg-purple-hover focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
+                onClick={() => setOpen(false)}
+              >
                 Apply
               </button>
             </div>

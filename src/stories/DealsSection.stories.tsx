@@ -15,11 +15,14 @@ type Story = StoryObj
 
 export const Default: Story = {
   render: () => (
-    <section className="band" style={{ maxWidth: 1312, margin: '0 auto' }}>
+    <section
+      className="pt-10 pb-10 flex flex-col gap-6 max-md:pt-0"
+      style={{ maxWidth: 1312, margin: '0 auto' }}
+    >
       <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
-        Find your next adventure with these <span className="text-accent">flight deals</span>
+        Find your next adventure with these <span className="text-purple">flight deals</span>
       </SectionTitle>
-      <div className="card-grid card-grid--deals">
+      <div className="grid gap-10 w-full grid-cols-3 cursor-pointer max-lg:grid-cols-2 max-md:grid-cols-1">
         <DealCard
           image={tripma.dealShanghai}
           title="The Bund,"

@@ -26,18 +26,23 @@ export function DestinationsPage() {
       subtitle="Browse our hand-picked destinations and find your next adventure."
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Destinations' }]}
     >
-      <div className="destinations-toolbar">
+      <div className="flex gap-3 items-center mb-4 flex-wrap">
         <input
           placeholder="Search destinations"
           value={query}
           onChange={e => setQuery(e.target.value)}
+          className="flex-1 min-w-[200px] py-3 px-4 border border-grey-200 rounded-card text-[15px] font-sans"
         />
-        <div className="destinations-chips" role="tablist">
+        <div className="flex gap-1.5 flex-wrap" role="tablist">
           {continents.map(c => (
             <button
               key={c}
               type="button"
-              className={`chip ${continent === c ? 'is-active' : ''}`}
+              className={`py-2 px-3.5 border rounded-full font-sans cursor-pointer text-xs ${
+                continent === c
+                  ? 'bg-purple text-white border-purple'
+                  : 'bg-white text-grey-600 border-grey-200'
+              }`}
               onClick={() => setContinent(c)}
               aria-pressed={continent === c}
             >
@@ -47,21 +52,25 @@ export function DestinationsPage() {
         </div>
       </div>
 
-      <div className="destinations-grid">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
         {list.map(d => (
-          <Link key={d.id} to={`/flights?to=${d.airportCode}&depart=2026-06-15&return=2026-06-22&adults=1&children=0&trip=return`} className="destination-card">
-            <img src={d.image} alt="" />
-            <div className="destination-card__body">
-              <h3>{d.city}, <span className="text-accent">{d.country}</span></h3>
-              <p>{d.description}</p>
-              <p className="destination-card__price">From £{d.fromPriceGBP}</p>
+          <Link
+            key={d.id}
+            to={`/flights?to=${d.airportCode}&depart=2026-06-15&return=2026-06-22&adults=1&children=0&trip=return`}
+            className="bg-white rounded-card overflow-hidden shadow-card text-inherit no-underline transition-shadow flex flex-col hover:shadow-card-hover hover:no-underline"
+          >
+            <img src={d.image} alt="" className="w-full h-[180px] object-cover" />
+            <div className="p-4">
+              <h3 className="m-0 mb-1.5 text-grey-900 text-base">{d.city}, <span className="text-purple">{d.country}</span></h3>
+              <p className="text-grey-600 text-sm m-0 mb-2">{d.description}</p>
+              <p className="text-purple font-bold m-0">From £{d.fromPriceGBP}</p>
             </div>
           </Link>
         ))}
       </div>
 
       {list.length === 0 ? (
-        <div className="empty-state"><p>No destinations match that search.</p></div>
+        <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4"><p>No destinations match that search.</p></div>
       ) : null}
     </PageShell>
   )

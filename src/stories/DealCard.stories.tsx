@@ -118,7 +118,10 @@ export const EuroCurrency: Story = {
 export const GridOfThree: Story = {
   decorators: [
     Story => (
-      <div className="card-grid card-grid--deals" style={{ maxWidth: 1312 }}>
+      <div
+        className="grid gap-10 w-full grid-cols-3 cursor-pointer max-lg:grid-cols-2 max-md:grid-cols-1"
+        style={{ maxWidth: 1312 }}
+      >
         <Story />
       </div>
     ),

@@ -24,9 +24,14 @@ export function PassengersPage() {
 
   if (!draft.flight) {
     return (
-      <div className="empty-state">
+      <div className="bg-white p-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
         <p>No flight selected. Pick a flight first.</p>
-        <Link to="/" className="btn btn--primary">Back to home</Link>
+        <Link
+          to="/"
+          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+        >
+          Back to home
+        </Link>
       </div>
     )
   }
@@ -48,78 +53,84 @@ export function PassengersPage() {
   }
 
   return (
-    <div className="checkout-layout">
-      <section className="checkout-main">
-        <div className="detail-card">
-          <h2>Contact details</h2>
-          <p className="detail-card__sub">We'll send your booking confirmation here.</p>
-          <div className="field-grid">
-            <label className="field">
-              <span>Email</span>
+    <div className="grid grid-cols-[1fr_340px] gap-6 items-start max-[900px]:grid-cols-1">
+      <section>
+        <div className="bg-white rounded-card p-6 shadow-card mb-4">
+          <h2 className="mt-0 mb-2 text-xl text-grey-900">Contact details</h2>
+          <p className="mt-0 mb-4 text-grey-600 text-sm">We'll send your booking confirmation here.</p>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+            <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+              <span className="text-grey-600 font-semibold">Email</span>
               <input
+                className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                 type="email"
                 value={draft.contactEmail}
                 onChange={e => checkoutStore.set(d => ({ ...d, contactEmail: e.target.value }))}
                 required
               />
               {touched && !isValidEmail(draft.contactEmail) ? (
-                <span className="field-error">Enter a valid email address.</span>
+                <span className="text-[#b91c1c] text-[13px]">Enter a valid email address.</span>
               ) : null}
             </label>
-            <label className="field">
-              <span>Phone</span>
+            <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+              <span className="text-grey-600 font-semibold">Phone</span>
               <input
+                className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                 type="tel"
                 value={draft.contactPhone}
                 onChange={e => checkoutStore.set(d => ({ ...d, contactPhone: e.target.value }))}
                 required
               />
               {touched && draft.contactPhone.trim().length < 6 ? (
-                <span className="field-error">Include your country code and number.</span>
+                <span className="text-[#b91c1c] text-[13px]">Include your country code and number.</span>
               ) : null}
             </label>
           </div>
         </div>
 
         {draft.passengers.map((p, index) => (
-          <div key={p.id} className="detail-card">
-            <h2>Traveller {index + 1}</h2>
-            <p className="detail-card__sub">
+          <div key={p.id} className="bg-white rounded-card p-6 shadow-card mb-4">
+            <h2 className="mt-0 mb-2 text-xl text-grey-900">Traveller {index + 1}</h2>
+            <p className="mt-0 mb-4 text-grey-600 text-sm">
               Enter names exactly as they appear on the passport.
             </p>
-            <div className="field-grid">
-              <label className="field">
-                <span>First name</span>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+              <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+                <span className="text-grey-600 font-semibold">First name</span>
                 <input
+                  className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                   value={p.firstName}
                   onChange={e => updatePassenger(p.id, { firstName: e.target.value })}
                 />
                 {touched && !p.firstName.trim() ? (
-                  <span className="field-error">Required</span>
+                  <span className="text-[#b91c1c] text-[13px]">Required</span>
                 ) : null}
               </label>
-              <label className="field">
-                <span>Last name</span>
+              <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+                <span className="text-grey-600 font-semibold">Last name</span>
                 <input
+                  className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                   value={p.lastName}
                   onChange={e => updatePassenger(p.id, { lastName: e.target.value })}
                 />
                 {touched && !p.lastName.trim() ? (
-                  <span className="field-error">Required</span>
+                  <span className="text-[#b91c1c] text-[13px]">Required</span>
                 ) : null}
               </label>
-              <label className="field">
-                <span>Date of birth</span>
+              <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+                <span className="text-grey-600 font-semibold">Date of birth</span>
                 <input
+                  className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                   type="date"
                   value={p.dob}
                   onChange={e => updatePassenger(p.id, { dob: e.target.value })}
                 />
-                {touched && !p.dob ? <span className="field-error">Required</span> : null}
+                {touched && !p.dob ? <span className="text-[#b91c1c] text-[13px]">Required</span> : null}
               </label>
-              <label className="field">
-                <span>Passport number (optional)</span>
+              <label className="flex flex-col gap-1.5 text-sm text-grey-900">
+                <span className="text-grey-600 font-semibold">Passport number (optional)</span>
                 <input
+                  className="font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1"
                   value={p.passportNumber || ''}
                   onChange={e => updatePassenger(p.id, { passportNumber: e.target.value })}
                 />
@@ -128,7 +139,7 @@ export function PassengersPage() {
           </div>
         ))}
       </section>
-      <aside className="checkout-side">
+      <aside className="sticky top-4">
         <PriceSummary
           draft={draft}
           cta={{ label: 'Continue to seats', onClick: onContinue, disabled: false }}

@@ -30,7 +30,7 @@ export const FiveStar: Story = {
     stars: 5,
     meta: (
       <>
-        Seoul, South Korea <span className="text-muted-sep">|</span> April 2026
+        Seoul, South Korea <span className="text-grey-300">|</span> April 2026
       </>
     ),
     children:
@@ -45,7 +45,7 @@ export const FourStar: Story = {
     stars: 4,
     meta: (
       <>
-        Honolulu, Hawaii <span className="text-muted-sep">|</span> February 2026
+        Honolulu, Hawaii <span className="text-grey-300">|</span> February 2026
       </>
     ),
     children:
@@ -60,7 +60,7 @@ export const ThreeStar: Story = {
     stars: 3,
     meta: (
       <>
-        Mexico City, Mexico <span className="text-muted-sep">|</span> March 2026
+        Mexico City, Mexico <span className="text-grey-300">|</span> March 2026
       </>
     ),
     children:
@@ -75,7 +75,7 @@ export const OneStar: Story = {
     stars: 1,
     meta: (
       <>
-        London, UK <span className="text-muted-sep">|</span> January 2026
+        London, UK <span className="text-grey-300">|</span> January 2026
       </>
     ),
     children:
@@ -90,7 +90,7 @@ export const ShortReview: Story = {
     stars: 5,
     meta: (
       <>
-        Beijing, China <span className="text-muted-sep">|</span> April 2026
+        Beijing, China <span className="text-grey-300">|</span> April 2026
       </>
     ),
     children: 'Excellent! Will use again.',
@@ -104,7 +104,7 @@ export const LongReview: Story = {
     stars: 5,
     meta: (
       <>
-        Mumbai, India <span className="text-muted-sep">|</span> February 2026
+        Mumbai, India <span className="text-grey-300">|</span> February 2026
       </>
     ),
     children:
@@ -115,7 +115,10 @@ export const LongReview: Story = {
 export const GridOfThree: Story = {
   decorators: [
     Story => (
-      <div className="testimonial-grid" style={{ maxWidth: 1312 }}>
+      <div
+        className="grid grid-cols-3 gap-10 items-start max-lg:grid-cols-1 max-lg:gap-8"
+        style={{ maxWidth: 1312 }}
+      >
         <Story />
       </div>
     ),
@@ -128,7 +131,7 @@ export const GridOfThree: Story = {
         stars={5}
         meta={
           <>
-            Seoul, South Korea <span className="text-muted-sep">|</span> April 2026
+            Seoul, South Korea <span className="text-grey-300">|</span> April 2026
           </>
         }
       >
@@ -140,7 +143,7 @@ export const GridOfThree: Story = {
         stars={4}
         meta={
           <>
-            Honolulu, Hawaii <span className="text-muted-sep">|</span> February 2026
+            Honolulu, Hawaii <span className="text-grey-300">|</span> February 2026
           </>
         }
       >
@@ -152,7 +155,7 @@ export const GridOfThree: Story = {
         stars={5}
         meta={
           <>
-            Berlin, Germany <span className="text-muted-sep">|</span> April 2026
+            Berlin, Germany <span className="text-grey-300">|</span> April 2026
           </>
         }
       >

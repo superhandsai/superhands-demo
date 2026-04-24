@@ -1,7 +1,6 @@
 import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
-import '../src/style.css'
-import '../src/pages.css'
+import '../src/index.css'
 
 /** @type { import('@storybook/react-vite').Preview } */
 const preview = {

@@ -13,7 +13,7 @@ function QrPlaceholder({ value }: { value: string }) {
   for (let i = 0; i < value.length; i++) h = (h * 33) ^ value.charCodeAt(i)
   return (
     <svg
-      className="boarding-pass__qr"
+      className="w-[92px] h-[92px] bg-white p-1 rounded-lg"
       viewBox={`0 0 ${cells} ${cells}`}
       role="img"
       aria-label="Boarding pass QR code"
@@ -34,34 +34,52 @@ export function BoardingPass({ booking, passenger, seat }: BoardingPassProps) {
   const first = booking.flight.outbound[0]
   const last = booking.flight.outbound[booking.flight.outbound.length - 1]
   return (
-    <article className="boarding-pass">
-      <header className="boarding-pass__head">
+    <article className="bg-boarding-pass rounded-card p-6 shadow-card grid gap-4 max-w-[520px]">
+      <header className="flex justify-between text-grey-600 text-[13px]">
         <span>Tripma boarding pass</span>
-        <strong>{first.carrier}</strong>
+        <strong className="text-grey-900 text-base">{first.carrier}</strong>
       </header>
-      <div className="boarding-pass__route">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
         <div>
-          <strong>{first.from}</strong>
-          <span>{first.departTime}</span>
+          <strong className="block text-[28px] text-grey-900">{first.from}</strong>
+          <span className="text-grey-600">{first.departTime}</span>
         </div>
-        <span className="boarding-pass__plane" aria-hidden>✈</span>
+        <span className="text-2xl text-purple" aria-hidden>✈</span>
         <div>
-          <strong>{last.to}</strong>
-          <span>{last.arriveTime}</span>
+          <strong className="block text-[28px] text-grey-900">{last.to}</strong>
+          <span className="text-grey-600">{last.arriveTime}</span>
         </div>
       </div>
-      <dl className="boarding-pass__grid">
-        <div><dt>Passenger</dt><dd>{passenger.firstName} {passenger.lastName}</dd></div>
-        <div><dt>Flight</dt><dd>{first.flightNumber}</dd></div>
-        <div><dt>Date</dt><dd>{formatIsoDate(first.departDate)}</dd></div>
-        <div><dt>Seat</dt><dd>{seat}</dd></div>
-        <div><dt>Gate</dt><dd>B{Math.max(1, (booking.pnr.charCodeAt(0) % 20))}</dd></div>
-        <div><dt>Boards</dt><dd>{first.departTime}</dd></div>
+      <dl className="grid grid-cols-3 gap-3 m-0">
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Passenger</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">{passenger.firstName} {passenger.lastName}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Flight</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">{first.flightNumber}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Date</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">{formatIsoDate(first.departDate)}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Seat</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">{seat}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Gate</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">B{Math.max(1, (booking.pnr.charCodeAt(0) % 20))}</dd>
+        </div>
+        <div>
+          <dt className="text-[11px] uppercase text-grey-600 tracking-[0.08em]">Boards</dt>
+          <dd className="mt-0.5 mb-0 text-grey-900 font-semibold">{first.departTime}</dd>
+        </div>
       </dl>
-      <footer className="boarding-pass__foot">
+      <footer className="flex justify-between items-center border-t border-dashed border-grey-300 pt-3">
         <div>
           <span>Ref</span>
-          <strong>{booking.pnr}</strong>
+          <strong className="font-mono text-xl tracking-[0.1em] block">{booking.pnr}</strong>
         </div>
         <QrPlaceholder value={`${booking.pnr}-${passenger.id}`} />
       </footer>

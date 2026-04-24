@@ -35,7 +35,10 @@ export const OnWhiteBackground: Story = {
 export const OnAccentBackground: Story = {
   decorators: [
     Story => (
-      <div className="hero__search-block" style={{ maxWidth: 1200 }}>
+      <div
+        className="box-border w-full p-6 bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px]"
+        style={{ maxWidth: 1200 }}
+      >
         <Story />
       </div>
     ),

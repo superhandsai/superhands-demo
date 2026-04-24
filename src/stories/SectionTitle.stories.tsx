@@ -14,7 +14,7 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        Find your next adventure with these <span className="text-accent">flight deals</span>
+        Find your next adventure with these <span className="text-purple">flight deals</span>
       </>
     ),
     headingId: 'demo-heading',
@@ -25,7 +25,7 @@ export const WithSeeAll: Story = {
   args: {
     children: (
       <>
-        Explore unique <span className="text-accent">places to stay</span>
+        Explore unique <span className="text-purple">places to stay</span>
       </>
     ),
     aside: <SeeAllLink />,
@@ -45,7 +45,7 @@ export const LongTitle: Story = {
     children: (
       <>
         Discover the most popular weekend getaways near you with{' '}
-        <span className="text-accent">exclusive member-only pricing</span>
+        <span className="text-purple">exclusive member-only pricing</span>
       </>
     ),
     aside: <SeeAllLink />,
@@ -57,7 +57,7 @@ export const NoAside: Story = {
   args: {
     children: (
       <>
-        What <span className="text-accent">Tripma</span> users are saying
+        What <span className="text-purple">Tripma</span> users are saying
       </>
     ),
     headingId: 'demo-heading-5',

@@ -36,15 +36,15 @@ function StepperRow({
   onInc,
 }: StepperRowProps) {
   return (
-    <div className="passengers-picker__row">
-      <div className="passengers-picker__label">
-        <span className="passengers-picker__name">{title}</span>
-        {hint ? <span className="passengers-picker__hint">{hint}</span> : null}
+    <div className="flex items-center justify-between gap-4 px-1 py-3">
+      <div className="flex flex-col gap-[2px] min-w-0">
+        <span className="text-[16px] font-bold text-grey-900">{title}</span>
+        {hint ? <span className="text-[13px] text-grey-400">{hint}</span> : null}
       </div>
-      <div className="passengers-picker__stepper" role="group" aria-label={title}>
+      <div className="flex items-center gap-3 flex-shrink-0" role="group" aria-label={title}>
         <button
           type="button"
-          className="passengers-picker__step"
+          className="flex items-center justify-center w-9 h-9 p-0 border border-grey-200 rounded-full bg-white text-[20px] leading-none text-grey-900 cursor-pointer hover:not-disabled:border-purple hover:not-disabled:text-purple disabled:opacity-35 disabled:cursor-default focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
           aria-label={decAria}
           disabled={value <= min}
           onMouseDown={e => e.preventDefault()}
@@ -52,12 +52,12 @@ function StepperRow({
         >
           −
         </button>
-        <span className="passengers-picker__value" aria-live="polite">
+        <span className="min-w-[1.25rem] text-[17px] font-bold text-center text-grey-900 tabular-nums" aria-live="polite">
           {value}
         </span>
         <button
           type="button"
-          className="passengers-picker__step"
+          className="flex items-center justify-center w-9 h-9 p-0 border border-grey-200 rounded-full bg-white text-[20px] leading-none text-grey-900 cursor-pointer hover:not-disabled:border-purple hover:not-disabled:text-purple disabled:opacity-35 disabled:cursor-default focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
           aria-label={incAria}
           disabled={value >= max}
           onMouseDown={e => e.preventDefault()}
@@ -97,21 +97,35 @@ export function PassengersField() {
     }
   }, [open])
 
+  // Field classes: stacked people field.
+  // Base: relative, flex-col, justify-center, gap-[2px], min-h-20, px-[13px] py-[9px], cursor-pointer, bg-white, border-2 rounded-[16px]
+  // Desktop (>=769px) inside passengers-field group: rounded-none, border-l-0, border-r-0; when open adds purple inset shadows left/right
+  // Mobile (<=768px): rounded-[16px] even when open
+  const fieldBase =
+    'relative group w-full self-stretch flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] py-[9px] cursor-pointer bg-white border-2 rounded-[16px] md:rounded-none md:border-l-0 md:border-r-0 box-border'
+  const fieldBorder = open
+    ? 'border-purple md:shadow-[inset_2px_0_0_var(--color-purple),inset_-2px_0_0_var(--color-purple)] md:relative md:z-[3] max-md:rounded-[16px]'
+    : 'border-grey-200'
+
   return (
-    <div ref={rootRef} className={`flight-search__passengers-field ${open ? 'is-active' : ''}`}>
+    <div
+      ref={rootRef}
+      className={`relative flex flex-col flex-[0_1_280px] min-w-[240px] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0 ${open ? 'z-[25]' : ''}`}
+    >
       <input type="hidden" name="adults" value={adults} />
       <input type="hidden" name="children" value={children} />
-      <label
-        className={`flight-search__field flight-search__field--people flight-search__field--stacked ${open ? 'is-open' : ''}`}
-      >
-        <span className="flight-search__label" id={travellersLabelId}>
+      <label className={`${fieldBase} ${fieldBorder}`}>
+        <span
+          className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]"
+          id={travellersLabelId}
+        >
           Travellers
         </span>
-        <div className="flight-search__value-row">
+        <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
           <input
             id={baseId}
             type="text"
-            className="flight-search__input flight-search__input--stacked"
+            className="relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none text-grey-900 cursor-pointer focus:outline-none"
             readOnly
             value={summary}
             aria-labelledby={travellersLabelId}
@@ -126,12 +140,12 @@ export function PassengersField() {
       {open && (
         <div
           id={`${baseId}-popover`}
-          className="flight-search__passengers-popover"
+          className="absolute top-[calc(100%+8px)] right-0 left-auto z-[35] w-[min(320px,calc(100vw-32px))] pt-4 px-[18px] pb-[18px] bg-white border border-grey-200 rounded-[16px] shadow-search max-md:left-0 max-md:right-0 max-md:w-auto max-md:max-w-none"
           role="dialog"
           aria-modal="true"
           aria-label="Travellers"
         >
-          <div className="passengers-picker">
+          <div className="flex flex-col gap-1">
             <StepperRow
               title="Adults"
               hint="Aged 18+"
@@ -154,8 +168,12 @@ export function PassengersField() {
               onDec={() => setChildren(c => Math.max(CHILD_MIN, c - 1))}
               onInc={() => setChildren(c => Math.min(CHILD_MAX, c + 1))}
             />
-            <div className="passengers-picker__footer">
-              <button type="button" className="date-range-picker__done" onClick={() => setOpen(false)}>
+            <div className="flex mt-3 pt-0">
+              <button
+                type="button"
+                className="w-full box-border px-5 py-[10px] border-none rounded-[12px] bg-purple text-[15px] font-bold text-purple-on cursor-pointer hover:bg-purple-hover focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
+                onClick={() => setOpen(false)}
+              >
                 Done
               </button>
             </div>

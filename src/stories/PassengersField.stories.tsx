@@ -7,7 +7,7 @@ const meta: Meta<typeof PassengersField> = {
   decorators: [
     Story => (
       <div style={{ maxWidth: 300, padding: 24 }}>
-        <div className="flight-search">
+        <div className="flex flex-wrap items-start gap-4">
           <Story />
         </div>
       </div>

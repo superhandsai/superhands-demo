@@ -47,8 +47,11 @@ export function SeatMap({
   }, [selectedByPassenger])
 
   return (
-    <div className="seat-map" role="grid" aria-label="Seat map">
-      <div className="seat-map__header" aria-hidden>
+    <div className="bg-[#fafaff] p-4 rounded-card overflow-x-auto" role="grid" aria-label="Seat map">
+      <div
+        className="grid grid-cols-[32px_repeat(3,28px)_12px_repeat(3,28px)] gap-1.5 text-grey-600 text-xs ml-8 mb-1.5 text-center"
+        aria-hidden
+      >
         {COLS.map(c => (
           <span key={c}>{c}</span>
         ))}
@@ -56,8 +59,12 @@ export function SeatMap({
       {Array.from({ length: rows }, (_, ri) => {
         const row = ri + 1
         return (
-          <div key={row} className="seat-map__row" role="row">
-            <span className="seat-map__row-num" aria-hidden>{row}</span>
+          <div
+            key={row}
+            className="grid grid-cols-[32px_repeat(3,28px)_12px_repeat(3,28px)] gap-1.5 items-center mb-1.5"
+            role="row"
+          >
+            <span className="text-grey-600 text-xs text-right pr-1.5" aria-hidden>{row}</span>
             {COLS.map((col) => {
               const seat = `${row}${col}`
               const isOwn = Object.values(selectedByPassenger).includes(seat)
@@ -65,13 +72,20 @@ export function SeatMap({
               const isCurrent = ownerId === currentPassengerId
               const isTaken = taken.has(seat) && !isOwn
               const disabled = isTaken || !currentPassengerId || (isOwn && !isCurrent)
+              const stateClass = isTaken
+                ? 'bg-grey-200 text-grey-400 border-grey-200 cursor-not-allowed'
+                : isCurrent
+                  ? 'bg-purple text-white border-purple'
+                  : isOwn
+                    ? 'bg-purple-on text-purple border-purple'
+                    : 'bg-white text-grey-600 border-grey-200 hover:border-purple hover:bg-purple-on'
               return (
                 <button
                   key={seat}
                   type="button"
                   role="gridcell"
                   aria-label={`Seat ${seat}${isTaken ? ' taken' : ''}`}
-                  className={`seat ${isTaken ? 'is-taken' : ''} ${isCurrent ? 'is-selected' : ''} ${isOwn && !isCurrent ? 'is-owned' : ''}`}
+                  className={`w-7 h-7 border rounded-md cursor-pointer text-[11px] font-[inherit] ${stateClass} disabled:cursor-not-allowed`}
                   disabled={disabled}
                   onClick={() => onSelect(seat)}
                 >
@@ -79,7 +93,7 @@ export function SeatMap({
                 </button>
               )
             }).flatMap((el, i) =>
-              i === 2 ? [el, <span key={`aisle-${row}`} className="seat-map__aisle" aria-hidden />] : [el],
+              i === 2 ? [el, <span key={`aisle-${row}`} className="w-3" aria-hidden />] : [el],
             )}
           </div>
         )

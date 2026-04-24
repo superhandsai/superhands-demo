@@ -19,6 +19,11 @@ function formatCard(value: string): string {
   return digits.replace(/(.{4})/g, '$1 ').trim()
 }
 
+const fieldLabelCls = 'flex flex-col gap-1.5 text-sm text-grey-900'
+const fieldLabelFullCls = `${fieldLabelCls} col-span-full`
+const fieldInputCls =
+  'font-sans text-[15px] px-3 py-2.5 border border-grey-200 rounded-sm bg-white text-grey-900 focus:outline focus:outline-2 focus:outline-purple focus:outline-offset-1'
+
 export function PaymentPage() {
   const draft = useStore(checkoutStore)
   const session = useStore(sessionStore)
@@ -35,9 +40,14 @@ export function PaymentPage() {
 
   if (!draft.flight) {
     return (
-      <div className="empty-state">
+      <div className="bg-white p-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
         <p>No flight selected.</p>
-        <Link className="btn btn--primary" to="/">Back to home</Link>
+        <Link
+          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+          to="/"
+        >
+          Back to home
+        </Link>
       </div>
     )
   }
@@ -90,19 +100,31 @@ export function PaymentPage() {
   }
 
   return (
-    <form className="checkout-layout" onSubmit={onPay}>
-      <section className="checkout-main">
-        <div className="detail-card">
-          <h2>Payment</h2>
-          <p className="detail-card__sub">Payments are processed securely. Try card number <code>4111 1111 1111 1111</code>.</p>
-          <div className="field-grid">
-            <label className="field field--full">
-              <span>Name on card</span>
-              <input value={cardName} onChange={e => setCardName(e.target.value)} autoComplete="cc-name" required />
-            </label>
-            <label className="field field--full">
-              <span>Card number</span>
+    <form
+      className="grid grid-cols-[1fr_340px] gap-6 items-start max-[900px]:grid-cols-1"
+      onSubmit={onPay}
+    >
+      <section>
+        <div className="bg-white rounded-card p-6 shadow-card mb-4">
+          <h2 className="mt-0 mb-2 text-xl text-grey-900">Payment</h2>
+          <p className="mt-0 mb-4 text-grey-600 text-sm">
+            Payments are processed securely. Try card number <code>4111 1111 1111 1111</code>.
+          </p>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
+            <label className={fieldLabelFullCls}>
+              <span className="text-grey-600 font-semibold">Name on card</span>
               <input
+                className={fieldInputCls}
+                value={cardName}
+                onChange={e => setCardName(e.target.value)}
+                autoComplete="cc-name"
+                required
+              />
+            </label>
+            <label className={fieldLabelFullCls}>
+              <span className="text-grey-600 font-semibold">Card number</span>
+              <input
+                className={fieldInputCls}
                 value={cardNumber}
                 onChange={e => setCardNumber(formatCard(e.target.value))}
                 inputMode="numeric"
@@ -111,9 +133,10 @@ export function PaymentPage() {
                 required
               />
             </label>
-            <label className="field">
-              <span>Expiry (MM/YY)</span>
+            <label className={fieldLabelCls}>
+              <span className="text-grey-600 font-semibold">Expiry (MM/YY)</span>
               <input
+                className={fieldInputCls}
                 value={expiry}
                 onChange={e => setExpiry(e.target.value.replace(/[^\d/]/g, '').slice(0, 5))}
                 placeholder="MM/YY"
@@ -121,9 +144,10 @@ export function PaymentPage() {
                 required
               />
             </label>
-            <label className="field">
-              <span>CVV</span>
+            <label className={fieldLabelCls}>
+              <span className="text-grey-600 font-semibold">CVV</span>
               <input
+                className={fieldInputCls}
                 value={cvv}
                 onChange={e => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 inputMode="numeric"
@@ -131,44 +155,62 @@ export function PaymentPage() {
                 required
               />
             </label>
-            <label className="field field--full">
-              <span>Billing postcode</span>
-              <input value={postcode} onChange={e => setPostcode(e.target.value)} autoComplete="postal-code" />
+            <label className={fieldLabelFullCls}>
+              <span className="text-grey-600 font-semibold">Billing postcode</span>
+              <input
+                className={fieldInputCls}
+                value={postcode}
+                onChange={e => setPostcode(e.target.value)}
+                autoComplete="postal-code"
+              />
             </label>
           </div>
         </div>
 
-        <div className="detail-card">
-          <h2>Promo code</h2>
-          <div className="promo-row">
-            <input value={promo} onChange={e => setPromo(e.target.value)} placeholder="Enter a code (try TRIPMA10)" />
-            <button type="button" className="btn btn--secondary" onClick={applyPromo}>Apply</button>
+        <div className="bg-white rounded-card p-6 shadow-card mb-4">
+          <h2 className="mt-0 mb-2 text-xl text-grey-900">Promo code</h2>
+          <div className="flex gap-2">
+            <input
+              className="flex-1 px-3 py-2.5 border border-grey-200 rounded-sm"
+              value={promo}
+              onChange={e => setPromo(e.target.value)}
+              placeholder="Enter a code (try TRIPMA10)"
+            />
+            <button
+              type="button"
+              className="font-sans font-bold cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-white text-purple border border-purple hover:bg-purple-on"
+              onClick={applyPromo}
+            >
+              Apply
+            </button>
           </div>
-          {promoApplied ? <p className="promo-ok">10% off applied.</p> : null}
+          {promoApplied ? <p className="text-[#15803d] text-sm mt-2 mb-0">10% off applied.</p> : null}
         </div>
 
-        {error ? <p className="form-error">{error}</p> : null}
+        {error ? <p className="text-[#b91c1c] text-sm my-2">{error}</p> : null}
       </section>
-      <aside className="checkout-side">
+      <aside className="sticky top-4">
         <PriceSummary draft={draft}>
           {promoApplied ? (
-            <div className="summary-card__row">
+            <div className="flex justify-between py-1.5 text-sm">
               <span>Promo (TRIPMA10)</span>
               <strong>−£{discount.toLocaleString()}</strong>
             </div>
           ) : null}
-          <div className="summary-card__row summary-card__row--total">
+          <div className="flex justify-between py-1.5 text-lg pt-3">
             <span>You pay</span>
-            <strong>£{finalTotal.toLocaleString()}</strong>
+            <strong className="text-grey-900">£{finalTotal.toLocaleString()}</strong>
           </div>
           <button
             type="submit"
-            className="btn btn--primary summary-card__cta"
+            className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover disabled:cursor-not-allowed disabled:opacity-60 w-full mt-3"
             disabled={submitting}
           >
             {submitting ? 'Processing…' : `Pay £${finalTotal.toLocaleString()}`}
           </button>
-          <p className="summary-card__small">By paying you agree to our Terms of service and fare rules.</p>
+          <p className="text-[13px] text-grey-600 my-2">
+            By paying you agree to our Terms of service and fare rules.
+          </p>
         </PriceSummary>
       </aside>
     </form>

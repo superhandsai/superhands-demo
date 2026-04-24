@@ -28,9 +28,9 @@ export interface PriceSummaryProps {
 export function PriceSummary({ draft, cta, children }: PriceSummaryProps) {
   if (!draft.flight) {
     return (
-      <div className="summary-card">
-        <h3>Summary</h3>
-        <p className="summary-card__small">No flight selected yet.</p>
+      <div className="bg-white rounded-card p-5 shadow-card sticky top-4">
+        <h3 className="m-0 mb-1.5 text-base text-grey-900">Summary</h3>
+        <p className="text-[13px] text-grey-600 my-2">No flight selected yet.</p>
       </div>
     )
   }
@@ -45,50 +45,50 @@ export function PriceSummary({ draft, cta, children }: PriceSummaryProps) {
   const last = draft.flight.outbound[draft.flight.outbound.length - 1]
 
   return (
-    <div className="summary-card">
-      <h3>Summary</h3>
-      <p className="summary-card__route">
+    <div className="bg-white rounded-card p-5 shadow-card sticky top-4">
+      <h3 className="m-0 mb-1.5 text-base text-grey-900">Summary</h3>
+      <p className="font-bold text-grey-900 my-1">
         {first.from} → {last.to}
       </p>
-      <p className="summary-card__small">{fare.label} · {pax} traveller{pax > 1 ? 's' : ''}</p>
-      <hr />
-      <div className="summary-card__row">
+      <p className="text-[13px] text-grey-600 my-2">{fare.label} · {pax} traveller{pax > 1 ? 's' : ''}</p>
+      <hr className="border-0 border-t border-grey-200 my-2.5" />
+      <div className="flex justify-between py-1.5 text-sm">
         <span>Fare ({pax} × £{perPerson})</span>
         <strong>£{base.toLocaleString()}</strong>
       </div>
       {bagCount > 0 ? (
-        <div className="summary-card__row">
+        <div className="flex justify-between py-1.5 text-sm">
           <span>Checked bags ({bagCount})</span>
           <strong>£{(bagCount * BAG_FEE).toLocaleString()}</strong>
         </div>
       ) : null}
       {mealCount > 0 ? (
-        <div className="summary-card__row">
+        <div className="flex justify-between py-1.5 text-sm">
           <span>Special meals ({mealCount})</span>
           <strong>£{(mealCount * MEAL_FEE).toLocaleString()}</strong>
         </div>
       ) : null}
       {draft.extras.insurance ? (
-        <div className="summary-card__row">
+        <div className="flex justify-between py-1.5 text-sm">
           <span>Trip insurance ({pax})</span>
           <strong>£{(INSURANCE_FEE * pax).toLocaleString()}</strong>
         </div>
       ) : null}
       {draft.extras.priorityBoarding ? (
-        <div className="summary-card__row">
+        <div className="flex justify-between py-1.5 text-sm">
           <span>Priority boarding</span>
           <strong>£{(PRIORITY_FEE * pax).toLocaleString()}</strong>
         </div>
       ) : null}
-      <hr />
-      <div className="summary-card__row summary-card__row--total">
+      <hr className="border-0 border-t border-grey-200 my-2.5" />
+      <div className="flex justify-between py-1.5 text-lg pt-3">
         <span>Total</span>
-        <strong>£{total.toLocaleString()}</strong>
+        <strong className="text-grey-900">£{total.toLocaleString()}</strong>
       </div>
       {cta ? (
         <button
           type="button"
-          className="btn btn--primary summary-card__cta"
+          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] inline-flex items-center justify-center gap-2 transition-colors bg-purple text-white hover:bg-purple-hover disabled:cursor-not-allowed disabled:opacity-60 w-full mt-3"
           onClick={cta.onClick}
           disabled={cta.disabled}
         >

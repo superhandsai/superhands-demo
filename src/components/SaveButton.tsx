@@ -49,7 +49,7 @@ export function SaveButton(props: SaveButtonProps) {
   return (
     <button
       type="button"
-      className={`save-btn ${saved ? 'is-saved' : ''}`}
+      className={`bg-transparent border-0 p-1 cursor-pointer rounded-full transition-[color,transform] duration-150 hover:scale-[1.08] ${saved ? 'text-danger hover:text-danger' : 'text-grey-400 hover:text-purple'}`}
       aria-pressed={saved}
       aria-label={saved ? 'Remove from saved' : 'Save'}
       onClick={onClick}
