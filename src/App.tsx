@@ -40,7 +40,7 @@ const HEADER_LINK =
   'px-[10px] text-[16px] text-grey-400 rounded-sm min-h-11 inline-flex items-center hover:text-purple hover:no-underline'
 
 const BTN_HEADER =
-  'box-border inline-flex items-center justify-center bg-purple text-grey-100 text-[16px] font-normal border-none rounded-[12px] min-h-10 h-10 px-4 cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline'
+  'box-border inline-flex items-center justify-center bg-red-600 text-grey-100 text-[16px] font-normal border-none rounded-[12px] min-h-10 h-10 px-4 cursor-pointer no-underline transition-[background] duration-200 hover:bg-red-700 hover:no-underline'
 
 const BTN_HEADER_MOBILE_FULL =
   'max-md:w-auto max-md:min-h-11 max-md:h-auto max-md:px-4 max-md:py-[11px]'
