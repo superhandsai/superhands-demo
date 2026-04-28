@@ -157,7 +157,7 @@ export function SearchPills({
             aria-current={selected ? 'page' : undefined}
           >
             {Icon ? <Icon size={size} /> : null}
-            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
+            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words text-[10px]">
               {tab.label}
             </span>
           </span>
