@@ -321,7 +321,7 @@ a:hover {
 }
 
 .btn--search__text {
-  font-weight: 600;
+  font-weight: 100;
 }
 
 .btn--primary {
@@ -525,6 +525,13 @@ a:hover {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+#hero-heading {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: #ff0000;
 }
 
 .hero__search-block {
