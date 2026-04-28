@@ -735,7 +735,7 @@ export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
         aria-label="Trip type"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[15px] font-semibold leading-[1.25] tracking-[0.02em]">
+        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[25px] font-semibold leading-[1.25] tracking-[0.02em]">
           {selected.label}
         </span>
         <TripTypeTriggerChevron open={open} />
@@ -804,7 +804,7 @@ function SwapAirportsIcon() {
 export function FlightSearchBar() {
   const directFlightsId = useId()
   const navigate = useNavigate()
-  const [tripType, setTripType] = useState<TripType>('return')
+  const [tripType, setTripType] = useState<TripType>('multi-city')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [airportMenu, setAirportMenu] = useState<AirportMenuKey>(null)
