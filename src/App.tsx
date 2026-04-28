@@ -489,7 +489,7 @@ export function AirportField({
       <input type="hidden" name={name} value={value} />
       <div
         ref={controlRef}
-        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
+        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] rounded-r-none bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
       >
         <span className={FLIGHT_SEARCH_LABEL} id={labelId}>
           {label}
@@ -592,7 +592,7 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[62px]"
           style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
         >
           Find the best flights anywhere
@@ -735,7 +735,7 @@ export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
         aria-label="Trip type"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[15px] font-semibold leading-[1.25] tracking-[0.02em]">
+        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[18px] font-normal leading-[1.25] tracking-[0.02em]">
           {selected.label}
         </span>
         <TripTypeTriggerChevron open={open} />
