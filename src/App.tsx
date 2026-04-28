@@ -592,8 +592,8 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[118px]"
+          style={{ fontSize: 'clamp(3rem, 8vw, 7.375rem)' }}
         >
           Find the best flights anywhere
         </h1>
@@ -735,7 +735,7 @@ export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
         aria-label="Trip type"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[21px] font-semibold leading-[1.25] tracking-[0.02em]">
+        <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[30px] font-semibold leading-[1.25] tracking-[0.02em]">
           {selected.label}
         </span>
         <TripTypeTriggerChevron open={open} />
