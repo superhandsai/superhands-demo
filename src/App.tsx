@@ -592,10 +592,10 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] text-blue-600 lg:text-[56px]"
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] text-pink-600 lg:text-[56px]"
           style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
         >
-          Find the best flights anywhere
+          test test
         </h1>
       </div>
       <div role="region" aria-labelledby={`${pillsId}-flights`} className="w-full">
