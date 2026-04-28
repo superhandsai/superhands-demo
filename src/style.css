@@ -301,6 +301,7 @@ a:hover {
   color: var(--color-grey-100);
   flex-shrink: 0;
   gap: 10px;
+  font-weight: 900;
 }
 
 .btn--search:hover {
