@@ -592,7 +592,7 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab="flights" id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[62px]"
           style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
         >
           Find the best flights anywhere
@@ -900,7 +900,7 @@ export function FlightSearchBar() {
         <PassengersField />
         <button
           type="submit"
-          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
+          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0 opacity-[0.59]"
         >
           <span className="font-semibold">Search</span>
           <span className="flex w-6 h-6 flex-shrink-0 items-center justify-center" aria-hidden>
@@ -944,8 +944,8 @@ export function SectionTitle({ children, aside, headingId }: SectionTitleProps) 
   return (
     <div className="flex flex-nowrap items-center justify-between gap-4 w-full">
       <h2
-        className="m-0 font-bold text-grey-600 leading-[1.2] max-w-[min(100%,42rem)]"
-        style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)' }}
+        className="m-0 text-grey-600 leading-[1.2] max-w-[min(100%,42rem)]"
+        style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)', fontWeight: 100 }}
         id={headingId}
       >
         {children}
