@@ -1017,7 +1017,7 @@ interface DealCardProps {
 export function DealCard({ image, title, highlight, price, description, imageClass }: DealCardProps) {
   const { prefix, digits } = splitDealPrice(price)
   return (
-    <article className="group/card bg-white rounded-card shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+    <article className="group/card bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-300 ease-out hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:-translate-y-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <div className={`relative aspect-[4/3] max-h-[397px] overflow-hidden ${imageClass ?? ''}`}>
         <img
           src={image}
@@ -1065,7 +1065,7 @@ export function StayCard({ image, title, description, imageClass }: StayCardProp
       ? '[&>img]:w-[187.86%] [&>img]:max-w-none [&>img]:object-left [&>img]:-ml-[18%]'
       : ''
   return (
-    <article className="group/card bg-white rounded-card shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+    <article className="group/card bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-300 ease-out hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:-translate-y-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <div className={`relative aspect-[4/3] max-h-[397px] overflow-hidden ${mongoliaImgClasses}`}>
         <img
           src={image}
