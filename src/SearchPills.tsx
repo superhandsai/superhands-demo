@@ -155,6 +155,7 @@ export function SearchPills({
             id={`${pillsId}-${tab.id}`}
             className={`${base} ${stateClasses}`}
             aria-current={selected ? 'page' : undefined}
+            style={{ marginRight: '25px' }}
           >
             {Icon ? <Icon size={size} /> : null}
             <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
