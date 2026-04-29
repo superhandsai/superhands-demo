@@ -51,7 +51,7 @@
 
 /* Hero title gradient — apply with bg-hero-title bg-clip-text text-transparent */
 @utility bg-hero-title {
-  background-image: linear-gradient(180deg, #6d5ef0 0%, #524dde 55%, #3f38c4 100%);
+  background-image: linear-gradient(138deg, #8c4040 0%, rgb(82, 77, 222) 55%, rgb(63, 56, 196) 100%);
 }
 
 /* Confirmation hero gradient */
