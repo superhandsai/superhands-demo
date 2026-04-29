@@ -144,6 +144,13 @@
     white-space: nowrap;
     border: 0;
   }
+
+  #_r_1_-flights {
+    background-color: rgba(92, 237, 121, 0.68);
+    border-top-color: rgba(216, 237, 92, 0.38);
+    row-gap: 17px;
+    column-gap: 9px;
+  }
 }
 
 /* Print */
