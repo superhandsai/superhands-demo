@@ -138,7 +138,7 @@ export function SearchPills({
   return (
     <div
       id={pillsId}
-      className="flex flex-wrap justify-end items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full"
+      className="flex flex-wrap justify-end items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full pt-[3px]"
       role="group"
       aria-label="What are you booking?"
     >
