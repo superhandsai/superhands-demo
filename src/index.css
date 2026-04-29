@@ -2,7 +2,7 @@
 
 @theme {
   /* Brand colors — bg-purple, text-purple, border-purple, etc. */
-  --color-purple: #605dec;
+  --color-purple: rgba(95, 92, 237, 0.46);
   --color-purple-hover: #4f4ed4;
   --color-purple-on: #f6f6fe;
 
