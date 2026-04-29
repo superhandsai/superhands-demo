@@ -250,6 +250,10 @@ a:hover {
   border-right: 1px solid var(--color-grey-200);
 }
 
+.site-header__locale .site-header__link:nth-of-type(3) {
+  color: rgba(176, 123, 123, 0.87);
+}
+
 /* Single flex child on the anchor avoids stray whitespace text nodes breaking alignment */
 .site-header__locale-pair {
   display: inline-flex;
