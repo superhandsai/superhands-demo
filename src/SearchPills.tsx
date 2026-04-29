@@ -174,6 +174,7 @@ export function SearchPills({
             borderTopStyle: 'dashed',
             cursor: 'default',
             borderColor: 'rgba(237, 92, 128, 1)',
+            lineHeight: '18px',
           } : undefined
           return (
             <button
