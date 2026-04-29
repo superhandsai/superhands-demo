@@ -611,7 +611,7 @@ function WaveText({ text, className }: WaveTextProps) {
             backgroundImage: 'inherit',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            color: 'transparent',
+            color: '#000000',
           }}
         >
           {letter === ' ' ? '\u00A0' : letter}
