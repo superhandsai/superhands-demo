@@ -207,19 +207,19 @@ export function SiteHeader() {
           ) : null}
           <Link to="/help" className={HEADER_LINK}>Help</Link>
           <div
-            className="inline-flex items-stretch flex-wrap box-border h-10 min-h-10 border border-grey-200 rounded-[12px] bg-grey-100 overflow-hidden max-md:w-full max-md:h-auto max-md:min-h-11 max-md:flex-row max-md:flex-nowrap max-md:items-stretch max-md:overflow-x-auto"
+            className="hidden max-md:flex items-stretch flex-wrap box-border w-full h-auto min-h-11 border border-grey-200 rounded-[12px] bg-grey-100 overflow-hidden flex-row flex-nowrap overflow-x-auto"
             role="group"
             aria-label="Language, location, and currency"
           >
             <a
-              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-purple hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-purple hover:no-underline flex-1 min-w-min w-auto min-h-11 px-3 whitespace-nowrap"
               href="#"
               style={{ fontSize: '15px', color: 'rgba(123, 176, 174, 1)', backgroundColor: 'rgba(0, 0, 0, 0.61)', padding: '3px' }}
             >
               English (UK)
             </a>
             <a
-              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-purple hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-purple hover:no-underline flex-1 min-w-min w-auto min-h-11 px-3 whitespace-nowrap"
               href="#"
             >
               <span className="inline-flex items-center gap-2">
@@ -227,7 +227,7 @@ export function SiteHeader() {
               </span>
             </a>
             <a
-              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 hover:text-purple hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 hover:text-purple hover:no-underline flex-1 min-w-min w-auto min-h-11 px-3 whitespace-nowrap"
               href="#"
             >
               £ GBP
