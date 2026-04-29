@@ -144,18 +144,19 @@ export function SearchPills({
       className="flex flex-wrap justify-start items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full"
       role={interactive ? 'tablist' : 'group'}
       aria-label="What are you booking?"
+      size="md"
     >
       {tabs.map(tab => {
         const Icon = TAB_ICONS[tab.id]
         const selected = selectedTab === tab.id
         const cursorClass = interactive ? 'cursor-pointer' : 'cursor-default hover:cursor-pointer'
-        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
+        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS['md']} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
         const stateClasses = selected
           ? 'bg-purple text-grey-100 border-purple hover:bg-purple-hover hover:border-purple-hover'
           : 'bg-white text-grey-600 border-grey-200 hover:text-purple hover:border-purple'
         const label = (
           <>
-            {Icon ? <Icon size={size} /> : null}
+            {Icon ? <Icon size={'md'} /> : null}
             <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
               {tab.label}
             </span>
