@@ -70,7 +70,11 @@ function StepperRow({
   )
 }
 
-export function PassengersField() {
+interface PassengersFieldProps {
+  label?: string
+}
+
+export function PassengersField({ label = 'Travellers' }: PassengersFieldProps = {}) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const baseId = useId()
   const travellersLabelId = `${baseId}-travellers-label`
@@ -119,7 +123,7 @@ export function PassengersField() {
           className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]"
           id={travellersLabelId}
         >
-          Travellers
+          {label}
         </span>
         <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
           <input

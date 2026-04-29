@@ -13,7 +13,8 @@ import { tripma } from './assets/tripma/urls'
 import { DateRangeField } from './DateRangeField'
 import { FieldClearButton } from './FieldClearButton'
 import { PassengersField } from './PassengersField'
-import { SearchPills } from './SearchPills'
+import { SearchPills, type SearchPillTabId } from './SearchPills'
+import { CarsSearchBar, HotelsSearchBar } from './HeroSearchBars'
 import {
   type Airport,
   type AirportApi,
@@ -583,23 +584,33 @@ export function AirportField({
   )
 }
 
+const HERO_HEADINGS: Record<SearchPillTabId, string> = {
+  flights: 'Find the best flights anywhere',
+  hotels: 'Find a place to stay anywhere',
+  cars: 'Find the right car for your trip',
+  packages: 'Find the best holiday packages',
+}
+
 export function HeroSearchGroup() {
   const pillsId = useId()
+  const [tab, setTab] = useState<SearchPillTabId>('flights')
 
   return (
     <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
       <div className="flex flex-col items-start gap-8 w-full">
-        <SearchPills selectedTab="flights" id={pillsId} size="lg" />
+        <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
         <h1
           id="hero-heading"
           className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
           style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
         >
-          Find the best flights anywhere
+          {HERO_HEADINGS[tab]}
         </h1>
       </div>
-      <div role="region" aria-labelledby={`${pillsId}-flights`} className="w-full">
-        <FlightSearchBar />
+      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
+        {tab === 'flights' ? <FlightSearchBar /> : null}
+        {tab === 'hotels' ? <HotelsSearchBar /> : null}
+        {tab === 'cars' ? <CarsSearchBar /> : null}
       </div>
     </div>
   )

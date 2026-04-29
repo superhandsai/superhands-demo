@@ -208,9 +208,21 @@ function MonthGrid({
 
 interface DateRangeFieldProps {
   oneWay?: boolean
+  departLabel?: string
+  returnLabel?: string
+  departName?: string
+  returnName?: string
+  placeholder?: string
 }
 
-export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
+export function DateRangeField({
+  oneWay = false,
+  departLabel = 'Depart',
+  returnLabel = 'Return',
+  departName = 'depart_date',
+  returnName = 'return_date',
+  placeholder = 'Add date',
+}: DateRangeFieldProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const dialogId = useId()
   const departLabelId = `${dialogId}-depart-label`
@@ -328,14 +340,14 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
         open ? 'z-[25]' : ''
       } ${oneWay ? 'md:flex-[1_1_0]' : 'md:flex-[2_1_0]'}`}
     >
-      <input type="hidden" name="depart_date" value={departKey} />
-      <input type="hidden" name="return_date" value={oneWay ? '' : returnKey} />
+      <input type="hidden" name={departName} value={departKey} />
+      <input type="hidden" name={returnName} value={oneWay ? '' : returnKey} />
       <div
         className={`flex flex-[0_0_auto] items-stretch self-stretch w-full box-border gap-0 min-w-0 max-md:flex-row max-md:items-stretch max-md:gap-2`}
       >
         <label className={`${dateFieldBase} ${dateFieldDesktopJoin} ${splitFieldBorder(open && pickIntent === 'depart')} max-md:flex-1 max-md:min-w-0`}>
           <span className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]" id={departLabelId}>
-            Depart
+            {departLabel}
           </span>
           <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
             {showDepartPlaceholder ? (
@@ -343,7 +355,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
                 className="absolute left-0 right-0 top-1/2 -translate-y-1/2 text-[18px] leading-[1.25] text-grey-400 pointer-events-none whitespace-nowrap overflow-hidden text-ellipsis text-left"
                 aria-hidden="true"
               >
-                Add date
+                {placeholder}
               </span>
             ) : null}
             <input
@@ -381,7 +393,7 @@ export function DateRangeField({ oneWay = false }: DateRangeFieldProps) {
               className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]"
               id={returnLabelId}
             >
-              Return
+              {returnLabel}
             </span>
             <div className="relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]">
               {showReturnPlaceholder ? (

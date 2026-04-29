@@ -116,6 +116,7 @@ const SEARCH_TABS: readonly SearchPillTab[] = [
 export interface SearchPillsProps {
   tabs?: readonly SearchPillTab[]
   selectedTab?: SearchPillTabId
+  onSelectTab?: (id: SearchPillTabId) => void
   id?: string
   size?: SearchPillSize
 }
@@ -129,26 +130,52 @@ const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
 export function SearchPills({
   tabs = SEARCH_TABS,
   selectedTab,
+  onSelectTab,
   id,
   size = 'md',
 }: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
+  const interactive = Boolean(onSelectTab)
 
   return (
     <div
       id={pillsId}
       className="flex flex-wrap justify-start items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full"
-      role="group"
+      role={interactive ? 'tablist' : 'group'}
       aria-label="What are you booking?"
     >
       {tabs.map(tab => {
         const Icon = TAB_ICONS[tab.id]
         const selected = selectedTab === tab.id
-        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full cursor-default select-none transition-[color,background,border-color] duration-150 hover:cursor-pointer max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center`
+        const cursorClass = interactive ? 'cursor-pointer' : 'cursor-default hover:cursor-pointer'
+        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
         const stateClasses = selected
           ? 'bg-purple text-grey-100 border-purple hover:bg-purple-hover hover:border-purple-hover'
           : 'bg-white text-grey-600 border-grey-200 hover:text-purple hover:border-purple'
+        const label = (
+          <>
+            {Icon ? <Icon size={size} /> : null}
+            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
+              {tab.label}
+            </span>
+          </>
+        )
+        if (interactive) {
+          return (
+            <button
+              key={tab.id}
+              id={`${pillsId}-${tab.id}`}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              className={`${base} ${stateClasses} m-0 appearance-none`}
+              onClick={() => onSelectTab?.(tab.id)}
+            >
+              {label}
+            </button>
+          )
+        }
         return (
           <span
             key={tab.id}
@@ -156,10 +183,7 @@ export function SearchPills({
             className={`${base} ${stateClasses}`}
             aria-current={selected ? 'page' : undefined}
           >
-            {Icon ? <Icon size={size} /> : null}
-            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
-              {tab.label}
-            </span>
+            {label}
           </span>
         )
       })}
