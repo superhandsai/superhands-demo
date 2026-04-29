@@ -132,7 +132,7 @@ export function SearchPills({
   selectedTab,
   onSelectTab,
   id,
-  size = 'md',
+  size = 'sm',
 }: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
@@ -141,7 +141,7 @@ export function SearchPills({
   return (
     <div
       id={pillsId}
-      className="flex flex-wrap flex-col justify-end items-start gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full"
+      className="inline flex-wrap flex-col justify-end items-start gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full [border-top-style:none]"
       role={interactive ? 'tablist' : 'group'}
       aria-label="What are you booking?"
     >
