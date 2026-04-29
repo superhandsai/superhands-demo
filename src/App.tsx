@@ -471,7 +471,7 @@ export function AirportField({
   // We use md: utilities to override mobile.
   const desktopSeam = isFirst
     ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    : 'max-md:rounded-[16px] md:rounded-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
