@@ -128,9 +128,9 @@ const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
 
 export function SearchPills({
   tabs = SEARCH_TABS,
-  selectedTab,
+  selectedTab = 'cars',
   id,
-  size = 'sm',
+  size = 'lg',
 }: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
