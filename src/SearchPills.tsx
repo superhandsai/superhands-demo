@@ -9,9 +9,9 @@ export interface SearchPillTab {
 }
 
 const ICON_SIZE_CLASS: Record<SearchPillSize, string> = {
-  sm: 'w-[7px] h-[7px]',
-  md: 'w-[9px] h-[9px]',
-  lg: 'w-[11px] h-[11px]',
+  sm: 'w-[12px] h-[12px]',
+  md: 'w-[14px] h-[14px]',
+  lg: 'w-[16px] h-[16px]',
 }
 
 function TabIconWrap({
@@ -122,9 +122,9 @@ export interface SearchPillsProps {
 }
 
 const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
-  sm: 'gap-[3px] px-[5px] py-[3px] text-[6.5px]',
-  md: 'gap-1 px-[6px] py-[5px] text-[8px]',
-  lg: 'gap-[5px] px-[9px] py-[7px] text-[9px]',
+  sm: 'gap-[4px] px-[8px] py-[5px] text-[10px]',
+  md: 'gap-[5px] px-[10px] py-[7px] text-[12px]',
+  lg: 'gap-[6px] px-[14px] py-[10px] text-[14px]',
 }
 
 export function SearchPills({
