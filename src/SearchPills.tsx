@@ -141,7 +141,7 @@ export function SearchPills({
   return (
     <div
       id={pillsId}
-      className="flex flex-wrap justify-start items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full"
+      className="flex flex-wrap justify-start items-center gap-2 max-md:flex-nowrap max-md:gap-[6px] max-md:w-full scale-[0.7] origin-left"
       role={interactive ? 'tablist' : 'group'}
       aria-label="What are you booking?"
     >
