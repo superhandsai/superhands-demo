@@ -130,7 +130,7 @@ export function SearchPills({
   tabs = SEARCH_TABS,
   selectedTab,
   id = '_r_11',
-  size = 'lg',
+  size = 'sm',
 }: SearchPillsProps) {
   const autoId = useId()
   const pillsId = id || autoId
