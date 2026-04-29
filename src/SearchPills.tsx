@@ -162,6 +162,19 @@ export function SearchPills({
           </>
         )
         if (interactive) {
+          const customStyle = tab.id === 'flights' ? {
+            borderTopLeftRadius: '10px',
+            borderTopRightRadius: '10px',
+            borderBottomRightRadius: '10px',
+            borderBottomLeftRadius: '10px',
+            columnGap: '10px',
+            paddingBlockStart: '14px',
+            paddingBlockEnd: '19px',
+            borderTopWidth: '0px',
+            borderTopStyle: 'dashed',
+            cursor: 'default',
+            borderColor: 'rgba(237, 92, 128, 1)',
+          } : undefined
           return (
             <button
               key={tab.id}
@@ -171,6 +184,7 @@ export function SearchPills({
               aria-selected={selected}
               className={`${base} ${stateClasses} m-0 appearance-none`}
               onClick={() => onSelectTab?.(tab.id)}
+              style={customStyle}
             >
               {label}
             </button>
