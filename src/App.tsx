@@ -600,7 +600,7 @@ function WaveText({ text, className }: WaveTextProps) {
   const letters = text.split('')
 
   return (
-    <span className={className}>
+    <span className={className} style={{ display: 'inline' }}>
       {letters.map((letter, index) => (
         <span
           key={index}
@@ -608,6 +608,10 @@ function WaveText({ text, className }: WaveTextProps) {
             display: 'inline-block',
             animation: `wave 2s ease-in-out infinite`,
             animationDelay: `${index * 0.05}s`,
+            backgroundImage: 'inherit',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
           }}
         >
           {letter === ' ' ? '\u00A0' : letter}
