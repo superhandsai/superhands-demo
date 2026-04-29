@@ -135,7 +135,7 @@ function HeaderMenuIcon() {
   )
 }
 
-function UkFlagIcon() {
+function ScottishFlagIcon() {
   return (
     <svg
       className="flex-shrink-0 block w-5 h-[10px]"
@@ -146,16 +146,13 @@ function UkFlagIcon() {
       aria-hidden
     >
       <defs>
-        <clipPath id="uk-flag-clip">
+        <clipPath id="scottish-flag-clip">
           <rect width="60" height="30" rx="1" />
         </clipPath>
       </defs>
-      <g clipPath="url(#uk-flag-clip)">
-        <path fill="#012169" d="M0 0h60v30H0z" />
+      <g clipPath="url(#scottish-flag-clip)">
+        <path fill="#0065BD" d="M0 0h60v30H0z" />
         <path fill="none" stroke="#fff" strokeWidth="6" d="M0 0l60 30M60 0L0 30" />
-        <path fill="none" stroke="#C8102E" strokeWidth="4" d="M0 0l60 30M60 0L0 30" />
-        <path fill="none" stroke="#fff" strokeWidth="10" d="M30 0v30M0 15h60" />
-        <path fill="none" stroke="#C8102E" strokeWidth="6" d="M30 0v30M0 15h60" />
       </g>
     </svg>
   )
@@ -222,7 +219,7 @@ export function SiteHeader() {
               href="#"
             >
               <span className="inline-flex items-center gap-2">
-                <UkFlagIcon /><span className="leading-none">United Kingdom</span>
+                <ScottishFlagIcon /><span className="leading-none">Scotland</span>
               </span>
             </a>
             <a
