@@ -591,6 +591,42 @@ const HERO_HEADINGS: Record<SearchPillTabId, string> = {
   packages: 'Find the best holiday packages',
 }
 
+interface WaveTextProps {
+  text: string
+  className?: string
+}
+
+function WaveText({ text, className }: WaveTextProps) {
+  const letters = text.split('')
+
+  return (
+    <span className={className}>
+      {letters.map((letter, index) => (
+        <span
+          key={index}
+          style={{
+            display: 'inline-block',
+            animation: `wave 2s ease-in-out infinite`,
+            animationDelay: `${index * 0.05}s`,
+          }}
+        >
+          {letter === ' ' ? '\u00A0' : letter}
+        </span>
+      ))}
+      <style>{`
+        @keyframes wave {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.3);
+          }
+        }
+      `}</style>
+    </span>
+  )
+}
+
 export function HeroSearchGroup() {
   const pillsId = useId()
   const [tab, setTab] = useState<SearchPillTabId>('flights')
@@ -604,7 +640,11 @@ export function HeroSearchGroup() {
           className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
           style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)' }}
         >
-          {HERO_HEADINGS[tab]}
+          {tab === 'flights' ? (
+            <WaveText text={HERO_HEADINGS[tab]} />
+          ) : (
+            HERO_HEADINGS[tab]
+          )}
         </h1>
       </div>
       <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
