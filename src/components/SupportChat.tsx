@@ -44,7 +44,7 @@ export function SupportChat() {
       {!open ? (
         <button
           type="button"
-          className="fixed right-5 bottom-5 z-[1000] flex items-center gap-2 bg-purple text-white border-0 rounded-full py-3 px-[18px] font-semibold cursor-pointer shadow-[0_12px_30px_rgba(96,93,236,0.4)] font-[inherit] hover:brightness-105"
+          className="md:hidden fixed right-5 bottom-5 z-[1000] flex items-center gap-2 bg-purple text-white border-0 rounded-full py-3 px-[18px] font-semibold cursor-pointer shadow-[0_12px_30px_rgba(96,93,236,0.4)] font-[inherit] hover:brightness-105"
           aria-label="Open support chat"
           onClick={openChat}
         >
@@ -53,7 +53,7 @@ export function SupportChat() {
         </button>
       ) : null}
       <div
-        className={`fixed right-5 bottom-5 w-[min(380px,calc(100vw-40px))] h-[min(560px,calc(100vh-40px))] bg-white border border-grey-200 rounded-[20px] shadow-drawer flex flex-col transition-[opacity,transform] duration-150 z-[1100] ${open ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-5 opacity-0 pointer-events-none'}`}
+        className={`md:hidden fixed right-5 bottom-5 w-[min(380px,calc(100vw-40px))] h-[min(560px,calc(100vh-40px))] bg-white border border-grey-200 rounded-[20px] shadow-drawer flex flex-col transition-[opacity,transform] duration-150 z-[1100] ${open ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-5 opacity-0 pointer-events-none'}`}
         aria-hidden={!open}
       >
         <header className="py-4 px-5 border-b border-grey-200 flex justify-between items-start gap-4">
