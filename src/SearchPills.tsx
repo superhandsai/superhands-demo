@@ -9,9 +9,9 @@ export interface SearchPillTab {
 }
 
 const ICON_SIZE_CLASS: Record<SearchPillSize, string> = {
-  sm: 'w-[14px] h-[14px]',
-  md: 'w-[18px] h-[18px]',
-  lg: 'w-[22px] h-[22px]',
+  sm: 'w-[7px] h-[7px]',
+  md: 'w-[9px] h-[9px]',
+  lg: 'w-[11px] h-[11px]',
 }
 
 function TabIconWrap({
@@ -23,7 +23,7 @@ function TabIconWrap({
 }) {
   return (
     <span
-      className={`flex flex-shrink-0 ${ICON_SIZE_CLASS[size]} text-current max-md:w-[18px] max-md:h-[18px] [&_svg]:block [&_svg]:w-full [&_svg]:h-full`}
+      className={`flex flex-shrink-0 ${ICON_SIZE_CLASS[size]} text-current max-md:w-[9px] max-md:h-[9px] [&_svg]:block [&_svg]:w-full [&_svg]:h-full`}
       aria-hidden
     >
       {children}
@@ -122,9 +122,9 @@ export interface SearchPillsProps {
 }
 
 const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
-  sm: 'gap-[6px] px-[10px] py-[6px] text-[13px]',
-  md: 'gap-2 px-3 py-[10px] text-[16px]',
-  lg: 'gap-[10px] px-[18px] py-[14px] text-[18px]',
+  sm: 'gap-[3px] px-[5px] py-[3px] text-[6.5px]',
+  md: 'gap-1 px-[6px] py-[5px] text-[8px]',
+  lg: 'gap-[5px] px-[9px] py-[7px] text-[9px]',
 }
 
 export function SearchPills({
@@ -156,7 +156,7 @@ export function SearchPills({
         const label = (
           <>
             {Icon ? <Icon size={size} /> : null}
-            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
+            <span className="max-md:block max-md:max-w-full max-md:text-[5.5px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words">
               {tab.label}
             </span>
           </>
