@@ -598,7 +598,7 @@ export function HeroSearchGroup() {
   return (
     <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
       <div className="flex flex-col items-start gap-8 w-full">
-        <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
+        <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="sm" />
         <h1
           id="hero-heading"
           className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
