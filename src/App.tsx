@@ -227,7 +227,7 @@ export function SiteHeader() {
             </a>
             <a
               className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none self-stretch leading-none text-[16px] text-grey-400 hover:text-purple hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
-              style={{ paddingInlineStart: '29px', paddingInlineEnd: '29px' }}
+              style={{ paddingInlineStart: '29px', paddingInlineEnd: '29px', borderTopStyle: 'dashed' }}
               href="#"
             >
               £ GBP
