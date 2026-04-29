@@ -128,7 +128,7 @@ const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
 
 export function SearchPills({
   tabs = SEARCH_TABS,
-  selectedTab,
+  selectedTab = 'packages',
   id,
   size = 'md',
 }: SearchPillsProps) {
