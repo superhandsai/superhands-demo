@@ -1226,7 +1226,7 @@ export function HomeContent() {
         aria-labelledby="hero-heading"
       >
         <img
-          className="absolute inset-0 z-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 z-0 w-full h-full object-cover object-center justify-end"
           src={tripma.heroMap}
           alt=""
         />
