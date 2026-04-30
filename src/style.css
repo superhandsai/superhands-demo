@@ -701,8 +701,8 @@ a:hover {
 }
 
 .search-pills--lg .search-pills__pill {
-  padding: 14px 18px;
-  font-size: 18px;
+  padding: 12px 12px;
+  font-size: 16px;
   gap: 10px;
 }
 
