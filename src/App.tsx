@@ -193,7 +193,7 @@ export function SiteHeader() {
     <header className="relative z-[50] bg-white border-b border-transparent">
       <div className="relative mx-auto flex items-center justify-between gap-4 p-2 max-w-[1440px]">
         <Link to="/" className="flex-shrink-0">
-          <img src={tripma.wordmark} alt="Tripma" width={105} height={30} className="block w-[104.8px] max-w-full h-auto" />
+          <img src={tripma.wordmark} alt="Tripma" width={148} height={43} className="block w-[148px] max-w-full h-[43px]" />
         </Link>
         <nav id={navId} className={navClasses}>
           <Link to="/destinations" className={HEADER_LINK}>Destinations</Link>
