@@ -491,6 +491,7 @@ export function AirportField({
       <div
         ref={controlRef}
         className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
+        style={{ borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}
       >
         <span className={FLIGHT_SEARCH_LABEL} id={labelId}>
           {label}
