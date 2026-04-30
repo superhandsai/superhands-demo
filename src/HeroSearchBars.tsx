@@ -6,7 +6,7 @@ import { FieldClearButton } from './FieldClearButton'
 import { PassengersField } from './PassengersField'
 
 const FIELD_BASE =
-  'group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] bg-white cursor-pointer'
+  'group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] md:rounded-l-[16px] md:rounded-r-none bg-white cursor-pointer'
 const FIELD_LABEL =
   'flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]'
 const FIELD_VALUE_ROW =
