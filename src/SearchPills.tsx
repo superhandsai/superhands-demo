@@ -124,7 +124,7 @@ export interface SearchPillsProps {
 const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
   sm: 'gap-[6px] px-[10px] py-[6px] text-[13px]',
   md: 'gap-2 px-3 py-[10px] text-[16px]',
-  lg: 'gap-[10px] px-[18px] py-[14px] text-[18px]',
+  lg: 'gap-[10px] px-[26px] py-[26px] text-[18px]',
 }
 
 export function SearchPills({
