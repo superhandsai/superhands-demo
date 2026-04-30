@@ -2082,7 +2082,11 @@ a:hover {
     align-self: stretch;
     width: auto;
     margin: 0;
-    border-radius: 16px;
+    border-radius: 19px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
     box-sizing: border-box;
     min-height: 53px;
     height: 53px;
