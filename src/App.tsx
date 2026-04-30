@@ -470,8 +470,8 @@ export function AirportField({
   // For last airport: no left round, no left border; the swap overlaps between them.
   // We use md: utilities to override mobile.
   const desktopSeam = isFirst
-    ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    ? 'md:rounded-l-[16px] md:rounded-r-none md:pr-[28px]'
+    : 'md:rounded-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
@@ -607,7 +607,7 @@ export function HeroSearchGroup() {
           {HERO_HEADINGS[tab]}
         </h1>
       </div>
-      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
+      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full min-h-[280px] md:min-h-[200px]">
         {tab === 'flights' ? <FlightSearchBar /> : null}
         {tab === 'hotels' ? <HotelsSearchBar /> : null}
         {tab === 'cars' ? <CarsSearchBar /> : null}
@@ -911,7 +911,7 @@ export function FlightSearchBar() {
         <PassengersField />
         <button
           type="submit"
-          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
+          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-[-2px] max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
         >
           <span className="font-semibold">Search</span>
           <span className="flex w-6 h-6 flex-shrink-0 items-center justify-center" aria-hidden>
