@@ -109,7 +109,7 @@ const TAB_ICONS: Record<SearchPillTabId, ComponentType<{ size: SearchPillSize }>
 
 const SEARCH_TABS: readonly SearchPillTab[] = [
   { id: 'flights', label: 'Flights' },
-  { id: 'hotels', label: 'Hotels' },
+  { id: 'hotels', label: 'TEST' },
   { id: 'cars', label: 'Cars' },
 ]
 
@@ -150,7 +150,8 @@ export function SearchPills({
         const selected = selectedTab === tab.id
         const cursorClass = interactive ? 'cursor-pointer' : 'cursor-default hover:cursor-pointer'
         const flightsPadding = tab.id === 'flights' && size === 'lg' ? 'py-[32px]' : ''
-        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} ${flightsPadding} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
+        const hotelsRedText = tab.id === 'hotels' ? '!text-red-600' : ''
+        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} ${flightsPadding} ${hotelsRedText} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
         const stateClasses = selected
           ? 'bg-purple text-grey-100 border-purple hover:bg-purple-hover hover:border-purple-hover'
           : 'bg-white text-grey-600 border-grey-200 hover:text-purple hover:border-purple'
