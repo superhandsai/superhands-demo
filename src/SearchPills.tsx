@@ -170,6 +170,7 @@ export function SearchPills({
               role="tab"
               aria-selected={selected}
               className={`${base} ${stateClasses} m-0 appearance-none`}
+              style={{ padding: '20px' }}
               onClick={() => onSelectTab?.(tab.id)}
             >
               {label}
