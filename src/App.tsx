@@ -212,7 +212,7 @@ export function SiteHeader() {
             aria-label="Language, location, and currency"
           >
             <a
-              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-purple hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2 min-h-0 rounded-none px-5 self-stretch leading-none text-[16px] text-grey-400 border-r border-grey-200 hover:text-red-600 hover:no-underline max-md:flex-1 max-md:min-w-min max-md:w-auto max-md:min-h-11 max-md:px-3 max-md:whitespace-nowrap"
               href="#"
             >
               English (UK)
