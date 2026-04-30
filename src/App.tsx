@@ -602,7 +602,7 @@ export function HeroSearchGroup() {
         <h1
           id="hero-heading"
           className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
+          style={{ fontSize: '56px', textShadow: '0px 2px 4px rgba(0,0,0,0.3)' }}
         >
           {HERO_HEADINGS[tab]}
         </h1>
