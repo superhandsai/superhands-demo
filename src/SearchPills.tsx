@@ -124,7 +124,7 @@ export interface SearchPillsProps {
 const PILL_SIZE_CLASS: Record<SearchPillSize, string> = {
   sm: 'gap-[6px] px-[10px] py-[6px] text-[13px]',
   md: 'gap-2 px-3 py-[10px] text-[16px]',
-  lg: 'gap-[10px] px-[18px] py-[32px] text-[18px]',
+  lg: 'gap-[10px] px-[18px] py-[14px] text-[18px]',
 }
 
 export function SearchPills({
@@ -149,7 +149,8 @@ export function SearchPills({
         const Icon = TAB_ICONS[tab.id]
         const selected = selectedTab === tab.id
         const cursorClass = interactive ? 'cursor-pointer' : 'cursor-default hover:cursor-pointer'
-        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
+        const flightsPadding = tab.id === 'flights' && size === 'lg' ? 'py-[32px]' : ''
+        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} ${flightsPadding} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2`
         const stateClasses = selected
           ? 'bg-purple text-grey-100 border-purple hover:bg-purple-hover hover:border-purple-hover'
           : 'bg-white text-grey-600 border-grey-200 hover:text-purple hover:border-purple'
