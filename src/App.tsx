@@ -56,7 +56,8 @@ const FLIGHT_SEARCH_VALUE_ROW =
   'relative flex items-center gap-1 min-h-[22px] flex-auto min-w-0 overflow-hidden flex-[0_0_auto]'
 
 const FLIGHT_SEARCH_INPUT_STACKED =
-  'relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none text-grey-900 focus:outline-none text-left'
+  'relative w-full max-w-full min-w-0 h-auto min-h-[22px] flex-1 self-stretch p-0 m-0 text-[18px] leading-[1.25] overflow-hidden whitespace-nowrap text-ellipsis bg-transparent border-none focus:outline-none text-left'
+const FLIGHT_SEARCH_INPUT_STACKED_STYLE = { color: 'rgba(33, 20, 27, 0.63)' }
 
 const OPTION_BASE =
   'flex flex-col items-stretch self-stretch gap-1 w-full m-0 px-3 py-[10px] flex-shrink-0 border-none rounded-sm bg-transparent font-sans text-[16px] font-normal leading-[1.35] text-grey-900 text-left cursor-pointer appearance-none focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2'
@@ -507,6 +508,7 @@ export function AirportField({
             className={`${FLIGHT_SEARCH_INPUT_STACKED} cursor-text ${
               showHint ? 'text-transparent caret-grey-900' : ''
             } ${String(value || '').trim() ? 'pr-8' : ''}`}
+            style={!showHint ? FLIGHT_SEARCH_INPUT_STACKED_STYLE : undefined}
             role="combobox"
             aria-expanded={open}
             aria-controls={listId}
