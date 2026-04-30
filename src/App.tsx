@@ -938,7 +938,7 @@ export function FlightSearchBar() {
                 backgroundSize: '14px 14px',
               }}
             />
-            <span className="inline-flex items-center min-h-0 leading-[1.25]">Direct flights</span>
+            <span className="inline-flex items-center min-h-0 leading-[1.25]" style={{ textShadow: '11px 2px 4px rgba(0,0,0,0.3)', fontSize: '45px' }}>Direct flights</span>
           </label>
         </div>
       </div>
