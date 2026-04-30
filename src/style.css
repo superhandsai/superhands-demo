@@ -2208,6 +2208,8 @@ a:hover {
 .card-grid--deals {
   grid-template-columns: repeat(3, 1fr);
   cursor: pointer;
+  width: 1248px;
+  row-gap: 40px;
 }
 
 .card-grid--stays {
