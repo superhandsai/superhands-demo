@@ -222,7 +222,7 @@ export function SiteHeader() {
               href="#"
             >
               <span className="inline-flex items-center gap-2">
-                <UkFlagIcon /><span className="leading-none">United Kingdom</span>
+                <UkFlagIcon /><span className="leading-none" style={{ color: 'rgba(176, 123, 141, 1)' }}>United Kingdom</span>
               </span>
             </a>
             <a
