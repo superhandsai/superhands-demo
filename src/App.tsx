@@ -596,7 +596,7 @@ export function HeroSearchGroup() {
   const [tab, setTab] = useState<SearchPillTabId>('flights')
 
   return (
-    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
+    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8 min-h-[400px]">
       <div className="flex flex-col items-start gap-8 w-full">
         <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
         <h1
