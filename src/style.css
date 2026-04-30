@@ -297,7 +297,7 @@ a:hover {
 }
 
 .btn--search {
-  background: var(--color-purple);
+  background: rgba(237, 92, 164, 0.9);
   color: var(--color-grey-100);
   flex-shrink: 0;
   gap: 10px;
