@@ -149,7 +149,7 @@ export function SearchPills({
         const Icon = TAB_ICONS[tab.id]
         const selected = selectedTab === tab.id
         const cursorClass = interactive ? 'cursor-pointer' : 'cursor-default hover:cursor-pointer'
-        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color,box-shadow,transform] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 hover:shadow-[0_4px_12px_rgba(96,93,236,0.2)] hover:translate-y-[-2px]`
+        const base = `inline-flex items-center justify-center ${PILL_SIZE_CLASS[size]} font-medium border rounded-full ${cursorClass} select-none transition-[color,background,border-color,box-shadow,transform] duration-150 max-md:flex-1 max-md:min-w-0 max-md:flex-col max-md:items-center max-md:justify-center max-md:gap-1 max-md:px-1 max-md:py-2 max-md:rounded-[12px] max-md:text-center focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 hover:shadow-[0_4px_12px_rgba(96,93,236,0.2)] hover:translate-y-[-1px]`
         const stateClasses = selected
           ? 'bg-purple text-grey-100 border-purple hover:bg-purple-hover hover:border-purple-hover'
           : 'bg-white text-grey-600 border-grey-200 hover:text-purple hover:border-purple'
