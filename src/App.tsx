@@ -38,7 +38,7 @@ interface PopoverPlacement {
 
 // Shared Tailwind class strings for repeated patterns.
 const HEADER_LINK =
-  'px-[10px] text-[16px] text-black rounded-sm min-h-11 inline-flex items-center hover:text-purple hover:no-underline'
+  'px-[10px] text-[16px] text-[rgba(176,123,123,1)] rounded-sm min-h-11 inline-flex items-center hover:text-purple hover:no-underline'
 
 const BTN_HEADER =
   'box-border inline-flex items-center justify-center bg-purple text-grey-100 text-[16px] font-normal border-none rounded-[12px] min-h-10 h-10 px-4 cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline'
