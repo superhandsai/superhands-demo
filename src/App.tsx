@@ -196,7 +196,7 @@ export function SiteHeader() {
           <img src={tripma.wordmark} alt="Tripma" width={105} height={30} className="block w-[104.8px] max-w-full h-auto" />
         </Link>
         <nav id={navId} className={navClasses}>
-          <Link to="/destinations" className={HEADER_LINK}>Destinations</Link>
+          <Link to="/destinations" className={HEADER_LINK}>Destinations!!</Link>
           <Link to="/stays" className={HEADER_LINK}>Stays</Link>
           {account ? (
             <Link to="/trips" className={HEADER_LINK}>My trips</Link>
