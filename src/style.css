@@ -518,8 +518,8 @@ a:hover {
   max-width: none;
   font-size: clamp(1.75rem, 4vw, 3rem);
   font-weight: 800;
-  line-height: 1.05;
-  text-align: left;
+  line-height: 1.2;
+  text-align: center;
   letter-spacing: -0.02em;
   background: var(--hero-title-gradient);
   -webkit-background-clip: text;
@@ -593,7 +593,8 @@ a:hover {
 
 @media (min-width: 1025px) {
   .hero__title {
-    font-size: 56px;
+    font-size: 30px;
+    line-height: 36px;
   }
 }
 
