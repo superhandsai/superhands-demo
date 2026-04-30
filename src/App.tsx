@@ -859,7 +859,7 @@ export function FlightSearchBar() {
       <div className="flex flex-wrap items-center gap-x-[14px] gap-y-[10px] max-md:w-full max-md:flex-col max-md:items-stretch">
         <TripTypeSelect value={tripType} onChange={setTripType} />
       </div>
-      <div className="relative z-[1] w-full min-w-0 flex flex-wrap items-start gap-4 box-border p-0 bg-transparent border-none rounded-none shadow-none overflow-visible md:gap-0 md:gap-y-3 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:h-auto max-md:max-h-none max-md:p-0 max-md:gap-3 max-md:bg-transparent max-md:border-none max-md:shadow-none">
+      <div className="relative z-[1] w-full min-w-0 flex flex-wrap items-start gap-4 box-border p-0 bg-transparent border-none rounded-none shadow-none overflow-visible md:gap-0 md:gap-y-3 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:h-auto max-md:max-h-none max-md:p-0 max-md:gap-3 max-md:bg-transparent max-md:border-none max-md:shadow-none text-[20px]">
         <div className="relative flex flex-col items-stretch gap-2 flex-1 min-w-0 md:flex-row md:items-start md:flex-wrap md:gap-0 md:gap-y-3 md:flex-[2_1_0] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0">
           <AirportField
             fieldKey="from"
