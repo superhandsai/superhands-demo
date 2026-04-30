@@ -1228,7 +1228,7 @@ a:hover {
   gap: 2px;
   min-width: 0;
   min-height: 80px;
-  padding: 9px 13px;
+  padding: 9px;
   cursor: pointer;
 }
 
@@ -1238,11 +1238,11 @@ a:hover {
 
 /* Mirror swap overlap: extra inset toward the seam on From (right) and To (left) */
 .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control.flight-search__control--stacked {
-  padding-right: var(--airport-swap-content-inset-from);
+  padding-right: 9px;
 }
 
 .flight-search__airports-pair > .flight-search__airport:last-child .flight-search__control.flight-search__control--stacked {
-  padding-left: var(--airport-swap-content-inset-to);
+  padding-left: 9px;
 }
 
 @media (min-width: 769px) {
@@ -2037,8 +2037,8 @@ a:hover {
   /* Same horizontal inset as From; extra right padding so value text clears the 44px swap */
   .flight-search__airports-pair > .flight-search__airport:first-child .flight-search__control.flight-search__control--stacked,
   .flight-search__airports-pair > .flight-search__airport:last-child .flight-search__control.flight-search__control--stacked {
-    padding-left: 13px;
-    padding-right: 52px;
+    padding-left: 9px;
+    padding-right: 9px;
   }
 
   .flight-search__divider {
