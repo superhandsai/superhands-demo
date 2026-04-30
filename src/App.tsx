@@ -729,10 +729,10 @@ export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
   }, [open])
 
   const triggerBase =
-    'box-border inline-flex items-center gap-2 w-auto min-h-10 m-0 font-sans text-[18px] font-semibold text-grey-900 text-left bg-transparent rounded-[12px] shadow-none cursor-pointer appearance-none focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 hover:text-purple hover:border-purple'
+    'box-border inline-flex items-center gap-2 w-auto min-h-10 m-0 font-sans text-[18px] font-semibold text-grey-900 text-left bg-transparent shadow-none cursor-pointer appearance-none focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 hover:text-purple hover:border-purple'
   const triggerState = open
-    ? 'text-purple border-2 border-purple px-[13px] py-[7px]'
-    : 'border border-grey-200 px-[13px] py-2 pr-3'
+    ? 'text-purple border-2 border-purple px-[18px] py-2 rounded-tl-[10px] rounded-tr-[11px] rounded-br-[65px] rounded-bl-[74px]'
+    : 'border border-grey-200 px-[18px] py-2 rounded-tl-[10px] rounded-tr-[11px] rounded-br-[65px] rounded-bl-[74px]'
 
   return (
     <div className={`relative w-auto max-w-none ${open ? 'z-[40]' : ''}`} ref={rootRef}>
