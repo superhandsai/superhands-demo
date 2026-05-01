@@ -10,11 +10,7 @@ import {
 } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { tripma } from './assets/tripma/urls'
-import { DateRangeField } from './DateRangeField'
 import { FieldClearButton } from './FieldClearButton'
-import { PassengersField } from './PassengersField'
-import { SearchPills, type SearchPillTabId } from './SearchPills'
-import { CarsSearchBar, HotelsSearchBar } from './HeroSearchBars'
 import {
   type Airport,
   type AirportApi,
@@ -418,7 +414,7 @@ export function AirportField({
   }, [airportApi, filter, excludeCodes, value])
 
   const closedDisplay =
-    value && airportApi ? airportApi.formatAirportFieldValue(value) : value || ''
+    value && airportApi ? airportApi.formatAirportFieldValue(value) : value || filter || ''
   const inputDisplay = open ? filter : closedDisplay
   const showHint =
     (!closedDisplay && !open) || (open && !String(inputDisplay ?? '').trim())
@@ -471,7 +467,7 @@ export function AirportField({
   // We use md: utilities to override mobile.
   const desktopSeam = isFirst
     ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    : 'md:rounded-l-none md:rounded-r-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
@@ -503,6 +499,7 @@ export function AirportField({
           ) : null}
           <input
             id={`${name}-combobox`}
+            name={`${name}_display`}
             type="text"
             className={`${FLIGHT_SEARCH_INPUT_STACKED} cursor-text ${
               showHint ? 'text-transparent caret-grey-900' : ''
@@ -584,33 +581,11 @@ export function AirportField({
   )
 }
 
-const HERO_HEADINGS: Record<SearchPillTabId, string> = {
-  flights: 'Find the best flights anywhere',
-  hotels: 'Find a place to stay anywhere',
-  cars: 'Find the right car for your trip',
-  packages: 'Find the best holiday packages',
-}
-
 export function HeroSearchGroup() {
-  const pillsId = useId()
-  const [tab, setTab] = useState<SearchPillTabId>('flights')
-
   return (
     <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
-      <div className="flex flex-col items-start gap-8 w-full">
-        <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
-        <h1
-          id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
-        >
-          {HERO_HEADINGS[tab]}
-        </h1>
-      </div>
-      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
-        {tab === 'flights' ? <FlightSearchBar /> : null}
-        {tab === 'hotels' ? <HotelsSearchBar /> : null}
-        {tab === 'cars' ? <CarsSearchBar /> : null}
+      <div className="w-full">
+        <FlightSearchBar />
       </div>
     </div>
   )
@@ -625,6 +600,63 @@ const FLIGHT_TRIP_TYPES: readonly TripTypeOption[] = [
   { value: 'return', label: 'Return' },
   { value: 'one-way', label: 'One way' },
   { value: 'multi-city', label: 'Multi-city' },
+]
+
+interface CalendarWindowPreset {
+  id: string
+  label: string
+  depart: string
+  returnDate: string
+}
+
+const CALENDAR_WINDOW_PRESETS: readonly CalendarWindowPreset[] = [
+  { id: 'jun-1-14', label: 'Jun 1 - Jun 14', depart: '2026-06-01', returnDate: '2026-06-14' },
+  { id: 'jun-16-29', label: 'Jun 16 - Jun 29', depart: '2026-06-16', returnDate: '2026-06-29' },
+  { id: 'jul-1-14', label: 'Jul 1 - Jul 14', depart: '2026-07-01', returnDate: '2026-07-14' },
+]
+
+interface AvailabilityDestinationPreset {
+  code: string
+  name: string
+  country: string
+  reason: string
+  fromFareGBP: number
+  duration: string
+}
+
+const AVAILABILITY_DESTINATION_PRESETS: readonly AvailabilityDestinationPreset[] = [
+  {
+    code: 'JFK',
+    name: 'New York',
+    country: 'United States',
+    reason: 'Great for a two-week city + nearby coast split',
+    fromFareGBP: 410,
+    duration: '7h 55m',
+  },
+  {
+    code: 'NRT',
+    name: 'Tokyo',
+    country: 'Japan',
+    reason: 'Strong culture + food itinerary for 14 nights',
+    fromFareGBP: 620,
+    duration: '13h 45m',
+  },
+  {
+    code: 'LIS',
+    name: 'Lisbon',
+    country: 'Portugal',
+    reason: 'Short flight and easy long-stay base',
+    fromFareGBP: 160,
+    duration: '2h 50m',
+  },
+  {
+    code: 'BCN',
+    name: 'Barcelona',
+    country: 'Spain',
+    reason: 'Reliable weather and direct summer options',
+    fromFareGBP: 145,
+    duration: '2h 20m',
+  },
 ]
 
 function TripTypeReturnIcon() {
@@ -791,157 +823,145 @@ export function TripTypeSelect({ value, onChange }: TripTypeSelectProps) {
   )
 }
 
-function SwapAirportsIcon() {
-  return (
-    <svg
-      width="100%"
-      height="100%"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path
-        d="M20 17H4M4 17L8 13M4 17L8 21M4 7H20M20 7L16 3M20 7L16 11"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 export function FlightSearchBar() {
-  const directFlightsId = useId()
   const navigate = useNavigate()
-  const [tripType, setTripType] = useState<TripType>('return')
-  const [from, setFrom] = useState('')
-  const [to, setTo] = useState('')
+  const [from, setFrom] = useState('LHR')
+  const [selectedCalendarWindowId, setSelectedCalendarWindowId] = useState<string>('jun-16-29')
   const [airportMenu, setAirportMenu] = useState<AirportMenuKey>(null)
-  const [nearbyAirports, setNearbyAirports] = useState(false)
-  const [toNearbyAirports, setToNearbyAirports] = useState(false)
-  const [directFlights, setDirectFlights] = useState(false)
-  const [swapIconFlipped, setSwapIconFlipped] = useState(false)
+  const [showOriginEditor, setShowOriginEditor] = useState(false)
+  const selectedCalendarWindow = useMemo(
+    () => CALENDAR_WINDOW_PRESETS.find(w => w.id === selectedCalendarWindowId),
+    [selectedCalendarWindowId]
+  )
+  const activeWindow = selectedCalendarWindow ?? CALENDAR_WINDOW_PRESETS[0]
+  const dateSummaryText = selectedCalendarWindow
+    ? `${selectedCalendarWindow.depart} to ${selectedCalendarWindow.returnDate}`
+    : `${activeWindow.depart} to ${activeWindow.returnDate}`
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const data = new FormData(e.currentTarget)
+  const destinationCards = useMemo(() => {
+    return AVAILABILITY_DESTINATION_PRESETS.map((dest, index) => {
+      const seasonalLift =
+        selectedCalendarWindowId === 'jul-1-14'
+          ? 35
+          : selectedCalendarWindowId === 'jun-1-14'
+            ? 10
+            : 0
+      return {
+        ...dest,
+        price: dest.fromFareGBP + seasonalLift + index * 7,
+      }
+    })
+  }, [selectedCalendarWindowId])
+
+  function openFlightWindow(destinationCode: string) {
     const params = new URLSearchParams()
-    const fromValue = String(data.get('from') || '').trim()
-    const toValue = String(data.get('to') || '').trim()
-    const depart = String(data.get('depart_date') || '').trim()
-    const returnDate = String(data.get('return_date') || '').trim()
-    const adults = String(data.get('adults') || '1')
-    const children = String(data.get('children') || '0')
-    const direct = data.get('direct_flights') ? '1' : ''
-    const trip = String(data.get('trip_type') || tripType)
-    if (fromValue) params.set('from', fromValue)
-    if (toValue) params.set('to', toValue)
-    if (depart) params.set('depart', depart)
-    if (returnDate && trip !== 'one-way') params.set('return', returnDate)
-    params.set('adults', adults)
-    params.set('children', children)
-    if (direct) params.set('direct', direct)
-    params.set('trip', trip)
+    params.set('from', from || 'LHR')
+    params.set('to', destinationCode)
+    params.set('depart', activeWindow.depart)
+    params.set('return', activeWindow.returnDate)
+    params.set('adults', '1')
+    params.set('children', '0')
+    params.set('trip', 'return')
     navigate(`/flights?${params.toString()}`)
   }
 
-  function swapFromTo() {
-    setAirportMenu(null)
-    setFrom(to)
-    setTo(from)
-    setSwapIconFlipped(f => !f)
-  }
-
   return (
-    <form className="w-full flex flex-col items-start gap-[14px]" onSubmit={onSubmit}>
-      <div className="flex flex-wrap items-center gap-x-[14px] gap-y-[10px] max-md:w-full max-md:flex-col max-md:items-stretch">
-        <TripTypeSelect value={tripType} onChange={setTripType} />
-      </div>
-      <div className="relative z-[1] w-full min-w-0 flex flex-wrap items-start gap-4 box-border p-0 bg-transparent border-none rounded-none shadow-none overflow-visible md:gap-0 md:gap-y-3 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:h-auto max-md:max-h-none max-md:p-0 max-md:gap-3 max-md:bg-transparent max-md:border-none max-md:shadow-none">
-        <div className="relative flex flex-col items-stretch gap-2 flex-1 min-w-0 md:flex-row md:items-start md:flex-wrap md:gap-0 md:gap-y-3 md:flex-[2_1_0] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0">
-          <AirportField
-            fieldKey="from"
-            name="from"
-            label="From"
-            hint="Country, city or airport"
-            value={from}
-            onChange={setFrom}
-            menuOpen={airportMenu}
-            onOpenMenu={setAirportMenu}
-            onCloseMenu={() => setAirportMenu(null)}
-            excludeCodes={to ? [to] : []}
-            showFlightSearchOptions
-            omitDirectFlightsOption
-            nearbyAirportsChecked={nearbyAirports}
-            onNearbyAirportsChange={setNearbyAirports}
-          />
-          <button
-            type="button"
-            className="relative z-[40] flex items-center justify-center flex-shrink-0 self-center w-11 h-11 p-0 m-0 border-2 border-grey-200 rounded-full bg-white text-grey-600 cursor-pointer shadow-[0_1px_2px_rgba(28,5,77,0.06)] transition-[color,border-color,background] duration-150 hover:text-purple hover:border-purple focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 md:self-start md:mt-[18px] md:-ml-[22px] md:-mr-[22px] md:shadow-none max-md:absolute max-md:top-1/2 max-md:right-[13px] max-md:-translate-y-1/2 max-md:m-0 max-md:self-auto max-md:z-[45]"
-            aria-label="Swap departure and arrival airports"
-            onClick={swapFromTo}
-          >
-            <span
-              className={`flex w-[18px] h-[18px] transition-transform duration-[280ms] ease-in-out max-md:rotate-90 ${
-                swapIconFlipped ? 'rotate-180 max-md:rotate-[270deg]' : 'rotate-0'
-              }`}
-            >
-              <SwapAirportsIcon />
-            </span>
-          </button>
-          <AirportField
-            fieldKey="to"
-            name="to"
-            label="To"
-            hint="Country, city or airport"
-            value={to}
-            onChange={setTo}
-            menuOpen={airportMenu}
-            onOpenMenu={setAirportMenu}
-            onCloseMenu={() => setAirportMenu(null)}
-            excludeCodes={from ? [from] : []}
-            showToNearbyAirportsOption
-            toNearbyAirportsChecked={toNearbyAirports}
-            onToNearbyAirportsChange={setToNearbyAirports}
-          />
+    <section className="w-full flex flex-col items-start gap-[14px]">
+      <div
+        className="w-full p-3 rounded-[14px] border border-[rgba(96,93,236,0.25)] bg-[rgba(96,93,236,0.08)] flex flex-col gap-2"
+        role="group"
+        aria-label="Two-week windows from Google Calendar"
+      >
+        <p className="m-0 text-[14px] font-semibold text-grey-700">Google Calendar sync: free 2-week windows</p>
+        <div className="flex flex-wrap gap-2">
+          {CALENDAR_WINDOW_PRESETS.map(window => {
+            const active = window.id === selectedCalendarWindowId
+            return (
+              <button
+                key={window.id}
+                type="button"
+                onClick={() => setSelectedCalendarWindowId(window.id)}
+                className={`px-3 py-[7px] border rounded-[999px] text-[14px] font-semibold cursor-pointer transition-[background,color,border-color] duration-150 ${
+                  active
+                    ? 'bg-purple border-purple text-purple-on'
+                    : 'bg-white border-grey-200 text-grey-700 hover:border-purple hover:text-purple'
+                }`}
+              >
+                {window.label}
+              </button>
+            )
+          })}
         </div>
-        <DateRangeField oneWay={tripType === 'one-way'} />
-        <PassengersField />
-        <button
-          type="submit"
-          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
-        >
-          <span className="font-semibold">Search</span>
-          <span className="flex w-6 h-6 flex-shrink-0 items-center justify-center" aria-hidden>
-            <ArrowRightIcon className="block" />
-          </span>
-        </button>
-        <div className="flex-[0_0_100%] order-[99] self-start w-full flex-shrink-0" role="group" aria-label="Flight search options">
-          <label
-            className="flex items-center gap-[10px] m-0 font-sans text-[15px] font-semibold leading-[1.25] tracking-[0.02em] text-grey-900 cursor-pointer select-none"
-            htmlFor={directFlightsId}
-          >
-            <input
-              id={directFlightsId}
-              type="checkbox"
-              name="direct_flights"
-              checked={directFlights}
-              onChange={e => setDirectFlights(e.target.checked)}
-              className="flex-shrink-0 self-center w-[22px] h-[22px] m-0 box-border appearance-none border border-grey-200 rounded-[7px] bg-white cursor-pointer transition-[border-color,background-color,box-shadow] duration-150 hover:not-disabled:border-purple focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 checked:border-purple checked:bg-purple bg-no-repeat bg-center"
-              style={{
-                backgroundImage: directFlights
-                  ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M20 6L9 17l-5-5' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")"
-                  : undefined,
-                backgroundSize: '14px 14px',
-              }}
+        <div className="rounded-[10px] bg-white/90 border border-[rgba(96,93,236,0.2)] px-3 py-2">
+          <p className="m-0 text-[13px] text-grey-700">
+            <strong>Planner mode:</strong> Window {dateSummaryText} · From {from || 'LHR'} ·
+            Flights-only recommendations
+          </p>
+        </div>
+      </div>
+      <div className="sticky top-2 z-[8] w-full rounded-[12px] border border-[rgba(96,93,236,0.2)] bg-white/95 px-4 py-2">
+        <p className="m-0 text-[13px] font-semibold text-grey-700">
+          Window: {dateSummaryText} · From: {from || 'LHR'} · Trip length: 14 nights · Auto-curated destinations
+        </p>
+      </div>
+      <div className="relative z-[1] w-full min-w-0 flex flex-col items-stretch gap-3 box-border p-0 bg-transparent border-none rounded-none shadow-none">
+        <div className="relative flex flex-col items-stretch gap-2 w-full">
+          {showOriginEditor ? (
+            <AirportField
+              fieldKey="from"
+              name="from"
+              label="From (home airport)"
+              hint="Airport code or city"
+              value={from}
+              onChange={setFrom}
+              menuOpen={airportMenu}
+              onOpenMenu={setAirportMenu}
+              onCloseMenu={() => setAirportMenu(null)}
             />
-            <span className="inline-flex items-center min-h-0 leading-[1.25]">Direct flights</span>
-          </label>
+          ) : (
+            <div className="flex-1 min-w-0 rounded-[16px] border-2 border-grey-200 bg-white px-[13px] py-[9px] min-h-20 flex flex-col justify-center">
+              <span className="text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]">
+                From (home airport)
+              </span>
+              <div className="flex items-center justify-between gap-2 min-h-[22px]">
+                <strong className="text-[18px] leading-[1.25] text-grey-900">{from || 'LHR'}</strong>
+                <button
+                  type="button"
+                  className="px-3 py-1 text-[13px] font-semibold border border-grey-200 rounded-[999px] bg-white text-grey-700 cursor-pointer hover:border-purple hover:text-purple"
+                  onClick={() => setShowOriginEditor(true)}
+                >
+                  Change
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+          {destinationCards.map(dest => (
+            <article
+              key={dest.code}
+              className="rounded-[16px] border border-[rgba(96,93,236,0.2)] bg-white p-4 flex flex-col gap-2"
+            >
+              <p className="m-0 text-[12px] font-semibold text-[#0a7a34]">Flights available for this window</p>
+              <h3 className="m-0 text-[20px] leading-[1.2] text-grey-900">
+                {dest.name}, {dest.country}
+              </h3>
+              <p className="m-0 text-[14px] text-grey-600">{dest.reason}</p>
+              <p className="m-0 text-[14px] font-semibold text-grey-800">
+                From £{dest.price} · {dest.duration} · 14-night match
+              </p>
+              <button
+                type="button"
+                onClick={() => openFlightWindow(dest.code)}
+                className="mt-1 self-start h-auto px-[16px] py-[10px] rounded-[12px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[15px] font-semibold cursor-pointer transition-[background] duration-200 hover:bg-purple-hover"
+              >
+                View flights in this window
+              </button>
+            </article>
+          ))}
         </div>
       </div>
-    </form>
+    </section>
   )
 }
 
