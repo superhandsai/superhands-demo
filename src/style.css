@@ -812,9 +812,10 @@ a:hover {
 }
 
 .flight-search__direct-flights {
-  flex: 0 0 100%;
+  flex: 0 0 auto;
   order: 99;
   align-self: flex-start;
+  margin-left: 16px;
 }
 
 .flight-search__airports-column {
@@ -830,10 +831,11 @@ a:hover {
 .flight-search__nearby-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
-  width: 100%;
+  width: auto;
   min-width: 0;
   align-items: center;
   box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .flight-search__nearby-spacer {
