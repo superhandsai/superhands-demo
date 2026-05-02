@@ -49,7 +49,7 @@ export function SupportChat() {
           onClick={openChat}
         >
           <ChatIcon />
-          <span>Help</span>
+          <span>bla</span>
         </button>
       ) : null}
       <div
