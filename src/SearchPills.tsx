@@ -156,7 +156,7 @@ export function SearchPills({
         const label = (
           <>
             {Icon ? <Icon size={size} /> : null}
-            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words text-[24px]">
+            <span className="max-md:block max-md:max-w-full max-md:text-[11px] max-md:font-medium max-md:leading-[1.15] max-md:whitespace-normal max-md:break-words text-[24px] my-3">
               {tab.label}
             </span>
           </>
