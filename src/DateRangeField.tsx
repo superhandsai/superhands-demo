@@ -213,8 +213,6 @@ interface DateRangeFieldProps {
   departName?: string
   returnName?: string
   placeholder?: string
-  presetDepartKey?: string
-  presetReturnKey?: string
 }
 
 export function DateRangeField({
@@ -224,8 +222,6 @@ export function DateRangeField({
   departName = 'depart_date',
   returnName = 'return_date',
   placeholder = 'Add date',
-  presetDepartKey,
-  presetReturnKey,
 }: DateRangeFieldProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const dialogId = useId()
@@ -251,17 +247,6 @@ export function DateRangeField({
     setReturnKey('')
     setHoverKey(null)
   }, [oneWay])
-
-  useEffect(() => {
-    if (!presetDepartKey && !presetReturnKey) return
-    setDepartKey(presetDepartKey || '')
-    setReturnKey(oneWay ? '' : presetReturnKey || '')
-    setHoverKey(null)
-    const anchor = fromKey(presetDepartKey || presetReturnKey)
-    if (anchor) {
-      setLeftMonth({ year: anchor.getFullYear(), month: anchor.getMonth() })
-    }
-  }, [presetDepartKey, presetReturnKey, oneWay])
 
   useEffect(() => {
     if (!open) return
