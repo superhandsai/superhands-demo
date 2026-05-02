@@ -322,6 +322,7 @@ a:hover {
 
 .btn--search__text {
   font-weight: 600;
+  color: rgb(250, 250, 250);
 }
 
 .btn--primary {
