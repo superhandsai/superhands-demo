@@ -999,7 +999,7 @@ interface SeeAllLinkProps {
 export function SeeAllLink({ to = '/destinations' }: SeeAllLinkProps = {}) {
   return (
     <Link
-      className="inline-flex items-center gap-1 text-grey-300 no-underline h-fit hover:text-purple hover:no-underline focus-visible:text-purple focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2"
+      className="inline-flex items-center gap-1 text-grey-300 no-underline h-fit hover:text-purple hover:no-underline focus-visible:text-purple focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 text-[14px]"
       to={to}
     >
       <span className="h-fit flex-shrink-0 text-[24px] leading-[1.2]">All</span>
