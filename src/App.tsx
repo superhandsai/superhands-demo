@@ -1002,7 +1002,7 @@ export function SeeAllLink({ to = '/destinations' }: SeeAllLinkProps = {}) {
       className="inline-flex items-center gap-1 text-grey-300 no-underline h-fit hover:text-purple hover:no-underline focus-visible:text-purple focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 text-[14px]"
       to={to}
     >
-      <span className="h-fit flex-shrink-0 text-[24px] leading-[1.2]">All</span>
+      <span className="h-fit flex-shrink-0 text-[21px] leading-[1.2]">All</span>
       <span className="flex w-6 h-6 items-center justify-center text-inherit">
         <ArrowRightIcon className="block flex-shrink-0" />
       </span>
