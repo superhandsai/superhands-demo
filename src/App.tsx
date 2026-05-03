@@ -601,7 +601,7 @@ export function HeroSearchGroup() {
         <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] text-[var(--color-danger)] lg:text-[57px]"
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] text-[var(--color-info)] lg:text-[57px]"
           style={{ fontSize: 'clamp(1.75rem, 4vw, 3.5625rem)' }}
         >
           {HERO_HEADINGS[tab]}
