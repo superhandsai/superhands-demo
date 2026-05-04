@@ -470,8 +470,8 @@ export function AirportField({
   // For last airport: no left round, no left border; the swap overlaps between them.
   // We use md: utilities to override mobile.
   const desktopSeam = isFirst
-    ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    ? 'rounded-[16px] md:rounded-r-none md:pr-[28px]'
+    : 'rounded-[16px] md:rounded-l-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
@@ -490,7 +490,7 @@ export function AirportField({
       <input type="hidden" name={name} value={value} />
       <div
         ref={controlRef}
-        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
+        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
       >
         <span className={FLIGHT_SEARCH_LABEL} id={labelId}>
           {label}
