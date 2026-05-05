@@ -26,13 +26,19 @@ export function DestinationsPage() {
       subtitle="Browse our hand-picked destinations and find your next adventure."
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Destinations' }]}
     >
-      <div className="flex flex-col gap-3 mb-4">
-        <div className="flex gap-1.5 flex-nowrap overflow-x-auto" role="tablist">
+      <div className="flex gap-3 items-center mb-4 flex-wrap">
+        <input
+          placeholder="Search destinations"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          className="flex-1 min-w-[200px] py-3 px-4 border border-grey-200 rounded-card text-[15px] font-sans"
+        />
+        <div className="flex gap-1.5 flex-wrap" role="tablist">
           {continents.map(c => (
             <button
               key={c}
               type="button"
-              className={`shrink-0 py-2 px-3.5 border rounded-full font-sans cursor-pointer text-xs ${
+              className={`py-2 px-3.5 border rounded-full font-sans cursor-pointer text-xs ${
                 continent === c
                   ? 'bg-purple text-white border-purple'
                   : 'bg-white text-grey-600 border-grey-200'
@@ -44,12 +50,6 @@ export function DestinationsPage() {
             </button>
           ))}
         </div>
-        <input
-          placeholder="Search destinations"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          className="w-full py-3 px-4 border border-grey-200 rounded-card text-[15px] font-sans"
-        />
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
