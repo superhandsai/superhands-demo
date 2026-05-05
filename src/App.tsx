@@ -591,6 +591,12 @@ const HERO_HEADINGS: Record<SearchPillTabId, string> = {
   packages: 'Find the best holiday packages',
 }
 
+const HERO_TAB_PANELS: Record<'flights' | 'hotels' | 'cars', () => ReactNode> = {
+  flights: () => <FlightSearchBar />,
+  hotels: () => <HotelsSearchBar />,
+  cars: () => <CarsSearchBar />,
+}
+
 export function HeroSearchGroup() {
   const pillsId = useId()
   const [tab, setTab] = useState<SearchPillTabId>('flights')
@@ -607,10 +613,24 @@ export function HeroSearchGroup() {
           {HERO_HEADINGS[tab]}
         </h1>
       </div>
-      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
-        {tab === 'flights' ? <FlightSearchBar /> : null}
-        {tab === 'hotels' ? <HotelsSearchBar /> : null}
-        {tab === 'cars' ? <CarsSearchBar /> : null}
+      <div className="grid grid-cols-1 w-full">
+        {(Object.keys(HERO_TAB_PANELS) as Array<keyof typeof HERO_TAB_PANELS>).map(panelId => {
+          const active = tab === panelId
+          const renderPanel = HERO_TAB_PANELS[panelId]
+          return (
+            <div
+              key={panelId}
+              role="tabpanel"
+              id={`${pillsId}-${panelId}-panel`}
+              aria-labelledby={`${pillsId}-${panelId}`}
+              aria-hidden={!active}
+              inert={!active}
+              className={`col-start-1 row-start-1 w-full ${active ? '' : 'invisible'}`}
+            >
+              {renderPanel()}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
