@@ -127,7 +127,7 @@ export function RefundModal({ booking, onClose }: RefundModalProps) {
                       <strong>{label}</strong>
                       {i === step && phase === 'processing' ? (
                         <span
-                          className="inline-block w-3 h-3 ml-2 border-2 border-purple border-t-transparent rounded-full animate-spin-refund align-middle"
+                          className="inline-block w-3 h-3 ml-2 border-2 border-purple border-t-transparent rounded-full animate-[spin_0.6s_linear_infinite] align-middle"
                           aria-hidden
                         />
                       ) : null}

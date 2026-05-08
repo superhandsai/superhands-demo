@@ -39,7 +39,7 @@ export function ConfirmationPage() {
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Confirmation' }]}
     >
       <div>
-        <div className="bg-confirmation-hero text-white p-8 rounded-card mb-4">
+        <div className="bg-[linear-gradient(135deg,var(--color-purple),#4340b3)] text-white p-8 rounded-card mb-4">
           <p className="m-0 mb-2 flex gap-4 items-baseline">
             <span className="text-xs opacity-80">Reference</span>
             <strong className="text-[28px] tracking-[0.1em]">{booking.pnr}</strong>

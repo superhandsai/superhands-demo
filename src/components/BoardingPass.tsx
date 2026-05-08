@@ -34,7 +34,7 @@ export function BoardingPass({ booking, passenger, seat }: BoardingPassProps) {
   const first = booking.flight.outbound[0]
   const last = booking.flight.outbound[booking.flight.outbound.length - 1]
   return (
-    <article className="bg-boarding-pass rounded-card p-6 shadow-card grid gap-4 max-w-[520px]">
+    <article className="bg-[linear-gradient(135deg,#fff,#f4f0ff)] rounded-card p-6 shadow-card grid gap-4 max-w-[520px]">
       <header className="flex justify-between text-grey-600 text-[13px]">
         <span>Tripma boarding pass</span>
         <strong className="text-grey-900 text-base">{first.carrier}</strong>

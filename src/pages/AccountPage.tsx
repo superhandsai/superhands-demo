@@ -357,7 +357,7 @@ function RewardsTab() {
               <strong>{(next.min - points).toLocaleString()} points to {next.name}</strong>
               <div className="h-2 bg-grey-200 rounded-full overflow-hidden my-3 mb-2">
                 <div
-                  className="h-full bg-tier-fill"
+                  className="h-full bg-[linear-gradient(90deg,#605dec,#8d6cff)]"
                   style={{ width: `${Math.round(progress * 100)}%` }}
                 />
               </div>

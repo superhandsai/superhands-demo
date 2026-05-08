@@ -87,9 +87,9 @@ export function SupportChat() {
               className="max-w-[85%] rounded-[14px] text-sm leading-[1.4] self-start bg-white text-grey-900 border border-grey-200 rounded-bl-[4px] inline-flex gap-1 py-3 px-[14px]"
               aria-live="polite"
             >
-              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-chat-typing" />
-              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-chat-typing [animation-delay:0.15s]" />
-              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-chat-typing [animation-delay:0.3s]" />
+              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-[chat-typing_1.1s_infinite_ease-in-out]" />
+              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-[chat-typing_1.1s_infinite_ease-in-out] [animation-delay:0.15s]" />
+              <span className="w-[6px] h-[6px] rounded-full bg-grey-400 animate-[chat-typing_1.1s_infinite_ease-in-out] [animation-delay:0.3s]" />
             </div>
           ) : null}
         </div>

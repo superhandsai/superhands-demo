@@ -56,7 +56,7 @@ export function ToastViewport() {
       {toasts.map(t => (
         <div
           key={t.id}
-          className="bg-white border border-grey-200 rounded-xl py-3 px-[14px] grid grid-cols-[24px_1fr_auto] gap-[10px] items-start shadow-pop pointer-events-auto animate-toast-in"
+          className="bg-white border border-grey-200 rounded-xl py-3 px-[14px] grid grid-cols-[24px_1fr_auto] gap-[10px] items-start shadow-pop pointer-events-auto animate-[toast-in_0.2s_ease-out]"
           role="status"
         >
           <span
