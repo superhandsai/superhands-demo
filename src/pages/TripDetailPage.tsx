@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { PageShell } from './PageShell'
-import { bookingsStore, updateBooking } from '../lib/bookingsStore'
+import { bookingsStore, updateBooking, type Booking } from '../lib/bookingsStore'
 import { useStore } from '../lib/useStore'
 import { formatDurationMins, formatIsoDate } from '../data/flights'
 import { RefundModal } from '../components/RefundModal'
@@ -11,6 +11,109 @@ const btnPrimaryCls =
   'font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover'
 const btnSecondaryCls =
   'font-sans font-bold cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-white text-purple border border-purple hover:bg-purple-on'
+
+type ReadinessState = 'complete' | 'attention' | 'optional'
+
+function readinessClassFor(state: ReadinessState): string {
+  if (state === 'complete') return 'bg-success-soft text-success'
+  if (state === 'attention') return 'bg-warn-soft text-warn'
+  return 'bg-grey-100 text-grey-600'
+}
+
+function TripReadinessPanel({ booking }: { booking: Booking }) {
+  const first = booking.flight.outbound[0]
+  const seatPassengerIds = new Set(booking.seats.map(s => s.passengerId))
+  const seatedPassengers = booking.passengers.filter(p => seatPassengerIds.has(p.id)).length
+  const passportsComplete = booking.passengers.every(p => p.passportNumber?.trim())
+  const checkedBags = Object.values(booking.extras.checkedBagsByPassenger).reduce(
+    (sum, count) => sum + count,
+    0,
+  )
+  const isConfirmed = booking.status === 'confirmed'
+  const items: Array<{
+    label: string
+    detail: string
+    state: ReadinessState
+    action?: { label: string; to: string }
+  }> = [
+    {
+      label: 'Seat selection',
+      detail:
+        seatedPassengers === booking.passengers.length
+          ? 'Seats assigned for every traveller.'
+          : `${seatedPassengers}/${booking.passengers.length} travellers have seats assigned.`,
+      state: seatedPassengers === booking.passengers.length ? 'complete' : 'attention',
+      action:
+        seatedPassengers === booking.passengers.length
+          ? undefined
+          : { label: 'Check in', to: `/trips/${booking.pnr}/check-in` },
+    },
+    {
+      label: 'Passport details',
+      detail: passportsComplete
+        ? 'Document details are saved for every traveller.'
+        : 'Some traveller documents are missing.',
+      state: passportsComplete ? 'complete' : 'attention',
+    },
+    {
+      label: 'Checked baggage',
+      detail:
+        checkedBags > 0
+          ? `${checkedBags} checked bag${checkedBags === 1 ? '' : 's'} added.`
+          : 'No checked bags added.',
+      state: checkedBags > 0 ? 'complete' : 'optional',
+    },
+    {
+      label: 'Priority boarding',
+      detail: booking.extras.priorityBoarding
+        ? 'Priority boarding is included.'
+        : 'Available to add from manage booking.',
+      state: booking.extras.priorityBoarding ? 'complete' : 'optional',
+    },
+    {
+      label: 'Flight status',
+      detail: `Track ${first.flightNumber} for gate and delay updates.`,
+      state: isConfirmed ? 'attention' : 'optional',
+      action: { label: 'Track flight', to: `/status?no=${first.flightNumber}` },
+    },
+  ]
+
+  return (
+    <div className="bg-white rounded-card p-6 shadow-card mb-4">
+      <div className="flex justify-between items-start gap-4 flex-wrap mb-4">
+        <div>
+          <h2 className="mt-0 mb-1 text-xl text-grey-900">Trip readiness</h2>
+          <p className="m-0 text-sm text-grey-600">
+            Review the details that usually matter before travel day.
+          </p>
+        </div>
+        <Link to={`/trips/${booking.pnr}/check-in`} className={btnPrimaryCls}>
+          Check in
+        </Link>
+      </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
+        {items.map(item => (
+          <div key={item.label} className="border border-grey-200 rounded-[12px] p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <strong className="text-grey-900 text-sm">{item.label}</strong>
+              <span
+                className={`inline-flex items-center rounded-full py-1 px-2.5 text-[11px] font-semibold ${readinessClassFor(item.state)}`}
+              >
+                {item.state === 'complete' ? 'Done' : item.state === 'attention' ? 'Review' : 'Optional'}
+              </span>
+            </div>
+            <p className="text-[13px] text-grey-600 m-0">{item.detail}</p>
+            {item.action ? (
+              <Link className="text-purple no-underline font-normal hover:underline text-[13px] inline-flex mt-2" to={item.action.to}>
+                {item.action.label}
+              </Link>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export function TripDetailPage() {
   const { pnr = '' } = useParams()
@@ -52,6 +155,8 @@ export function TripDetailPage() {
         </Link>
       }
     >
+      <TripReadinessPanel booking={booking} />
+
       <div className="bg-white rounded-card p-6 shadow-card mb-4">
         <h2 className="mt-0 mb-2 text-xl text-grey-900">Itinerary</h2>
         <h3 className="mt-4 mb-2 text-base text-grey-900">Outbound</h3>
