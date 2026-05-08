@@ -4,21 +4,34 @@ import { PageShell } from './PageShell'
 import { DESTINATIONS, type Destination } from '../data/destinations'
 
 type Continent = Destination['continent'] | 'All'
+type SortKey = 'recommended' | 'price-asc' | 'price-desc' | 'city'
 
 export function DestinationsPage() {
   const [continent, setContinent] = useState<Continent>('All')
   const [query, setQuery] = useState('')
+  const [sort, setSort] = useState<SortKey>('recommended')
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return DESTINATIONS.filter(d => {
+    const filtered = DESTINATIONS.filter(d => {
       if (continent !== 'All' && d.continent !== continent) return false
       if (!q) return true
       return d.city.toLowerCase().includes(q) || d.country.toLowerCase().includes(q)
     })
-  }, [continent, query])
+    if (sort === 'price-asc') return [...filtered].sort((a, b) => a.fromPriceGBP - b.fromPriceGBP)
+    if (sort === 'price-desc') return [...filtered].sort((a, b) => b.fromPriceGBP - a.fromPriceGBP)
+    if (sort === 'city') return [...filtered].sort((a, b) => a.city.localeCompare(b.city))
+    return filtered
+  }, [continent, query, sort])
 
   const continents: Continent[] = ['All', 'Asia', 'Europe', 'Africa', 'Americas', 'Oceania']
+  const hasFilters = Boolean(query.trim() || continent !== 'All')
+
+  function resetFilters() {
+    setQuery('')
+    setContinent('All')
+    setSort('recommended')
+  }
 
   return (
     <PageShell
@@ -50,6 +63,34 @@ export function DestinationsPage() {
             </button>
           ))}
         </div>
+        <label className="flex items-center gap-2 text-sm text-grey-600">
+          <span>Sort</span>
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value as SortKey)}
+            className="py-2 px-3 border border-grey-200 rounded-sm bg-white font-sans text-grey-900"
+          >
+            <option value="recommended">Recommended</option>
+            <option value="price-asc">Price low to high</option>
+            <option value="price-desc">Price high to low</option>
+            <option value="city">City A-Z</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="flex justify-between items-center gap-3 mb-4 flex-wrap">
+        <p className="m-0 text-sm text-grey-600">
+          Showing <strong>{list.length}</strong> of {DESTINATIONS.length} destinations
+        </p>
+        {hasFilters ? (
+          <button
+            type="button"
+            className="bg-transparent border-0 p-0 text-purple cursor-pointer hover:underline"
+            onClick={resetFilters}
+          >
+            Reset destination filters
+          </button>
+        ) : null}
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
@@ -70,7 +111,16 @@ export function DestinationsPage() {
       </div>
 
       {list.length === 0 ? (
-        <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4"><p>No destinations match that search.</p></div>
+        <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
+          <p>No destinations match that search.</p>
+          <button
+            type="button"
+            className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+            onClick={resetFilters}
+          >
+            Show all destinations
+          </button>
+        </div>
       ) : null}
     </PageShell>
   )
