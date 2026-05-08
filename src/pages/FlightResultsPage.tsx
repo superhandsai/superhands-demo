@@ -7,12 +7,17 @@ import { ResultsSkeleton } from '../components/ResultsSkeleton'
 import { addAlert } from '../lib/alertsStore'
 import { pushToast } from '../lib/toastStore'
 import {
+  formatDurationMins,
   formatIsoDate,
   generateFlights,
   type FlightOption,
 } from '../data/flights'
 
 type SortKey = 'price' | 'duration' | 'depart' | 'stops'
+
+function getFlightDuration(flight: FlightOption): number {
+  return flight.totalDurationMins
+}
 
 function parsePassengerCount(params: URLSearchParams) {
   const adults = Math.max(1, parseInt(params.get('adults') || '1', 10) || 1)
@@ -86,6 +91,50 @@ export function FlightResultsPage() {
     })
     return out
   }, [filtered, sort])
+
+  const insights = useMemo(() => {
+    if (allFlights.length === 0) {
+      return {
+        cheapest: null as FlightOption | null,
+        fastest: null as FlightOption | null,
+        bestValue: null as FlightOption | null,
+        directCount: 0,
+      }
+    }
+
+    const prices = allFlights.map(f => f.priceGBP)
+    const durations = allFlights.map(getFlightDuration)
+    const minPrice = Math.min(...prices)
+    const maxPriceForScore = Math.max(...prices)
+    const minDuration = Math.min(...durations)
+    const maxDurationForScore = Math.max(...durations)
+    const rangePrice = Math.max(1, maxPriceForScore - minPrice)
+    const rangeDuration = Math.max(1, maxDurationForScore - minDuration)
+
+    return {
+      cheapest: allFlights.reduce((best, f) => (f.priceGBP < best.priceGBP ? f : best), allFlights[0]),
+      fastest: allFlights.reduce(
+        (best, f) => (getFlightDuration(f) < getFlightDuration(best) ? f : best),
+        allFlights[0],
+      ),
+      bestValue: allFlights.reduce((best, f) => {
+        const score = (f.priceGBP - minPrice) / rangePrice + (getFlightDuration(f) - minDuration) / rangeDuration
+        const bestScore =
+          (best.priceGBP - minPrice) / rangePrice + (getFlightDuration(best) - minDuration) / rangeDuration
+        return score < bestScore ? f : best
+      }, allFlights[0]),
+      directCount: allFlights.filter(f => f.stops === 0).length,
+    }
+  }, [allFlights])
+
+  function getBadges(flight: FlightOption): string[] {
+    const badges: string[] = []
+    if (insights.bestValue?.id === flight.id) badges.push('Best value')
+    if (insights.cheapest?.id === flight.id) badges.push('Cheapest')
+    if (insights.fastest?.id === flight.id) badges.push('Fastest')
+    if (flight.seatsRemaining <= 5) badges.push('Few seats left')
+    return badges
+  }
 
   function toggleCarrier(code: string) {
     setSelectedCarriers(prev => {
@@ -269,13 +318,46 @@ export function FlightResultsPage() {
               <p className="m-0 mb-3 text-grey-600">
                 Showing <strong>{sorted.length}</strong> of {allFlights.length} flights
               </p>
+              {allFlights.length > 0 ? (
+                <div className="bg-white rounded-card shadow-card p-4 mb-4 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3 max-[720px]:grid-cols-1">
+                  <div className="bg-grey-100 rounded-[10px] py-3 px-4">
+                    <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+                      Cheapest fare
+                    </span>
+                    <strong className="text-xl text-grey-900">
+                      £{insights.cheapest?.priceGBP.toLocaleString()}
+                    </strong>
+                  </div>
+                  <div className="bg-grey-100 rounded-[10px] py-3 px-4">
+                    <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+                      Fastest trip
+                    </span>
+                    <strong className="text-xl text-grey-900">
+                      {insights.fastest ? formatDurationMins(getFlightDuration(insights.fastest)) : ''}
+                    </strong>
+                  </div>
+                  <div className="bg-grey-100 rounded-[10px] py-3 px-4">
+                    <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+                      Direct flights
+                    </span>
+                    <strong className="text-xl text-grey-900">
+                      {insights.directCount}
+                    </strong>
+                  </div>
+                </div>
+              ) : null}
               {sorted.length === 0 ? (
                 <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
                   <p>No flights match your filters. Try widening the stops or price.</p>
                 </div>
               ) : (
                 sorted.map(f => (
-                  <FlightResultCard key={f.id} flight={f} onSelect={() => selectFlight(f)} />
+                  <FlightResultCard
+                    key={f.id}
+                    flight={f}
+                    badges={getBadges(f)}
+                    onSelect={() => selectFlight(f)}
+                  />
                 ))
               )}
             </>
