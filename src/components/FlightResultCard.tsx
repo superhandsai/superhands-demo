@@ -47,9 +47,10 @@ function FlightLegSummary({ segments, label }: FlightLegSummaryProps) {
 interface FlightResultCardProps {
   flight: FlightOption
   onSelect: () => void
+  badges?: string[]
 }
 
-export function FlightResultCard({ flight, onSelect }: FlightResultCardProps) {
+export function FlightResultCard({ flight, onSelect, badges = [] }: FlightResultCardProps) {
   const first = flight.outbound[0]
   const last = flight.outbound[flight.outbound.length - 1]
   const ret = flight.return
@@ -75,6 +76,18 @@ export function FlightResultCard({ flight, onSelect }: FlightResultCardProps) {
             />
           </span>
         </div>
+        {badges.length > 0 ? (
+          <div className="flex flex-wrap gap-2 mb-3" aria-label="Flight highlights">
+            {badges.map(badge => (
+              <span
+                key={badge}
+                className="inline-flex items-center rounded-full bg-purple-soft text-purple py-1 px-2.5 text-xs font-semibold"
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <FlightLegSummary segments={flight.outbound} label="Outbound" />
         {flight.return ? <FlightLegSummary segments={flight.return} label="Return" /> : null}
       </div>
