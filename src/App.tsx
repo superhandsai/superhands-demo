@@ -191,7 +191,7 @@ export function SiteHeader() {
 
   return (
     <header className="relative z-[50] bg-white border-b border-transparent">
-      <div className="relative mx-auto flex items-center justify-between gap-4 p-2 max-w-[1440px]">
+      <div className="relative mx-auto flex items-center justify-between gap-4 px-8 py-4 max-w-[1440px] max-md:px-4 max-md:py-2">
         <Link to="/" className="flex-shrink-0">
           <img src={tripma.wordmark} alt="Tripma" width={105} height={30} className="block w-[104.8px] max-w-full h-auto" />
         </Link>
@@ -1189,7 +1189,7 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-white border-t border-grey-200 p-0 mt-auto">
-      <div className="max-w-[1440px] w-full mx-auto pt-20 pb-[120px] grid grid-cols-4 gap-x-8 gap-y-6 items-start max-[1320px]:pt-10 max-[1320px]:px-8 max-[1320px]:pb-[120px] max-[1320px]:grid-cols-2 max-md:pt-6 max-md:px-4 max-md:pb-12 max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-5">
+      <div className="max-w-[1440px] w-full mx-auto pt-20 pb-[120px] px-8 grid grid-cols-4 gap-x-8 gap-y-6 items-start max-[1320px]:pt-10 max-[1320px]:pb-[120px] max-[1320px]:grid-cols-2 max-md:pt-6 max-md:px-4 max-md:pb-12 max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-5">
         <div className="col-span-full w-full min-w-0">
           <a href="#" className="inline-block max-w-full">
             <img src={tripma.wordmark} alt="Tripma" width={131} height={37} className="w-[131px] max-w-full h-auto" />
@@ -1242,7 +1242,7 @@ export function HomeContent() {
   return (
     <>
       <section
-        className="relative z-[2] min-h-[480px] flex items-center justify-center px-6 py-12 overflow-visible lg:min-h-[520px] lg:py-14 max-md:p-2 max-md:pb-12 after:content-[''] after:absolute after:inset-0 after:z-[1] after:bg-[linear-gradient(180deg,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0.12)_45%,rgba(255,255,255,0.35)_100%)] after:pointer-events-none"
+        className="relative z-[2] min-h-[480px] flex items-center justify-center px-8 py-12 overflow-visible lg:min-h-[520px] lg:py-14 max-md:px-4 max-md:pb-12 after:content-[''] after:absolute after:inset-0 after:z-[1] after:bg-[linear-gradient(180deg,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0.12)_45%,rgba(255,255,255,0.35)_100%)] after:pointer-events-none"
         aria-labelledby="hero-heading"
       >
         <img
@@ -1256,7 +1256,7 @@ export function HomeContent() {
       </section>
 
       <main className="relative z-0 flex-1">
-        <div className="max-w-[1440px] mx-auto px-4 pb-40 max-md:px-3">
+        <div className="max-w-[1440px] mx-auto px-8 pb-40 max-md:px-4">
           <section className="pt-10 pb-10 flex flex-col gap-6 max-md:pt-0" aria-labelledby="deals-heading">
             <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
               Find your next adventure with these <span className="text-purple">flight deals</span>
