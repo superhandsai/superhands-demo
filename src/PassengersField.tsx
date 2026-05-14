@@ -114,7 +114,7 @@ export function PassengersField({ label = 'Travellers' }: PassengersFieldProps =
   return (
     <div
       ref={rootRef}
-      className={`relative flex flex-col flex-[0_1_280px] min-w-[240px] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0 ${open ? 'z-[25]' : ''}`}
+      className={`relative flex flex-col flex-[0_1_280px] min-w-[240px] max-md:flex-[0_1_200px] max-md:min-w-[180px] max-sm:flex-[0_0_auto] max-sm:w-full max-sm:min-w-0 ${open ? 'z-[25]' : ''}`}
     >
       <input type="hidden" name="adults" value={adults} />
       <input type="hidden" name="children" value={children} />
