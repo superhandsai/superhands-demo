@@ -1237,6 +1237,17 @@ export function HomeContent() {
 
       <main className="relative z-0 flex-1">
         <div className="max-w-[1440px] mx-auto px-4 pb-40 max-md:px-3">
+          <section className="pt-10 pb-10 flex flex-col gap-6" aria-labelledby="screenshot-heading">
+            <h2 id="screenshot-heading" className="text-3xl font-bold text-grey-600">Mobile Preview Screenshot</h2>
+            <div className="w-full max-w-2xl mx-auto border border-gray-200 rounded-lg overflow-hidden shadow-lg">
+              <img
+                src="/tool-artifacts/screenshots/hero-heading-mobile.png"
+                alt="Mobile preview screenshot of hero heading"
+                className="w-full h-auto"
+              />
+            </div>
+          </section>
+
           <section className="pt-10 pb-10 flex flex-col gap-6 max-md:pt-0" aria-labelledby="deals-heading">
             <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
               Find your next adventure with these <span className="text-purple">flight deals</span>
