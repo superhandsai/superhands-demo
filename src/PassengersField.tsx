@@ -120,7 +120,7 @@ export function PassengersField({ label = 'Travellers' }: PassengersFieldProps =
       <input type="hidden" name="children" value={children} />
       <label className={`${fieldBase} ${fieldBorder}`}>
         <span
-          className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em]"
+          className="flex-shrink-0 text-[15px] font-semibold leading-[1.25] text-grey-600 tracking-[0.02em] md:max-w-[120px]"
           id={travellersLabelId}
         >
           {label}
