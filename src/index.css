@@ -51,7 +51,8 @@
 
 /* Hero title gradient — apply with bg-hero-title bg-clip-text text-transparent */
 @utility bg-hero-title {
-  background-image: linear-gradient(180deg, #6d5ef0 0%, #524dde 55%, #3f38c4 100%);
+  background-image: linear-gradient(90deg, #6d5ef0 0%, #3f38c4 30%, #8a7cff 50%, #524dde 70%, #6d5ef0 100%);
+  background-size: 220% 100%;
 }
 
 /* Confirmation hero gradient */
@@ -94,6 +95,11 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes hero-title-gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 @theme {
   --animate-skeleton: skeleton-shimmer 1.4s ease infinite;
   --animate-toast-in: toast-in 0.2s ease-out;
@@ -133,6 +139,12 @@
 }
 
 @layer utilities {
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-hero-title-gradient {
+      animation: hero-title-gradient 5s ease-in-out infinite;
+    }
+  }
+
   .visually-hidden {
     position: absolute;
     width: 1px;

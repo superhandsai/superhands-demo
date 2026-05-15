@@ -602,13 +602,12 @@ export function HeroSearchGroup() {
   const [tab, setTab] = useState<SearchPillTabId>('flights')
 
   return (
-    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
-      <div className="flex flex-col items-start gap-8 w-full">
+    <div className="box-border w-full px-6 py-5 text-[rgba(19,23,32,1)] bg-[linear-gradient(135deg,rgba(255,255,255,0.94)_0%,rgba(247,245,255,0.9)_52%,rgba(235,242,255,0.92)_100%)] border border-white/75 rounded-[32px] shadow-[0_24px_80px_rgba(39,39,63,0.16),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md flex flex-col items-start gap-6 max-md:px-4 max-md:py-4 max-md:rounded-[24px]">
+      <div className="flex flex-col items-start gap-6 w-full">
         <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
         <h1
           id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-hero-title bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
+          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-normal bg-hero-title bg-clip-text text-transparent animate-hero-title-gradient text-[44px] lg:text-[56px] max-md:text-[32px]"
         >
           {HERO_HEADINGS[tab]}
         </h1>
@@ -1242,7 +1241,7 @@ export function HomeContent() {
   return (
     <>
       <section
-        className="relative z-[2] min-h-[480px] flex items-center justify-center px-6 py-12 overflow-visible lg:min-h-[520px] lg:py-14 max-md:p-2 max-md:pb-12 after:content-[''] after:absolute after:inset-0 after:z-[1] after:bg-[linear-gradient(180deg,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0.12)_45%,rgba(255,255,255,0.35)_100%)] after:pointer-events-none"
+        className="relative z-[2] min-h-[440px] flex items-center justify-center px-6 py-8 overflow-visible lg:min-h-[480px] lg:py-10 max-md:p-2 max-md:pb-10 after:content-[''] after:absolute after:inset-0 after:z-[1] after:bg-[linear-gradient(180deg,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0.12)_45%,rgba(255,255,255,0.35)_100%)] after:pointer-events-none"
         aria-labelledby="hero-heading"
       >
         <img
@@ -1257,7 +1256,7 @@ export function HomeContent() {
 
       <main className="relative z-0 flex-1">
         <div className="max-w-[1440px] mx-auto px-4 pb-40 max-md:px-3">
-          <section className="pt-10 pb-10 flex flex-col gap-6 max-md:pt-0" aria-labelledby="deals-heading">
+          <section className="pt-8 pb-10 flex flex-col gap-6 max-md:pt-0" aria-labelledby="deals-heading">
             <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
               Find your next adventure with these <span className="text-purple">flight deals</span>
             </SectionTitle>
