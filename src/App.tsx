@@ -596,21 +596,32 @@ export function HeroSearchGroup() {
   const [tab, setTab] = useState<SearchPillTabId>('flights')
 
   return (
-    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
-      <div className="flex flex-col items-start gap-8 w-full">
+    <div className="relative box-border w-full overflow-hidden rounded-[32px] border border-white/70 bg-white/[0.82] p-8 text-grey-900 shadow-[0_24px_70px_rgba(39,39,63,0.18),0_2px_10px_rgba(96,93,236,0.08)] backdrop-blur-xl flex flex-col items-start gap-8 max-lg:p-6 max-md:rounded-[24px] max-md:p-4 max-md:gap-6">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,#16c6d7_0%,#605dec_48%,#ff8a65_100%)]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(96,93,236,0.12)_0%,rgba(255,255,255,0)_38%,rgba(22,198,215,0.11)_100%)]" aria-hidden />
+      <div className="relative z-[1] flex flex-col items-start gap-7 w-full max-md:gap-5">
         <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
-        <h1
-          id="hero-heading"
-          className="m-0 w-full max-w-none font-extrabold leading-[1.05] text-left tracking-[-0.02em] bg-[linear-gradient(180deg,#6d5ef0_0%,#524dde_55%,#3f38c4_100%)] bg-clip-text text-transparent lg:text-[56px]"
-          style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}
-        >
-          {HERO_HEADINGS[tab]}
-        </h1>
+        <div className="flex w-full flex-col items-start gap-3">
+          <span className="inline-flex items-center rounded-full border border-[rgba(96,93,236,0.18)] bg-white/70 px-3 py-[6px] text-[13px] font-bold uppercase leading-none tracking-normal text-purple shadow-[0_8px_24px_rgba(96,93,236,0.08)]">
+            Travel planning made simple
+          </span>
+          <h1
+            id="hero-heading"
+            className="hero-gradient-text m-0 w-full max-w-[900px] text-[52px] font-extrabold leading-[1.02] tracking-normal max-lg:text-[44px] max-md:text-[32px]"
+          >
+            {HERO_HEADINGS[tab]}
+          </h1>
+        </div>
       </div>
-      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
+      <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="relative z-[1] w-full rounded-[22px] bg-white/[0.72] p-3 shadow-[inset_0_0_0_1px_rgba(203,212,230,0.55)] max-md:rounded-[18px] max-md:p-2">
         {tab === 'flights' ? <FlightSearchBar /> : null}
         {tab === 'hotels' ? <HotelsSearchBar /> : null}
         {tab === 'cars' ? <CarsSearchBar /> : null}
+      </div>
+      <div className="relative z-[1] flex flex-wrap items-center gap-3 text-[14px] font-semibold leading-none text-grey-600 max-md:gap-2 max-md:text-[13px]">
+        <span className="rounded-full bg-white/[0.74] px-3 py-2 shadow-[inset_0_0_0_1px_rgba(203,212,230,0.6)]">Flexible dates</span>
+        <span className="rounded-full bg-white/[0.74] px-3 py-2 shadow-[inset_0_0_0_1px_rgba(203,212,230,0.6)]">Price alerts</span>
+        <span className="rounded-full bg-white/[0.74] px-3 py-2 shadow-[inset_0_0_0_1px_rgba(203,212,230,0.6)]">No hidden fees</span>
       </div>
     </div>
   )
@@ -1222,11 +1233,11 @@ export function HomeContent() {
   return (
     <>
       <section
-        className="relative z-[2] min-h-[480px] flex items-center justify-center px-6 py-12 overflow-visible lg:min-h-[520px] lg:py-14 max-md:p-2 max-md:pb-12 after:content-[''] after:absolute after:inset-0 after:z-[1] after:bg-[linear-gradient(180deg,rgba(255,255,255,0.45)_0%,rgba(255,255,255,0.12)_45%,rgba(255,255,255,0.35)_100%)] after:pointer-events-none"
+        className="relative z-[2] min-h-[560px] flex items-center justify-center overflow-hidden px-6 py-16 lg:min-h-[620px] lg:py-20 max-md:min-h-[auto] max-md:px-3 max-md:py-8 before:content-[''] before:absolute before:inset-0 before:z-[1] before:bg-[radial-gradient(circle_at_20%_18%,rgba(22,198,215,0.22)_0%,rgba(22,198,215,0)_26%),linear-gradient(180deg,rgba(255,255,255,0.22)_0%,rgba(255,255,255,0.68)_78%,rgba(255,255,255,0.96)_100%)] before:pointer-events-none after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:z-[1] after:h-28 after:bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,#fff_100%)] after:pointer-events-none"
         aria-labelledby="hero-heading"
       >
         <img
-          className="absolute inset-0 z-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 z-0 w-full h-full scale-[1.04] object-cover object-center saturate-[1.08] contrast-[1.04]"
           src={tripma.heroMap}
           alt=""
         />
