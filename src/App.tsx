@@ -1368,7 +1368,7 @@ export function HomeContent() {
 
 export default function App() {
   return (
-    <div className="min-h-[100svh] flex flex-col bg-white">
+    <div className="min-h-[100svh] flex flex-col bg-red-500">
       <SiteHeader />
       <HomeContent />
       <SiteFooter />
