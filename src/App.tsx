@@ -185,12 +185,12 @@ export function SiteHeader() {
   const unreadCount = notifications.filter(n => !n.read).length
 
   // Desktop nav: flex row with gap-2. Mobile (max-md): hidden unless open, becomes dropdown.
-  const navClasses = `flex flex-wrap items-center gap-2 p-0 ml-auto max-md:ml-0 max-md:absolute max-md:top-full max-md:left-0 max-md:right-0 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:bg-white max-md:p-2 max-md:shadow-card max-md:gap-0 ${
+  const navClasses = `flex flex-wrap items-center gap-2 p-0 ml-auto max-md:ml-0 max-md:absolute max-md:top-full max-md:left-0 max-md:right-0 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:bg-red-500 max-md:p-2 max-md:shadow-card max-md:gap-0 ${
     open ? 'max-md:flex' : 'max-md:hidden'
   }`
 
   return (
-    <header className="relative z-[50] bg-white border-b border-transparent">
+    <header className="relative z-[50] bg-red-500 border-b border-transparent">
       <div className="relative mx-auto flex items-center justify-between gap-4 p-2 max-w-[1440px]">
         <Link to="/" className="flex-shrink-0">
           <img src={tripma.wordmark} alt="Tripma" width={105} height={30} className="block w-[104.8px] max-w-full h-auto" />
@@ -1168,7 +1168,7 @@ export function SiteFooter() {
   const app = ['Tripma for Android', 'Tripma for iOS', 'Mobile site']
 
   return (
-    <footer className="bg-white border-t border-grey-200 p-0 mt-auto">
+    <footer className="bg-red-500 border-t border-grey-200 p-0 mt-auto">
       <div className="max-w-[1440px] w-full mx-auto pt-20 pb-[120px] grid grid-cols-4 gap-x-8 gap-y-6 items-start max-[1320px]:pt-10 max-[1320px]:px-8 max-[1320px]:pb-[120px] max-[1320px]:grid-cols-2 max-md:pt-6 max-md:px-4 max-md:pb-12 max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-5">
         <div className="col-span-full w-full min-w-0">
           <a href="#" className="inline-block max-w-full">
