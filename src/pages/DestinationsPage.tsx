@@ -27,7 +27,7 @@ export function DestinationsPage() {
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Destinations' }]}
     >
       <div className="flex flex-col gap-3 mb-4">
-        <div className="flex gap-1.5 flex-nowrap overflow-x-auto" role="tablist">
+        <div className="flex gap-1.5 flex-nowrap overflow-x-auto -mx-6 px-6" role="tablist">
           {continents.map(c => (
             <button
               key={c}
