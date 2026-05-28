@@ -1261,7 +1261,7 @@ export function HomeContent() {
             <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
               Find your next adventure with these <span className="text-purple">flight deals</span>
             </SectionTitle>
-            <div className="grid gap-10 w-full grid-cols-3 cursor-pointer max-lg:grid-cols-2 max-md:grid-cols-1">
+            <div className="grid gap-10 w-full grid-cols-4 cursor-pointer max-lg:grid-cols-2 max-md:grid-cols-1">
               <DealCard
                 image={tripma.dealShanghai}
                 title="The Bund,"
