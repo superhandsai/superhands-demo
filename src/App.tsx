@@ -466,12 +466,11 @@ export function AirportField({
   // This component lives inside .airports-pair which manages the seam-merging via Tailwind on parent.
   // We key "first" / "last" airport via fieldKey. fieldKey 'from' is first, 'to' is last.
   const isFirst = fieldKey === 'from'
-  // Desktop (md+): for first airport, round only left side (no right round, no right seam-border issues).
-  // For last airport: no left round, no left border; the swap overlaps between them.
-  // We use md: utilities to override mobile.
+  // Medium and up: merge the inner seam. Large desktop also squares the destination right edge.
+  // Below lg, keep the destination right corners rounded for tablet and mobile layouts.
   const desktopSeam = isFirst
     ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    : 'md:rounded-l-none lg:rounded-r-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
