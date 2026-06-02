@@ -170,6 +170,7 @@ export function SearchPills({
               role="tab"
               aria-selected={selected}
               className={`${base} ${stateClasses} m-0 appearance-none`}
+              style={selected && tab.id === 'flights' ? { backgroundColor: 'var(--color-danger)' } : undefined}
               onClick={() => onSelectTab?.(tab.id)}
             >
               {label}
