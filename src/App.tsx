@@ -606,7 +606,7 @@ export function HeroSearchGroup() {
         >
           <span
             key={tab}
-            className="[animation:var(--animate-hero-title)] motion-reduce:[animation:none]"
+            className="inline-block will-change-transform [animation:var(--animate-hero-title)] motion-reduce:[animation:none]"
           >
             {HERO_HEADINGS[tab]}
           </span>
