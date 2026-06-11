@@ -250,7 +250,7 @@ export function SiteHeader() {
               </button>
             </>
           ) : (
-            <Link to="/signin" className={`${BTN_HEADER} max-md:hidden`}>Log in</Link>
+            <Link to="/signin" className={`${BTN_HEADER} max-md:hidden !bg-[var(--color-success)]`}>Log in</Link>
           )}
         </nav>
         <div className="hidden max-md:flex items-center gap-2 flex-shrink-0 ml-auto">
