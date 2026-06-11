@@ -586,7 +586,7 @@ export function AirportField({
 
 const HERO_HEADINGS: Record<SearchPillTabId, string> = {
   flights: 'Find the best flights anywhere',
-  hotels: 'Find a place to stay anywhere',
+  hotels: 'Find accommodation anywhere',
   cars: 'Find the right car for your trip',
   packages: 'Find the best holiday packages',
 }
