@@ -165,8 +165,6 @@ export function CarsSearchBar() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    // No cars route exists yet; for the prototype, send users to the
-    // help center with the search context preserved in the query string.
     const data = new FormData(e.currentTarget)
     const params = new URLSearchParams()
     const loc = String(data.get('pickup_location') || '').trim()
@@ -177,7 +175,7 @@ export function CarsSearchBar() {
     if (start) params.set('start', start)
     if (end) params.set('end', end)
     if (driverAge) params.set('age', driverAge)
-    navigate(`/help?topic=cars&${params.toString()}`)
+    navigate(`/cars/results?${params.toString()}`)
   }
 
   return (
