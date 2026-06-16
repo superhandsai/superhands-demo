@@ -823,6 +823,7 @@ export function FlightSearchBar() {
   const [toNearbyAirports, setToNearbyAirports] = useState(false)
   const [directFlights, setDirectFlights] = useState(false)
   const [swapIconFlipped, setSwapIconFlipped] = useState(false)
+  const [showPlaneAnimation, setShowPlaneAnimation] = useState(false)
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -844,7 +845,14 @@ export function FlightSearchBar() {
     params.set('children', children)
     if (direct) params.set('direct', direct)
     params.set('trip', trip)
-    navigate(`/flights?${params.toString()}`)
+
+    // Trigger plane animation
+    setShowPlaneAnimation(true)
+
+    // Navigate after animation completes
+    setTimeout(() => {
+      navigate(`/flights?${params.toString()}`)
+    }, 1200)
   }
 
   function swapFromTo() {
@@ -855,11 +863,31 @@ export function FlightSearchBar() {
   }
 
   return (
-    <form className="w-full flex flex-col items-start gap-[14px]" onSubmit={onSubmit}>
-      <div className="flex flex-wrap items-center gap-x-[14px] gap-y-[10px] max-md:w-full max-md:flex-col max-md:items-stretch">
-        <TripTypeSelect value={tripType} onChange={setTripType} />
-      </div>
-      <div className="relative z-[1] w-full min-w-0 flex flex-wrap items-start gap-4 box-border p-0 bg-transparent border-none rounded-none shadow-none overflow-visible md:gap-0 md:gap-y-3 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:h-auto max-md:max-h-none max-md:p-0 max-md:gap-3 max-md:bg-transparent max-md:border-none max-md:shadow-none">
+    <>
+      {showPlaneAnimation && (
+        <div className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden">
+          <div className="absolute bottom-0 left-0 animate-[flyAcross_1.2s_ease-out]">
+            <svg
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-purple"
+            >
+              <path
+                d="M20.56 3.91C21.15 4.5 21.15 5.45 20.56 6.03L16.67 9.92L18.79 19.11L17.38 20.53L13.5 13.1L9.6 17L9.96 19.47L8.89 20.53L7.13 17.35L3.94 15.58L5 14.5L7.5 14.87L11.37 11L3.94 7.09L5.36 5.68L14.55 7.8L18.44 3.91C19.02 3.33 19.98 3.33 20.56 3.91Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
+      <form className="w-full flex flex-col items-start gap-[14px]" onSubmit={onSubmit}>
+        <div className="flex flex-wrap items-center gap-x-[14px] gap-y-[10px] max-md:w-full max-md:flex-col max-md:items-stretch">
+          <TripTypeSelect value={tripType} onChange={setTripType} />
+        </div>
+        <div className="relative z-[1] w-full min-w-0 flex flex-wrap items-start gap-4 box-border p-0 bg-transparent border-none rounded-none shadow-none overflow-visible md:gap-0 md:gap-y-3 max-md:flex-col max-md:flex-nowrap max-md:items-stretch max-md:h-auto max-md:max-h-none max-md:p-0 max-md:gap-3 max-md:bg-transparent max-md:border-none max-md:shadow-none">
         <div className="relative flex flex-col items-stretch gap-2 flex-1 min-w-0 md:flex-row md:items-start md:flex-wrap md:gap-0 md:gap-y-3 md:flex-[2_1_0] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0">
           <AirportField
             fieldKey="from"
@@ -942,6 +970,7 @@ export function FlightSearchBar() {
         </div>
       </div>
     </form>
+    </>
   )
 }
 
