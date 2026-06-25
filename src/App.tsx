@@ -14,7 +14,6 @@ import { DateRangeField } from './DateRangeField'
 import { FieldClearButton } from './FieldClearButton'
 import { PassengersField } from './PassengersField'
 import { SearchPills, type SearchPillTabId } from './SearchPills'
-import { CarsSearchBar, HotelsSearchBar } from './HeroSearchBars'
 import {
   type Airport,
   type AirportApi,
@@ -609,8 +608,6 @@ export function HeroSearchGroup() {
       </div>
       <div role="tabpanel" aria-labelledby={`${pillsId}-${tab}`} className="w-full">
         {tab === 'flights' ? <FlightSearchBar /> : null}
-        {tab === 'hotels' ? <HotelsSearchBar /> : null}
-        {tab === 'cars' ? <CarsSearchBar /> : null}
       </div>
     </div>
   )
