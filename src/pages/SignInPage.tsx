@@ -64,7 +64,7 @@ export function SignInPage() {
         {error ? <p className="text-[#b91c1c] text-sm my-2">{error}</p> : null}
         <button
           type="submit"
-          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+          className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-danger text-white hover:bg-[#b91c1c]"
         >
           Sign in
         </button>
