@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom'
 import {
+  type FormEvent,
   type ReactNode,
   useEffect,
   useId,
@@ -1218,6 +1219,72 @@ export function SiteFooter() {
   )
 }
 
+function NewsletterSignup() {
+  const emailId = useId()
+  const [email, setEmail] = useState('')
+  const [submittedEmail, setSubmittedEmail] = useState('')
+
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setSubmittedEmail(email.trim())
+    setEmail('')
+  }
+
+  return (
+    <section
+      className="pt-20 pb-4 max-md:pt-6"
+      aria-labelledby="newsletter-heading"
+    >
+      <div className="grid grid-cols-[1fr_auto] gap-6 items-center rounded-card border border-grey-200 bg-grey-100 px-5 py-4 shadow-search max-lg:grid-cols-1">
+        <div className="min-w-0">
+          <p className="m-0 mb-2 text-[15px] font-bold uppercase tracking-[0.08em] text-purple">Newsletter</p>
+          <h2
+            id="newsletter-heading"
+            className="m-0 text-xl font-bold leading-[1.2] text-grey-900"
+          >
+            Get travel deals and destination ideas in your inbox
+          </h2>
+          <p className="m-0 mt-3 max-w-[520px] text-sm leading-[1.4] text-grey-600">
+            Sign up for monthly fare drops, seasonal guides, and Tripma-only offers.
+          </p>
+        </div>
+
+        <form className="flex flex-col gap-3 min-w-0 w-full max-w-[520px]" onSubmit={onSubmit}>
+          <label className="flex flex-col gap-2 text-sm font-semibold text-grey-600" htmlFor={emailId}>
+            Email address
+          </label>
+          <div className="flex gap-3 min-w-0 max-sm:flex-col">
+            <input
+              id={emailId}
+              className="min-w-0 flex-1 rounded-sm border border-grey-200 bg-white px-3 py-[10px] font-sans text-sm text-grey-900 shadow-card focus:outline-none focus:border-purple"
+              type="email"
+              value={email}
+              onChange={event => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              autoComplete="email"
+              required
+            />
+            <button
+              type="submit"
+              className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover max-sm:w-full"
+            >
+              Sign up
+            </button>
+          </div>
+          <p className="m-0 text-sm leading-[1.4] text-grey-600">
+            No spam. Unsubscribe any time.
+          </p>
+          {submittedEmail ? (
+            <p className="m-0 rounded-sm bg-success-soft px-3 py-[10px] text-sm font-semibold text-success" role="status">
+              Thanks. We’ll send Tripma updates to {submittedEmail}.
+            </p>
+          ) : null}
+        </form>
+      </div>
+    </section>
+  )
+}
+
 export function HomeContent() {
   return (
     <>
@@ -1360,6 +1427,8 @@ export function HomeContent() {
               </Testimonial>
             </div>
           </section>
+
+          <NewsletterSignup />
         </div>
       </main>
     </>
