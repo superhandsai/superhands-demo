@@ -32,12 +32,39 @@ export function SavedPage() {
     )
   }
 
+  const lowestFlight = flights.length > 0 ? Math.min(...flights.map(f => f.priceGBP)) : null
+  const lowestStay = stays.length > 0 ? Math.min(...stays.map(s => s.nightlyGBP)) : null
+
   return (
     <PageShell
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Saved' }]}
       title="Saved"
       subtitle={`${flights.length} flight${flights.length === 1 ? '' : 's'} · ${stays.length} stay${stays.length === 1 ? '' : 's'}`}
     >
+      <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3 mb-4 max-[720px]:grid-cols-1">
+        <div className="bg-white rounded-card p-4 shadow-card">
+          <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+            Saved items
+          </span>
+          <strong className="text-xl text-grey-900">{flights.length + stays.length}</strong>
+        </div>
+        <div className="bg-white rounded-card p-4 shadow-card">
+          <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+            Lowest flight
+          </span>
+          <strong className="text-xl text-grey-900">
+            {lowestFlight === null ? 'None' : `£${lowestFlight}`}
+          </strong>
+        </div>
+        <div className="bg-white rounded-card p-4 shadow-card">
+          <span className="block text-[11px] uppercase tracking-[0.08em] text-grey-600 mb-1">
+            Lowest stay
+          </span>
+          <strong className="text-xl text-grey-900">
+            {lowestStay === null ? 'None' : `£${lowestStay}/night`}
+          </strong>
+        </div>
+      </div>
       {flights.length > 0 ? (
         <div className="bg-white rounded-card p-6 shadow-card mb-4">
           <h2 className="mt-0 mb-2 text-xl text-grey-900">Flights</h2>

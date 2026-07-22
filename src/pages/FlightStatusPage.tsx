@@ -36,6 +36,8 @@ const STATUS_CHIP_CLASSES: Record<Status, string> = {
   delayed: 'bg-danger-soft text-danger',
 }
 
+const QUICK_TRACK_FLIGHTS = ['BA2490', 'VS103', 'KL1008']
+
 export function FlightStatusPage() {
   const [params, setParams] = useSearchParams()
   const queryNo = (params.get('no') || '').toUpperCase()
@@ -79,13 +81,44 @@ export function FlightStatusPage() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+    trackFlight(draft)
+  }
+
+  function trackFlight(flightNumber: string) {
     const next = new URLSearchParams(params)
-    if (draft.trim()) next.set('no', draft.trim().toUpperCase())
+    const normalized = flightNumber.trim().toUpperCase()
+    if (normalized) next.set('no', normalized)
     else next.delete('no')
+    setDraft(normalized)
     setParams(next)
   }
 
   const activeIdx = progression.indexOf(state.status === 'delayed' ? 'scheduled' : state.status)
+  const activity = [
+    {
+      label: 'Schedule loaded',
+      detail: `Terminal 3 gate ${state.gate}`,
+      done: Boolean(queryNo),
+    },
+    {
+      label: 'Boarding',
+      detail: state.status === 'boarding' ? 'Boarding is active now.' : 'Boarding time will update here.',
+      done: activeIdx >= 1,
+    },
+    {
+      label: 'Departure',
+      detail:
+        state.status === 'delayed' && state.delayMins > 0
+          ? `Expected departure is delayed by ${state.delayMins} minutes.`
+          : 'No departure delay currently shown.',
+      done: activeIdx >= 2,
+    },
+    {
+      label: 'Arrival',
+      detail: state.status === 'landed' ? 'Flight has landed.' : 'Arrival updates appear after departure.',
+      done: activeIdx >= 3,
+    },
+  ]
 
   return (
     <PageShell
@@ -112,6 +145,18 @@ export function FlightStatusPage() {
         >
           Track flight
         </button>
+        <div className="flex gap-2 mt-3 flex-wrap" aria-label="Example flights">
+          {QUICK_TRACK_FLIGHTS.map(no => (
+            <button
+              key={no}
+              type="button"
+              className="py-1.5 px-3 rounded-full border border-grey-200 bg-white text-grey-600 text-xs font-sans cursor-pointer hover:border-purple hover:text-purple"
+              onClick={() => trackFlight(no)}
+            >
+              {no}
+            </button>
+          ))}
+        </div>
       </form>
 
       {queryNo ? (
@@ -169,6 +214,25 @@ export function FlightStatusPage() {
                 </div>
               )
             })}
+          </div>
+          <div className="bg-grey-100 rounded-[12px] p-4 mb-5">
+            <h3 className="mt-0 mb-3 text-base text-grey-900">Status activity</h3>
+            <ol className="list-none p-0 m-0 flex flex-col gap-3">
+              {activity.map(item => (
+                <li key={item.label} className="grid grid-cols-[18px_1fr] gap-3 items-start">
+                  <span
+                    className={`w-[18px] h-[18px] rounded-full mt-0.5 ${
+                      item.done ? 'bg-purple' : 'bg-white border border-grey-200'
+                    }`}
+                    aria-hidden
+                  />
+                  <span>
+                    <strong className="block text-sm text-grey-900">{item.label}</strong>
+                    <span className="block text-xs text-grey-600">{item.detail}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
             <button

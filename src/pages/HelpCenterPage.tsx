@@ -3,6 +3,8 @@ import { PageShell } from './PageShell'
 import { FAQ } from '../data/faq'
 import { FaqItem } from '../components/FaqItem'
 
+const QUICK_TOPICS = ['refund', 'baggage', 'check in', 'flight status']
+
 export function HelpCenterPage() {
   const [query, setQuery] = useState('')
   const [categoryId, setCategoryId] = useState<string>(FAQ[0].id)
@@ -30,13 +32,36 @@ export function HelpCenterPage() {
       breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Help centre' }]}
     >
       <div className="mb-4">
-        <input
-          placeholder="Search for answers…"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          aria-label="Search help"
-          className="w-full py-4 px-5 text-base border border-grey-200 rounded-card font-sans shadow-card"
-        />
+        <div className="relative">
+          <input
+            placeholder="Search for answers…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            aria-label="Search help"
+            className="w-full py-4 px-5 pr-24 text-base border border-grey-200 rounded-card font-sans shadow-card"
+          />
+          {query ? (
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-0 p-0 text-purple cursor-pointer hover:underline"
+              onClick={() => setQuery('')}
+            >
+              Clear
+            </button>
+          ) : null}
+        </div>
+        <div className="flex gap-2 mt-3 flex-wrap" aria-label="Common help searches">
+          {QUICK_TOPICS.map(topic => (
+            <button
+              key={topic}
+              type="button"
+              className="py-1.5 px-3 rounded-full border border-grey-200 bg-white text-grey-600 text-xs font-sans cursor-pointer hover:border-purple hover:text-purple"
+              onClick={() => setQuery(topic)}
+            >
+              {topic}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-[280px_1fr] gap-6 items-start max-[900px]:grid-cols-1">
@@ -67,8 +92,22 @@ export function HelpCenterPage() {
         </aside>
         <section>
           {query ? (
+            <p className="mt-0 mb-3 text-sm text-grey-600">
+              {filtered.length} result{filtered.length === 1 ? '' : 's'} for "{query}"
+            </p>
+          ) : null}
+          {query ? (
             filtered.length === 0 ? (
-              <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4"><p>No articles match "{query}".</p></div>
+              <div className="bg-white py-12 px-6 text-center rounded-card shadow-card flex flex-col items-center gap-4">
+                <p>No articles match "{query}".</p>
+                <button
+                  type="button"
+                  className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
+                  onClick={() => setQuery('')}
+                >
+                  Browse categories
+                </button>
+              </div>
             ) : (
               (filtered as Array<{ category: string; question: string; answer: string }>).map((item, i) => (
                 <FaqItem key={`${item.question}-${i}`} question={item.question} answer={item.answer} meta={item.category} />
