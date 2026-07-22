@@ -1235,7 +1235,7 @@ function NewsletterSignup() {
       className="pt-14 pb-4 max-md:pt-10"
       aria-labelledby="newsletter-heading"
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(320px,520px)] gap-8 items-center rounded-card border border-grey-200 bg-[linear-gradient(135deg,#f6f6fe_0%,#fff_55%,#e7f1ff_100%)] px-8 py-8 shadow-search max-lg:grid-cols-1 max-md:px-5 max-md:py-6">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(320px,520px)] gap-8 items-center rounded-card border border-grey-200 bg-[#eaeaea] px-8 py-8 shadow-search max-lg:grid-cols-1 max-md:px-5 max-md:py-6">
         <div className="min-w-0">
           <p className="m-0 mb-2 text-[15px] font-bold uppercase tracking-[0.08em] text-purple">Newsletter</p>
           <h2
