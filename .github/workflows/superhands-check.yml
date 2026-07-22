@@ -153,7 +153,7 @@ jobs:
             fi
 
             bytes="$(wc -c < "$content_path" | tr -d ' ')"
-            if [ "$bytes" -gt 40000 ]; then
+            if [ "$bytes" -gt 1000000 ]; then
               jq --arg path "$path" '. + [{path: $path, reason: "too-large"}]' "$skipped_json" > "$tmpdir/skipped.next"
               mv "$tmpdir/skipped.next" "$skipped_json"
               continue
@@ -182,7 +182,7 @@ jobs:
                 "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/contents/$encoded_base_path?ref=$merge_base" \
                 -o "$candidate"; then
                 base_bytes="$(wc -c < "$candidate" | tr -d ' ')"
-                if [ "$base_bytes" -le 40000 ] && { [ ! -s "$candidate" ] || grep -Iq . "$candidate"; }; then
+                if [ "$base_bytes" -le 1000000 ] && { [ ! -s "$candidate" ] || grep -Iq . "$candidate"; }; then
                   base_content_path="$candidate"
                 fi
               fi
@@ -233,7 +233,7 @@ jobs:
           # contents push the payload over, drop ALL of them — whole-file
           # findings at a non-blocking conclusion beat a hard 413.
           payload_bytes="$(wc -c < "$payload_json" | tr -d ' ')"
-          if [ "$payload_bytes" -gt 480000 ]; then
+          if [ "$payload_bytes" -gt 3800000 ]; then
             jq 'del(.files[].baseContent)' "$payload_json" > "$tmpdir/payload.trimmed"
             mv "$tmpdir/payload.trimmed" "$payload_json"
           fi
