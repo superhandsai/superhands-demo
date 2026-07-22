@@ -3,16 +3,13 @@
 #   /superhands check
 #
 # This first-test workflow does not install dependencies, check out the PR, run
-# app code, or use a Superhands token. It fetches changed file snapshots through
-# GitHub's API with the built-in GITHUB_TOKEN, sends them to Superhands, then
+# app code, or use a Superhands token. It fetches PR diffs through GitHub's API
+# with the built-in GITHUB_TOKEN, sends them to Superhands, then
 # posts the rendered result back to the PR.
 #
-# Template v2: also collects each file's MERGE-BASE version (baseContent) so
-# Superhands reports only what the PR introduced. Requires a server that
-# accepts the baseContent field — deploy the Superhands server update BEFORE
-# rolling this template out to consuming repos (older servers reject unknown
-# payload fields). If base collection fails, the check still runs with
-# whole-file findings at a non-blocking conclusion.
+# Template v3 sends only unified diffs. Superhands reconstructs compact base
+# and head hunk fragments from each patch, so no complete file contents leave
+# the repository and no per-file contents API requests are needed.
 #
 # Security invariants (keep on every revision):
 # - PR/comment text never appears inside ${{ }} in run: blocks — event data
@@ -62,7 +59,7 @@ jobs:
             echo "should_run=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Collect PR file snapshots
+      - name: Collect PR diffs
         if: steps.command.outputs.should_run == 'true'
         id: payload
         shell: bash
@@ -94,28 +91,27 @@ jobs:
           skipped_json="$tmpdir/skipped.json"
           echo "[]" > "$collected_json"
           echo "[]" > "$skipped_json"
+          total_patch_bytes=0
 
           api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number" > "$pr_json"
-          api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100" > "$files_json"
+          echo "[]" > "$files_json"
+          for page in $(seq 1 30); do
+            page_json="$tmpdir/files-page-$page.json"
+            api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100&page=$page" > "$page_json"
+            jq -s '.[0] + .[1]' "$files_json" "$page_json" > "$tmpdir/files.next"
+            mv "$tmpdir/files.next" "$files_json"
+            if [ "$(jq 'length' "$page_json")" -lt 100 ]; then
+              break
+            fi
+          done
 
           head_sha="$(jq -r '.head.sha' "$pr_json")"
-          base_sha="$(jq -r '.base.sha' "$pr_json")"
           pr_title="$(jq -r '.title' "$pr_json")"
-
-          # Merge-base resolution: GitHub PR diffs are three-dot, so the ONLY
-          # correct baseline is the merge base — never the base branch tip.
-          # Resolution failure degrades to no baselines (whole-file findings,
-          # non-blocking), never to a tip fallback. Shas only in this URL.
-          merge_base=""
-          if compare_json="$(api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/compare/$base_sha...$head_sha?per_page=1" 2>/dev/null)"; then
-            merge_base="$(jq -r '.merge_base_commit.sha // ""' <<< "$compare_json")"
-          fi
 
           jq -c '.[]' "$files_json" | while IFS= read -r file; do
             path="$(jq -r '.filename' <<< "$file")"
             status="$(jq -r '.status' <<< "$file")"
             patch="$(jq -r '.patch // ""' <<< "$file")"
-            previous_path="$(jq -r '.previous_filename // ""' <<< "$file")"
 
             if [ "$status" = "removed" ]; then
               jq --arg path "$path" '. + [{path: $path, reason: "deleted"}]' "$skipped_json" > "$tmpdir/skipped.next"
@@ -139,73 +135,26 @@ jobs:
               continue
             fi
 
-            encoded_path="$(jq -rn --arg v "$path" '$v | split("/") | map(@uri) | join("/")')"
-            content_path="$tmpdir/content"
-            if ! curl --fail --silent --show-error \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github.raw" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/contents/$encoded_path?ref=$head_sha" \
-              -o "$content_path"; then
-              jq --arg path "$path" '. + [{path: $path, reason: "missing-content"}]' "$skipped_json" > "$tmpdir/skipped.next"
+            if [ -z "$patch" ]; then
+              jq --arg path "$path" '. + [{path: $path, reason: "missing-diff"}]' "$skipped_json" > "$tmpdir/skipped.next"
               mv "$tmpdir/skipped.next" "$skipped_json"
               continue
             fi
 
-            bytes="$(wc -c < "$content_path" | tr -d ' ')"
-            if [ "$bytes" -gt 1000000 ]; then
+            patch_bytes="$(printf '%s' "$patch" | wc -c | tr -d ' ')"
+            if [ "$patch_bytes" -gt 1000000 ] || [ "$((total_patch_bytes + patch_bytes))" -gt 4000000 ]; then
               jq --arg path "$path" '. + [{path: $path, reason: "too-large"}]' "$skipped_json" > "$tmpdir/skipped.next"
               mv "$tmpdir/skipped.next" "$skipped_json"
               continue
             fi
-            if [ -s "$content_path" ] && ! grep -Iq . "$content_path"; then
-              jq --arg path "$path" '. + [{path: $path, reason: "binary"}]' "$skipped_json" > "$tmpdir/skipped.next"
-              mv "$tmpdir/skipped.next" "$skipped_json"
-              continue
-            fi
+            total_patch_bytes="$((total_patch_bytes + patch_bytes))"
 
-            # Base version at the merge base (previous path for renames).
-            # Any failure or oversize just omits baseContent — the server
-            # degrades that file to whole-file findings.
-            base_content_path=""
-            if [ -n "$merge_base" ] && [ "$status" != "added" ]; then
-              base_source_path="$path"
-              if [ "$status" = "renamed" ] && [ -n "$previous_path" ]; then
-                base_source_path="$previous_path"
-              fi
-              encoded_base_path="$(jq -rn --arg v "$base_source_path" '$v | split("/") | map(@uri) | join("/")')"
-              candidate="$tmpdir/base-content"
-              if curl --fail --silent --show-error \
-                -H "Authorization: Bearer $GH_TOKEN" \
-                -H "Accept: application/vnd.github.raw" \
-                -H "X-GitHub-Api-Version: 2022-11-28" \
-                "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/contents/$encoded_base_path?ref=$merge_base" \
-                -o "$candidate"; then
-                base_bytes="$(wc -c < "$candidate" | tr -d ' ')"
-                if [ "$base_bytes" -le 1000000 ] && { [ ! -s "$candidate" ] || grep -Iq . "$candidate"; }; then
-                  base_content_path="$candidate"
-                fi
-              fi
-            fi
-
-            if [ -n "$base_content_path" ]; then
-              jq \
-                --arg path "$path" \
-                --arg status "$status" \
-                --arg patch "$patch" \
-                --rawfile content "$content_path" \
-                --rawfile baseContent "$base_content_path" \
-                '. + [{path: $path, status: $status, patch: $patch, content: $content, baseContent: $baseContent}]' \
-                "$collected_json" > "$tmpdir/collected.next"
-            else
-              jq \
-                --arg path "$path" \
-                --arg status "$status" \
-                --arg patch "$patch" \
-                --rawfile content "$content_path" \
-                '. + [{path: $path, status: $status, patch: $patch, content: $content}]' \
-                "$collected_json" > "$tmpdir/collected.next"
-            fi
+            jq \
+              --arg path "$path" \
+              --arg status "$status" \
+              --arg patch "$patch" \
+              '. + [{path: $path, status: $status, patch: $patch}]' \
+              "$collected_json" > "$tmpdir/collected.next"
             mv "$tmpdir/collected.next" "$collected_json"
           done
 
@@ -229,14 +178,21 @@ jobs:
               skipped: $skipped[0]
             }' > "$payload_json"
 
-          # The action-check route caps request bodies at 512KB. If base
-          # contents push the payload over, drop ALL of them — whole-file
-          # findings at a non-blocking conclusion beat a hard 413.
-          payload_bytes="$(wc -c < "$payload_json" | tr -d ' ')"
-          if [ "$payload_bytes" -gt 3800000 ]; then
-            jq 'del(.files[].baseContent)' "$payload_json" > "$tmpdir/payload.trimmed"
-            mv "$tmpdir/payload.trimmed" "$payload_json"
-          fi
+          # JSON escaping can make the request larger than the raw patch byte
+          # count. Keep the serialized body below the route's 4 MiB limit,
+          # dropping files loudly instead of letting the endpoint reject it.
+          max_payload_bytes=3800000
+          while [ "$(wc -c < "$payload_json" | tr -d ' ')" -gt "$max_payload_bytes" ]; do
+            if [ "$(jq '.files | length' "$payload_json")" -eq 0 ]; then
+              echo "Superhands payload metadata exceeds the request limit." >&2
+              exit 1
+            fi
+            dropped_path="$(jq -r '.files[-1].path' "$payload_json")"
+            jq --arg path "$dropped_path" \
+              '.files = .files[:-1] | .skipped += [{path: $path, reason: "capped"}]' \
+              "$payload_json" > "$tmpdir/payload.next"
+            mv "$tmpdir/payload.next" "$payload_json"
+          done
 
           echo "path=$payload_json" >> "$GITHUB_OUTPUT"
 
