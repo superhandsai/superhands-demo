@@ -1,0 +1,278 @@
+# Runs a static Superhands design-system check when someone comments:
+#
+#   /superhands check
+#
+# This first-test workflow does not install dependencies, check out the PR, run
+# app code, or use a Superhands token. It fetches changed file snapshots through
+# GitHub's API with the built-in GITHUB_TOKEN, sends them to Superhands, then
+# posts the rendered result back to the PR.
+#
+# Template v2: also collects each file's MERGE-BASE version (baseContent) so
+# Superhands reports only what the PR introduced. Requires a server that
+# accepts the baseContent field — deploy the Superhands server update BEFORE
+# rolling this template out to consuming repos (older servers reject unknown
+# payload fields). If base collection fails, the check still runs with
+# whole-file findings at a non-blocking conclusion.
+#
+# Security invariants (keep on every revision):
+# - PR/comment text never appears inside ${{ }} in run: blocks — event data
+#   is read via jq from $GITHUB_EVENT_PATH only.
+# - URLs are built from API-returned shas and @uri-encoded path segments,
+#   never from branch names or titles.
+# - Only OWNER/MEMBER/COLLABORATOR comments trigger the check.
+
+name: Superhands check
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  check:
+    if: >
+      github.event.issue.pull_request &&
+      github.event.comment.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    env:
+      SUPERHANDS_URL: ${{ vars.SUPERHANDS_URL }}
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_API_URL: ${{ github.api_url }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+    steps:
+      - name: Check command
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          command="$(jq -r '.comment.body | split("\n") | map(gsub("^[[:space:]]+|[[:space:]]+$"; "")) | map(select(length > 0)) | .[0] // ""' "$GITHUB_EVENT_PATH")"
+          association="$(jq -r '.comment.author_association // ""' "$GITHUB_EVENT_PATH")"
+          case "$association" in
+            OWNER|MEMBER|COLLABORATOR) allowed=true ;;
+            *) allowed=false ;;
+          esac
+          if [ "$command" = "/superhands check" ] && [ "$allowed" = "true" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Collect PR file snapshots
+        if: steps.command.outputs.should_run == 'true'
+        id: payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPERHANDS_URL:-}" ]; then
+            echo "Set the SUPERHANDS_URL repository variable to your Superhands deployment." >&2
+            exit 1
+          fi
+
+          tmpdir="$(mktemp -d)"
+          pr_number="$(jq -r '.issue.number' "$GITHUB_EVENT_PATH")"
+          comment_id="$(jq -r '.comment.id' "$GITHUB_EVENT_PATH")"
+          requester="$(jq -r '.comment.user.login' "$GITHUB_EVENT_PATH")"
+
+          api() {
+            curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$@"
+          }
+
+          pr_json="$tmpdir/pr.json"
+          files_json="$tmpdir/files.json"
+          payload_json="$tmpdir/payload.json"
+          collected_json="$tmpdir/collected.json"
+          skipped_json="$tmpdir/skipped.json"
+          echo "[]" > "$collected_json"
+          echo "[]" > "$skipped_json"
+
+          api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number" > "$pr_json"
+          api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pr_number/files?per_page=100" > "$files_json"
+
+          head_sha="$(jq -r '.head.sha' "$pr_json")"
+          base_sha="$(jq -r '.base.sha' "$pr_json")"
+          pr_title="$(jq -r '.title' "$pr_json")"
+
+          # Merge-base resolution: GitHub PR diffs are three-dot, so the ONLY
+          # correct baseline is the merge base — never the base branch tip.
+          # Resolution failure degrades to no baselines (whole-file findings,
+          # non-blocking), never to a tip fallback. Shas only in this URL.
+          merge_base=""
+          if compare_json="$(api "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/compare/$base_sha...$head_sha?per_page=1" 2>/dev/null)"; then
+            merge_base="$(jq -r '.merge_base_commit.sha // ""' <<< "$compare_json")"
+          fi
+
+          jq -c '.[]' "$files_json" | while IFS= read -r file; do
+            path="$(jq -r '.filename' <<< "$file")"
+            status="$(jq -r '.status' <<< "$file")"
+            patch="$(jq -r '.patch // ""' <<< "$file")"
+            previous_path="$(jq -r '.previous_filename // ""' <<< "$file")"
+
+            if [ "$status" = "removed" ]; then
+              jq --arg path "$path" '. + [{path: $path, reason: "deleted"}]' "$skipped_json" > "$tmpdir/skipped.next"
+              mv "$tmpdir/skipped.next" "$skipped_json"
+              continue
+            fi
+
+            case "$path" in
+              *.tsx|*.jsx|*.ts|*.js|*.css|*.html) ;;
+              *)
+                jq --arg path "$path" '. + [{path: $path, reason: "non-visual"}]' "$skipped_json" > "$tmpdir/skipped.next"
+                mv "$tmpdir/skipped.next" "$skipped_json"
+                continue
+                ;;
+            esac
+
+            count="$(jq 'length' "$collected_json")"
+            if [ "$count" -ge 20 ]; then
+              jq --arg path "$path" '. + [{path: $path, reason: "capped"}]' "$skipped_json" > "$tmpdir/skipped.next"
+              mv "$tmpdir/skipped.next" "$skipped_json"
+              continue
+            fi
+
+            encoded_path="$(jq -rn --arg v "$path" '$v | split("/") | map(@uri) | join("/")')"
+            content_path="$tmpdir/content"
+            if ! curl --fail --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github.raw" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/contents/$encoded_path?ref=$head_sha" \
+              -o "$content_path"; then
+              jq --arg path "$path" '. + [{path: $path, reason: "missing-content"}]' "$skipped_json" > "$tmpdir/skipped.next"
+              mv "$tmpdir/skipped.next" "$skipped_json"
+              continue
+            fi
+
+            bytes="$(wc -c < "$content_path" | tr -d ' ')"
+            if [ "$bytes" -gt 40000 ]; then
+              jq --arg path "$path" '. + [{path: $path, reason: "too-large"}]' "$skipped_json" > "$tmpdir/skipped.next"
+              mv "$tmpdir/skipped.next" "$skipped_json"
+              continue
+            fi
+            if [ -s "$content_path" ] && ! grep -Iq . "$content_path"; then
+              jq --arg path "$path" '. + [{path: $path, reason: "binary"}]' "$skipped_json" > "$tmpdir/skipped.next"
+              mv "$tmpdir/skipped.next" "$skipped_json"
+              continue
+            fi
+
+            # Base version at the merge base (previous path for renames).
+            # Any failure or oversize just omits baseContent — the server
+            # degrades that file to whole-file findings.
+            base_content_path=""
+            if [ -n "$merge_base" ] && [ "$status" != "added" ]; then
+              base_source_path="$path"
+              if [ "$status" = "renamed" ] && [ -n "$previous_path" ]; then
+                base_source_path="$previous_path"
+              fi
+              encoded_base_path="$(jq -rn --arg v "$base_source_path" '$v | split("/") | map(@uri) | join("/")')"
+              candidate="$tmpdir/base-content"
+              if curl --fail --silent --show-error \
+                -H "Authorization: Bearer $GH_TOKEN" \
+                -H "Accept: application/vnd.github.raw" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/contents/$encoded_base_path?ref=$merge_base" \
+                -o "$candidate"; then
+                base_bytes="$(wc -c < "$candidate" | tr -d ' ')"
+                if [ "$base_bytes" -le 40000 ] && { [ ! -s "$candidate" ] || grep -Iq . "$candidate"; }; then
+                  base_content_path="$candidate"
+                fi
+              fi
+            fi
+
+            if [ -n "$base_content_path" ]; then
+              jq \
+                --arg path "$path" \
+                --arg status "$status" \
+                --arg patch "$patch" \
+                --rawfile content "$content_path" \
+                --rawfile baseContent "$base_content_path" \
+                '. + [{path: $path, status: $status, patch: $patch, content: $content, baseContent: $baseContent}]' \
+                "$collected_json" > "$tmpdir/collected.next"
+            else
+              jq \
+                --arg path "$path" \
+                --arg status "$status" \
+                --arg patch "$patch" \
+                --rawfile content "$content_path" \
+                '. + [{path: $path, status: $status, patch: $patch, content: $content}]' \
+                "$collected_json" > "$tmpdir/collected.next"
+            fi
+            mv "$tmpdir/collected.next" "$collected_json"
+          done
+
+          jq -n \
+            --arg repoFullName "$GITHUB_REPOSITORY" \
+            --argjson prNumber "$pr_number" \
+            --arg prTitle "$pr_title" \
+            --arg headSha "$head_sha" \
+            --argjson commentId "$comment_id" \
+            --arg requester "$requester" \
+            --slurpfile files "$collected_json" \
+            --slurpfile skipped "$skipped_json" \
+            '{
+              repoFullName: $repoFullName,
+              prNumber: $prNumber,
+              prTitle: $prTitle,
+              headSha: $headSha,
+              commentId: $commentId,
+              requester: $requester,
+              files: $files[0],
+              skipped: $skipped[0]
+            }' > "$payload_json"
+
+          # The action-check route caps request bodies at 512KB. If base
+          # contents push the payload over, drop ALL of them — whole-file
+          # findings at a non-blocking conclusion beat a hard 413.
+          payload_bytes="$(wc -c < "$payload_json" | tr -d ' ')"
+          if [ "$payload_bytes" -gt 480000 ]; then
+            jq 'del(.files[].baseContent)' "$payload_json" > "$tmpdir/payload.trimmed"
+            mv "$tmpdir/payload.trimmed" "$payload_json"
+          fi
+
+          echo "path=$payload_json" >> "$GITHUB_OUTPUT"
+
+      - name: Run Superhands static check
+        if: steps.command.outputs.should_run == 'true'
+        id: superhands
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          response="$(mktemp)"
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            --data @"${{ steps.payload.outputs.path }}" \
+            "$SUPERHANDS_URL/api/github/action-check" > "$response"
+
+          jq -r '.comment' "$response" > superhands-comment.md
+          echo "conclusion=$(jq -r '.conclusion' "$response")" >> "$GITHUB_OUTPUT"
+
+      - name: Post Superhands result
+        if: steps.command.outputs.should_run == 'true'
+        shell: bash
+        env:
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+
+          jq -n --rawfile body superhands-comment.md '{body: $body}' > comment.json
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --data @comment.json \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments"
+
+      - name: Fail job on Superhands findings
+        if: steps.command.outputs.should_run == 'true' && steps.superhands.outputs.conclusion == 'failure'
+        run: exit 1
