@@ -1232,20 +1232,20 @@ function NewsletterSignup() {
 
   return (
     <section
-      className="pt-20 pb-4 max-md:pt-6"
+      className="pt-[15vh] pb-4 max-md:pt-3"
       aria-labelledby="newsletter-heading"
     >
-      <div className="grid grid-cols-[1fr_auto] gap-6 items-center rounded-card border border-grey-200 bg-grey-100 px-5 py-4 shadow-search max-lg:grid-cols-1">
+      <div className="grid grid-cols-[1fr_auto] gap-2 items-center rounded-card border border-grey-200 bg-grey-100 px-5 py-4 shadow-search max-lg:grid-cols-1">
         <div className="min-w-0">
           <p className="m-0 mb-2 text-[15px] font-bold uppercase tracking-[0.08em] text-purple">Newsletter</p>
           <h2
             id="newsletter-heading"
             className="m-0 text-xl font-bold leading-[1.2] text-grey-900"
           >
-            Get travel deals and destination ideas in your inbox
+            Receive distinguished travel offers and destination inspiration in your inbox
           </h2>
           <p className="m-0 mt-3 max-w-[520px] text-sm leading-[1.4] text-grey-600">
-            Sign up for monthly fare drops, seasonal guides, and Tripma-only offers.
+            Subscribe for considered fare reductions, seasonal guides, and exclusive Tripma offers.
           </p>
         </div>
 
@@ -1268,11 +1268,11 @@ function NewsletterSignup() {
               type="submit"
               className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover max-sm:w-full"
             >
-              Sign up
+              Subscribe
             </button>
           </div>
           <p className="m-0 text-sm leading-[1.4] text-grey-600">
-            No spam. Unsubscribe any time.
+            No unsolicited correspondence. You may unsubscribe at any time.
           </p>
           {submittedEmail ? (
             <p className="m-0 rounded-sm bg-success-soft px-3 py-[10px] text-sm font-semibold text-success" role="status">
