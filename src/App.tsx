@@ -1251,7 +1251,7 @@ function NewsletterSignup() {
 
         <form className="flex flex-col gap-3 min-w-0 w-full max-w-[520px]" onSubmit={onSubmit}>
           <label className="flex flex-col gap-2 text-sm font-semibold text-grey-600" htmlFor={emailId}>
-            Email address
+            Electronic correspondence address
           </label>
           <div className="flex gap-3 min-w-0 max-sm:flex-col">
             <input
@@ -1268,7 +1268,7 @@ function NewsletterSignup() {
               type="submit"
               className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover max-sm:w-full"
             >
-              Subscribe
+              Request subscription
             </button>
           </div>
           <p className="m-0 text-sm leading-[1.4] text-grey-600">
