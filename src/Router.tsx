@@ -25,6 +25,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { AlertsPage } from './pages/AlertsPage'
 import { SavedPage } from './pages/SavedPage'
 import { FlightStatusPage } from './pages/FlightStatusPage'
+import { ListsPage } from './pages/ListsPage'
 
 export function Router() {
   return (
@@ -57,6 +58,7 @@ export function Router() {
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/status" element={<FlightStatusPage />} />
+          <Route path="/lists" element={<ListsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
