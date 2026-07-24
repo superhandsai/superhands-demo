@@ -1219,67 +1219,143 @@ export function SiteFooter() {
   )
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+type NewsletterStatus = 'idle' | 'submitting' | 'success'
+
 function NewsletterSignup() {
   const emailId = useId()
+  const errorId = useId()
   const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<NewsletterStatus>('idle')
+  const [error, setError] = useState('')
   const [submittedEmail, setSubmittedEmail] = useState('')
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setSubmittedEmail(email.trim())
-    setEmail('')
+    if (status === 'submitting') return
+
+    const trimmed = email.trim()
+    if (!EMAIL_PATTERN.test(trimmed)) {
+      setError('Enter a valid email address so we know where to send deals.')
+      return
+    }
+
+    setError('')
+    setStatus('submitting')
+    // Simulate a network request to the newsletter service.
+    window.setTimeout(() => {
+      setSubmittedEmail(trimmed)
+      setEmail('')
+      setStatus('success')
+    }, 900)
+  }
+
+  function reset() {
+    setStatus('idle')
+    setSubmittedEmail('')
+    setError('')
   }
 
   return (
-    <section
-      className="pt-20 pb-4 max-md:pt-6"
-      aria-labelledby="newsletter-heading"
-    >
-      <div className="grid grid-cols-[1fr_auto] gap-6 items-center rounded-card border border-grey-200 bg-grey-100 px-5 py-4 shadow-search max-lg:grid-cols-1">
-        <div className="min-w-0">
-          <p className="m-0 mb-2 text-[15px] font-bold uppercase tracking-[0.08em] text-purple">Newsletter</p>
-          <h2
-            id="newsletter-heading"
-            className="m-0 text-xl font-bold leading-[1.2] text-grey-900"
-          >
-            Get travel deals and destination ideas in your inbox
-          </h2>
-          <p className="m-0 mt-3 max-w-[520px] text-sm leading-[1.4] text-grey-600">
-            Sign up for monthly fare drops, seasonal guides, and Tripma-only offers.
-          </p>
-        </div>
+    <section className="pt-20 pb-4 max-md:pt-10" aria-labelledby="newsletter-heading">
+      <div className="relative overflow-hidden rounded-card bg-[#eaeaea] px-10 py-12 shadow-search max-md:px-6 max-md:py-9">
+        {/* Decorative glow accents */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-24 h-64 w-64 rounded-full bg-purple/10 blur-2xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full bg-purple/10 blur-2xl"
+        />
 
-        <form className="flex flex-col gap-3 min-w-0 w-full max-w-[520px]" onSubmit={onSubmit}>
-          <label className="flex flex-col gap-2 text-sm font-semibold text-grey-600" htmlFor={emailId}>
-            Email address
-          </label>
-          <div className="flex gap-3 min-w-0 max-sm:flex-col">
-            <input
-              id={emailId}
-              className="min-w-0 flex-1 rounded-sm border border-grey-200 bg-white px-3 py-[10px] font-sans text-sm text-grey-900 shadow-card focus:outline-none focus:border-purple"
-              type="email"
-              value={email}
-              onChange={event => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
-            />
-            <button
-              type="submit"
-              className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover max-sm:w-full"
-            >
-              Sign up
-            </button>
-          </div>
-          <p className="m-0 text-sm leading-[1.4] text-grey-600">
-            No spam. Unsubscribe any time.
-          </p>
-          {submittedEmail ? (
-            <p className="m-0 rounded-sm bg-success-soft px-3 py-[10px] text-sm font-semibold text-success" role="status">
-              Thanks. We’ll send Tripma updates to {submittedEmail}.
+        <div className="relative grid grid-cols-[1.1fr_1fr] gap-10 items-center max-lg:grid-cols-1 max-lg:gap-7">
+          <div className="min-w-0">
+            <p className="m-0 mb-3 text-[13px] font-bold uppercase tracking-[0.12em] text-purple">
+              Tripma newsletter
             </p>
-          ) : null}
-        </form>
+            <h2
+              id="newsletter-heading"
+              className="m-0 text-[28px] font-bold leading-[1.15] text-grey-900 max-md:text-2xl"
+            >
+              Fare drops and destination ideas, straight to your inbox
+            </h2>
+            <p className="m-0 mt-4 max-w-[440px] text-[15px] leading-[1.5] text-grey-600">
+              Join travelers getting monthly fare alerts, seasonal guides, and Tripma-only offers. No spam — unsubscribe any time.
+            </p>
+          </div>
+
+          {status === 'success' ? (
+            <div
+              className="flex flex-col items-start gap-3 rounded-card bg-white/95 px-6 py-7 shadow-card"
+              role="status"
+            >
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-success-soft text-success">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M20 6 9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <p className="m-0 text-lg font-bold leading-[1.2] text-grey-900">You’re on the list!</p>
+              <p className="m-0 text-sm leading-[1.4] text-grey-600">
+                We’ll send Tripma updates to <span className="font-semibold text-grey-900">{submittedEmail}</span>.
+              </p>
+              <button
+                type="button"
+                onClick={reset}
+                className="mt-1 cursor-pointer border-0 bg-transparent p-0 text-sm font-bold text-purple hover:underline"
+              >
+                Use a different email
+              </button>
+            </div>
+          ) : (
+            <form
+              className="flex w-full flex-col gap-2 rounded-card bg-white/95 px-6 py-6 shadow-card"
+              onSubmit={onSubmit}
+              noValidate
+            >
+              <label className="text-sm font-bold text-grey-900" htmlFor={emailId}>
+                Email address
+              </label>
+              <div className="flex gap-3 min-w-0 max-sm:flex-col">
+                <input
+                  id={emailId}
+                  className={`min-w-0 flex-1 rounded-sm border bg-white px-3 py-[11px] font-sans text-sm text-grey-900 transition-colors focus:outline-none ${
+                    error ? 'border-danger focus:border-danger' : 'border-grey-200 focus:border-purple'
+                  }`}
+                  type="email"
+                  value={email}
+                  onChange={event => {
+                    setEmail(event.target.value)
+                    if (error) setError('')
+                  }}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? errorId : undefined}
+                  disabled={status === 'submitting'}
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="font-sans font-bold border-0 cursor-pointer rounded-card px-6 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover disabled:cursor-not-allowed disabled:opacity-70 max-sm:w-full"
+                >
+                  {status === 'submitting' ? 'Signing up…' : 'Sign up'}
+                </button>
+              </div>
+              {error ? (
+                <p id={errorId} className="m-0 text-sm font-semibold text-danger" role="alert">
+                  {error}
+                </p>
+              ) : (
+                <p className="m-0 text-xs leading-[1.4] text-grey-500">
+                  By signing up you agree to receive Tripma marketing emails.
+                </p>
+              )}
+            </form>
+          )}
+        </div>
       </div>
     </section>
   )
