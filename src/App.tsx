@@ -1245,7 +1245,7 @@ function NewsletterSignup() {
             Receive distinguished travel offers and destination inspiration in your inbox
           </h2>
           <p className="m-0 mt-3 max-w-[520px] text-sm leading-[1.4] text-grey-600">
-            Subscribe for considered fare reductions, seasonal guides, and exclusive Tripma offers.
+            Register to receive considered fare reductions, seasonal guides, and exclusive Tripma offers.
           </p>
         </div>
 
@@ -1260,7 +1260,7 @@ function NewsletterSignup() {
               type="email"
               value={email}
               onChange={event => setEmail(event.target.value)}
-              placeholder="you@example.com"
+              placeholder="name.surname@example.com"
               autoComplete="email"
               required
             />
@@ -1268,7 +1268,7 @@ function NewsletterSignup() {
               type="submit"
               className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover max-sm:w-full"
             >
-              Request subscription
+              Submit correspondence request
             </button>
           </div>
           <p className="m-0 text-sm leading-[1.4] text-grey-600">
@@ -1276,7 +1276,7 @@ function NewsletterSignup() {
           </p>
           {submittedEmail ? (
             <p className="m-0 rounded-sm bg-success-soft px-3 py-[10px] text-sm font-semibold text-success" role="status">
-              Thanks. We’ll send Tripma updates to {submittedEmail}.
+              Your request has been received. Tripma correspondence shall be sent to {submittedEmail}.
             </p>
           ) : null}
         </form>
