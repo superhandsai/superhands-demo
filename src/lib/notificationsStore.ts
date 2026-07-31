@@ -58,6 +58,23 @@ const SEED: AppNotification[] = [
 
 export const notificationsStore = createStore<AppNotification[]>(KEY, SEED)
 
+function newNotificationId(): string {
+  return `n-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`
+}
+
+export function addNotification(
+  input: Omit<AppNotification, 'id' | 'createdAt' | 'read'>,
+): AppNotification {
+  const notification: AppNotification = {
+    id: newNotificationId(),
+    createdAt: new Date().toISOString(),
+    read: false,
+    ...input,
+  }
+  notificationsStore.set(list => [notification, ...list])
+  return notification
+}
+
 export function markNotificationRead(id: string) {
   notificationsStore.set(list =>
     list.map(n => (n.id === id ? { ...n, read: true } : n)),

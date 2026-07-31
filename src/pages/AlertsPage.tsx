@@ -8,6 +8,24 @@ import {
 import { useStore } from '../lib/useStore'
 import { pushToast } from '../lib/toastStore'
 import { formatIsoDate } from '../data/flights'
+import { addNotification, formatRelativeTime } from '../lib/notificationsStore'
+
+function buildFlightSearchUrl(alert: {
+  from: string
+  to: string
+  depart: string
+  returnDate?: string
+}): string {
+  const params = new URLSearchParams({
+    from: alert.from,
+    to: alert.to,
+    depart: alert.depart,
+    adults: '1',
+    trip: alert.returnDate ? 'return' : 'one-way',
+  })
+  if (alert.returnDate) params.set('return', alert.returnDate)
+  return `/flights?${params.toString()}`
+}
 
 export function AlertsPage() {
   const alerts = useStore(alertsStore)
@@ -19,6 +37,13 @@ export function AlertsPage() {
         tone: 'success',
         title: `Price dropped £${res.drop}`,
         body: `New lowest fare £${res.price}`,
+      })
+      addNotification({
+        type: 'deal',
+        title: `${res.alert.from} → ${res.alert.to} dropped to £${res.price}`,
+        body: `Your watched route is down £${res.drop} from its previous tracked fare.`,
+        href: buildFlightSearchUrl(res.alert),
+        ctaLabel: 'View flights',
       })
     }
   }
@@ -58,6 +83,11 @@ export function AlertsPage() {
                   >
                     {change > 0 ? `↓ £${change} (${pct}%)` : 'Watching'}
                   </span>
+                  {a.lastDropAt && a.lastDropGBP ? (
+                    <span className="block text-[11px] text-grey-600 mt-1">
+                      Latest drop £{a.lastDropGBP} · {formatRelativeTime(a.lastDropAt)}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="flex gap-2 items-center flex-wrap max-[720px]:justify-start">
                   <button
@@ -68,7 +98,7 @@ export function AlertsPage() {
                     Simulate drop
                   </button>
                   <Link
-                    to={`/flights?from=${a.from}&to=${a.to}&depart=${a.depart}${a.returnDate ? `&return=${a.returnDate}` : ''}&adults=1&trip=${a.returnDate ? 'return' : 'oneway'}`}
+                    to={buildFlightSearchUrl(a)}
                     className="font-sans font-bold border-0 cursor-pointer rounded-card px-5 py-3 text-[15px] leading-[1.2] text-center transition-colors inline-flex items-center justify-center gap-2 bg-purple text-white hover:bg-purple-hover"
                   >
                     View flights
