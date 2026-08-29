@@ -18,6 +18,7 @@ import { CheckInPage } from './pages/CheckInPage'
 import { StaysPage } from './pages/StaysPage'
 import { StaysResultsPage } from './pages/StaysResultsPage'
 import { StayDetailPage } from './pages/StayDetailPage'
+import { CarsResultsPage } from './pages/CarsResultsPage'
 import { DestinationsPage } from './pages/DestinationsPage'
 import { HelpCenterPage } from './pages/HelpCenterPage'
 import { NotificationsPage } from './pages/NotificationsPage'
@@ -51,6 +52,7 @@ export function Router() {
           <Route path="/stays" element={<StaysPage />} />
           <Route path="/stays/results" element={<StaysResultsPage />} />
           <Route path="/stays/:id" element={<StayDetailPage />} />
+          <Route path="/cars/results" element={<CarsResultsPage />} />
           <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
