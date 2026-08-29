@@ -161,6 +161,8 @@ export function HotelsSearchBar() {
 export function CarsSearchBar() {
   const navigate = useNavigate()
   const [pickup, setPickup] = useState('')
+  const [dropoff, setDropoff] = useState('')
+  const [differentDropoff, setDifferentDropoff] = useState(false)
   const [age, setAge] = useState('30')
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -170,10 +172,12 @@ export function CarsSearchBar() {
     const data = new FormData(e.currentTarget)
     const params = new URLSearchParams()
     const loc = String(data.get('pickup_location') || '').trim()
+    const dropoffLoc = differentDropoff ? String(data.get('dropoff_location') || '').trim() : loc
     const start = String(data.get('pickup_date') || '').trim()
     const end = String(data.get('dropoff_date') || '').trim()
     const driverAge = String(data.get('driver_age') || '').trim()
     if (loc) params.set('pickup', loc)
+    if (dropoffLoc) params.set('dropoff', dropoffLoc)
     if (start) params.set('start', start)
     if (end) params.set('end', end)
     if (driverAge) params.set('age', driverAge)
@@ -182,13 +186,40 @@ export function CarsSearchBar() {
 
   return (
     <SearchBarShell onSubmit={onSubmit}>
-      <StackedTextField
-        name="pickup_location"
-        label="Pickup location"
-        hint="City, airport, or address"
-        value={pickup}
-        onChange={setPickup}
-      />
+      <div className="flex flex-col gap-2 flex-1 min-w-0 md:flex-[2_1_0] max-md:flex-[0_0_auto] max-md:w-full">
+        <div className="flex items-start gap-2 w-full">
+          <StackedTextField
+            name="pickup_location"
+            label="Pickup location"
+            hint="City, airport, or address"
+            value={pickup}
+            onChange={setPickup}
+            flexClasses="flex-1 min-w-0"
+          />
+          <div className="relative flex-1 min-w-0">
+            <StackedTextField
+              name="dropoff_location"
+              label="Drop-off location"
+              hint="Same as pickup"
+              value={dropoff}
+              onChange={setDropoff}
+              flexClasses="flex-1 min-w-0"
+            />
+            {!differentDropoff && (
+              <div className="absolute inset-0 bg-grey-100 opacity-50 rounded-[16px] pointer-events-none" />
+            )}
+          </div>
+        </div>
+        <label className="flex items-center gap-2 text-sm text-grey-700 cursor-pointer ml-3">
+          <input
+            type="checkbox"
+            checked={differentDropoff}
+            onChange={(e) => setDifferentDropoff(e.target.checked)}
+            className="w-4 h-4 cursor-pointer"
+          />
+          <span>Drop off at a different location</span>
+        </label>
+      </div>
       <DateRangeField
         departLabel="Pickup date"
         returnLabel="Drop-off date"
