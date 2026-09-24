@@ -329,28 +329,35 @@ export function AirportField({
   onCloseMenu,
   excludeCodes = [],
   showFlightSearchOptions = false,
+  omitDirectFlightsOption = false,
   nearbyAirportsChecked: _nearbyAirportsChecked = false,
   onNearbyAirportsChange,
+  directFlightsChecked = false,
+  onDirectFlightsChange,
   showToNearbyAirportsOption = false,
   toNearbyAirportsChecked: _toNearbyAirportsChecked = false,
   onToNearbyAirportsChange,
 }: AirportFieldProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
   const controlRef = useRef<HTMLDivElement | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const popoverRef = useRef<HTMLDivElement | null>(null)
   const listId = useId()
   const labelId = useId()
+  const directFlightsOptionId = useId()
   const [filter, setFilter] = useState('')
   const [airportApi, setAirportApi] = useState<AirportApi | null>(null)
   const [popoverPlacement, setPopoverPlacement] = useState<PopoverPlacement | null>(null)
   const matchMax768 = useMatchMax768()
 
   const open = menuOpen === fieldKey
+  const showDirectFlightsOption = Boolean(onDirectFlightsChange) && !omitDirectFlightsOption
 
   const hasMobileAirportExtras =
     matchMax768 &&
     ((showFlightSearchOptions && onNearbyAirportsChange) ||
-      (showToNearbyAirportsOption && onToNearbyAirportsChange))
+      (showToNearbyAirportsOption && onToNearbyAirportsChange) ||
+      showDirectFlightsOption)
 
   const useAirportPopoverSplit = Boolean(open && popoverPlacement && hasMobileAirportExtras)
 
@@ -429,6 +436,41 @@ export function AirportField({
     onCloseMenu()
   }
 
+  async function activateField() {
+    onOpenMenu(fieldKey)
+    inputRef.current?.focus()
+    const client = airportApi ?? (await getAirportApi())
+    if (!airportApi) setAirportApi(client)
+    const a = client.getAirportByCode(value)
+    setFilter(a ? buildAirportLocationLabel(a) || a.code : '')
+  }
+
+  function renderDirectFlightsOption() {
+    if (!showDirectFlightsOption || !onDirectFlightsChange) return null
+    return (
+      <label
+        className="flex items-center gap-[10px] m-0 px-3 py-[10px] font-sans text-[15px] font-semibold leading-[1.25] tracking-[0.02em] text-grey-900 cursor-pointer select-none flex-shrink-0"
+        htmlFor={directFlightsOptionId}
+        onMouseDown={e => e.preventDefault()}
+      >
+        <input
+          id={directFlightsOptionId}
+          type="checkbox"
+          checked={directFlightsChecked}
+          onChange={e => onDirectFlightsChange(e.target.checked)}
+          className="flex-shrink-0 self-center w-[22px] h-[22px] m-0 box-border appearance-none border border-grey-200 rounded-[7px] bg-white cursor-pointer transition-[border-color,background-color,box-shadow] duration-150 hover:not-disabled:border-purple focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 checked:border-purple checked:bg-purple bg-no-repeat bg-center"
+          style={{
+            backgroundImage: directFlightsChecked
+              ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M20 6L9 17l-5-5' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")"
+              : undefined,
+            backgroundSize: '14px 14px',
+          }}
+        />
+        <span className="inline-flex items-center min-h-0 leading-[1.25]">Direct flights</span>
+      </label>
+    )
+  }
+
   function renderOptions() {
     if (!airportApi) return <p className="m-0 px-[13px] py-2 text-[16px] text-grey-400">Loading airports…</p>
     if (filtered.length === 0) return <p className="m-0 px-[13px] py-2 text-[16px] text-grey-400">No airports match</p>
@@ -471,8 +513,8 @@ export function AirportField({
   // For last airport: no left round, no left border; the swap overlaps between them.
   // We use md: utilities to override mobile.
   const desktopSeam = isFirst
-    ? 'md:rounded-r-none md:pr-[28px]'
-    : 'md:rounded-l-none md:pl-[38px] md:border-l-0'
+    ? 'pl-[15px] md:rounded-l-[28px] md:rounded-r-none md:pr-[28px]'
+    : 'md:rounded-none md:pl-[38px] md:border-l-0'
   // When open, on desktop, the first airport needs purple right border; the second needs purple inset-left.
   const openSeamClasses = open
     ? isFirst
@@ -481,7 +523,9 @@ export function AirportField({
     : 'border-grey-200'
 
   // Mobile: both fields have padding-right 52px to clear the absolute swap button.
-  const mobileSwapClearance = 'max-md:pl-[13px] max-md:pr-[52px]'
+  const mobileSwapClearance = isFirst
+    ? 'max-md:pr-[52px]'
+    : 'max-md:pl-[13px] max-md:pr-[52px]'
 
   return (
     <div
@@ -491,11 +535,46 @@ export function AirportField({
       <input type="hidden" name={name} value={value} />
       <div
         ref={controlRef}
-        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] py-[9px] border-2 rounded-[16px] bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
+        className={`group relative flex flex-col items-stretch justify-center gap-[2px] flex-[0_0_auto] self-stretch w-full box-border min-h-20 px-[13px] pt-[13px] pb-[9px] border-2 rounded-[16px] bg-white cursor-pointer ${desktopSeam} ${mobileSwapClearance} ${openSeamClasses}`}
+        onMouseDown={e => {
+          const target = e.target as HTMLElement | null
+          if (!target) return
+          if (target.closest('button')) return
+          if (target === inputRef.current || inputRef.current?.contains(target)) return
+          e.preventDefault()
+          void activateField()
+        }}
       >
-        <span className={FLIGHT_SEARCH_LABEL} id={labelId}>
-          {label}
-        </span>
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <span className={FLIGHT_SEARCH_LABEL} id={labelId}>
+            {label}
+          </span>
+          {showDirectFlightsOption && directFlightsChecked ? (
+            <span
+              className="inline-flex items-center gap-1 flex-shrink-0 text-purple max-md:mr-[39px]"
+              aria-label="Direct flights selected"
+            >
+              <svg
+                className="flex-shrink-0 w-[15px] h-[15px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M20 6L9 17l-5-5"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="text-[15px] font-semibold leading-[1.25] tracking-[0.02em]">
+                Direct
+              </span>
+            </span>
+          ) : null}
+        </div>
         <div className={FLIGHT_SEARCH_VALUE_ROW}>
           {showHint ? (
             <span className={FLIGHT_SEARCH_HINT} aria-hidden="true">
@@ -503,6 +582,7 @@ export function AirportField({
             </span>
           ) : null}
           <input
+            ref={inputRef}
             id={`${name}-combobox`}
             type="text"
             className={`${FLIGHT_SEARCH_INPUT_STACKED} cursor-text ${
@@ -520,12 +600,8 @@ export function AirportField({
               if (!open) onOpenMenu(fieldKey)
               setFilter(next)
             }}
-            onFocus={async () => {
-              onOpenMenu(fieldKey)
-              const client = airportApi ?? (await getAirportApi())
-              if (!airportApi) setAirportApi(client)
-              const a = client.getAirportByCode(value)
-              setFilter(a ? buildAirportLocationLabel(a) || a.code : '')
+            onFocus={() => {
+              void activateField()
             }}
           />
           {String(value || '').trim() ? (
@@ -553,7 +629,13 @@ export function AirportField({
                 width: popoverPlacement.width,
               }}
             >
-              <div className="flex-shrink-0 px-3 py-[10px] bg-white border-b border-grey-200" />
+              {showDirectFlightsOption ? (
+                <div className="flex-shrink-0 bg-white border-b border-grey-200">
+                  {renderDirectFlightsOption()}
+                </div>
+              ) : (
+                <div className="flex-shrink-0 px-3 py-[10px] bg-white border-b border-grey-200" />
+              )}
               <div
                 id={listId}
                 className="flex-auto min-h-0 overflow-x-hidden overflow-y-auto p-2 flex flex-col gap-1"
@@ -566,17 +648,26 @@ export function AirportField({
           ) : (
             <div
               ref={popoverRef}
-              id={listId}
-              className="fixed z-[70] w-[max(100%,min(480px,calc(100vw-48px)))] max-h-[min(360px,70vh)] overflow-y-auto overflow-x-hidden p-2 flex flex-col gap-1 bg-white border border-grey-200 rounded-lg shadow-search max-md:w-full max-md:max-w-none"
+              className="fixed z-[70] w-[max(100%,min(480px,calc(100vw-48px)))] max-h-[min(360px,70vh)] overflow-hidden p-0 flex flex-col bg-white border border-grey-200 rounded-lg shadow-search max-md:w-full max-md:max-w-none"
               style={{
                 top: popoverPlacement.top,
                 left: popoverPlacement.left,
                 width: popoverPlacement.width,
               }}
-              role="listbox"
-              aria-label={label}
             >
-              {renderOptions()}
+              {showDirectFlightsOption ? (
+                <div className="flex-shrink-0 border-b border-grey-200">
+                  {renderDirectFlightsOption()}
+                </div>
+              ) : null}
+              <div
+                id={listId}
+                className="flex-auto min-h-0 overflow-y-auto overflow-x-hidden p-2 flex flex-col gap-1"
+                role="listbox"
+                aria-label={label}
+              >
+                {renderOptions()}
+              </div>
             </div>
           ),
           document.body
@@ -597,7 +688,7 @@ export function HeroSearchGroup() {
   const [tab, setTab] = useState<SearchPillTabId>('flights')
 
   return (
-    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px] flex flex-col items-start gap-8">
+    <div className="box-border w-full p-6 text-[rgba(19,23,32,1)] bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[52px] flex flex-col items-start gap-8">
       <div className="flex flex-col items-start gap-8 w-full">
         <SearchPills selectedTab={tab} onSelectTab={setTab} id={pillsId} size="lg" />
         <h1
@@ -814,7 +905,6 @@ function SwapAirportsIcon() {
 }
 
 export function FlightSearchBar() {
-  const directFlightsId = useId()
   const navigate = useNavigate()
   const [tripType, setTripType] = useState<TripType>('return')
   const [from, setFrom] = useState('')
@@ -857,6 +947,7 @@ export function FlightSearchBar() {
 
   return (
     <form className="w-full flex flex-col items-start gap-[14px]" onSubmit={onSubmit}>
+      {directFlights ? <input type="hidden" name="direct_flights" value="1" /> : null}
       <div className="flex flex-wrap items-center gap-x-[14px] gap-y-[10px] max-md:w-full max-md:flex-col max-md:items-stretch">
         <TripTypeSelect value={tripType} onChange={setTripType} />
       </div>
@@ -866,7 +957,7 @@ export function FlightSearchBar() {
             fieldKey="from"
             name="from"
             label="From"
-            hint="Country, city or airport"
+            hint="Country or city"
             value={from}
             onChange={setFrom}
             menuOpen={airportMenu}
@@ -896,7 +987,7 @@ export function FlightSearchBar() {
             fieldKey="to"
             name="to"
             label="To"
-            hint="Country, city or airport"
+            hint="Country or city"
             value={to}
             onChange={setTo}
             menuOpen={airportMenu}
@@ -906,41 +997,21 @@ export function FlightSearchBar() {
             showToNearbyAirportsOption
             toNearbyAirportsChecked={toNearbyAirports}
             onToNearbyAirportsChange={setToNearbyAirports}
+            directFlightsChecked={directFlights}
+            onDirectFlightsChange={setDirectFlights}
           />
         </div>
         <DateRangeField oneWay={tripType === 'one-way'} />
         <PassengersField />
         <button
           type="submit"
-          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
+          className="flex-[0_0_auto] self-start m-0 h-auto min-h-20 px-[22px] py-[10px] rounded-[16px] bg-purple text-grey-100 border-none inline-flex items-center justify-center gap-[10px] font-sans text-[18px] font-normal cursor-pointer no-underline transition-[background] duration-200 hover:bg-purple-hover hover:no-underline md:rounded-l-none md:rounded-r-[28px] md:ml-0 max-md:self-stretch max-md:w-auto max-md:mx-0 max-md:rounded-[16px] max-md:box-border max-md:min-h-[53px] max-md:h-[53px] max-md:max-h-[53px] max-md:px-[22px] max-md:py-0"
         >
           <span className="font-semibold">Search</span>
           <span className="flex w-6 h-6 flex-shrink-0 items-center justify-center" aria-hidden>
             <ArrowRightIcon className="block" />
           </span>
         </button>
-        <div className="flex-[0_0_100%] order-[99] self-start w-full flex-shrink-0" role="group" aria-label="Flight search options">
-          <label
-            className="flex items-center gap-[10px] m-0 font-sans text-[15px] font-semibold leading-[1.25] tracking-[0.02em] text-grey-900 cursor-pointer select-none"
-            htmlFor={directFlightsId}
-          >
-            <input
-              id={directFlightsId}
-              type="checkbox"
-              name="direct_flights"
-              checked={directFlights}
-              onChange={e => setDirectFlights(e.target.checked)}
-              className="flex-shrink-0 self-center w-[22px] h-[22px] m-0 box-border appearance-none border border-grey-200 rounded-[7px] bg-white cursor-pointer transition-[border-color,background-color,box-shadow] duration-150 hover:not-disabled:border-purple focus-visible:outline-2 focus-visible:outline-purple focus-visible:outline-offset-2 checked:border-purple checked:bg-purple bg-no-repeat bg-center"
-              style={{
-                backgroundImage: directFlights
-                  ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M20 6L9 17l-5-5' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")"
-                  : undefined,
-                backgroundSize: '14px 14px',
-              }}
-            />
-            <span className="inline-flex items-center min-h-0 leading-[1.25]">Direct flights</span>
-          </label>
-        </div>
       </div>
     </form>
   )
@@ -1029,7 +1100,7 @@ interface DealCardProps {
 export function DealCard({ image, title, highlight, price, description, imageClass }: DealCardProps) {
   const { prefix, digits } = splitDealPrice(price)
   return (
-    <article className="group/card bg-white rounded-card shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+    <article className="group/card bg-white rounded-[12px] shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <div className={`relative aspect-[4/3] max-h-[397px] overflow-hidden ${imageClass ?? ''}`}>
         <img
           src={image}
@@ -1077,7 +1148,7 @@ export function StayCard({ image, title, description, imageClass }: StayCardProp
       ? '[&>img]:w-[187.86%] [&>img]:max-w-none [&>img]:object-left [&>img]:-ml-[18%]'
       : ''
   return (
-    <article className="group/card bg-white rounded-card shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+    <article className="group/card bg-white rounded-[12px] shadow-card overflow-hidden flex flex-col min-h-0 transition-[box-shadow,transform] duration-[220ms] ease-in-out hover:shadow-card-hover hover:-translate-y-[3px] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <div className={`relative aspect-[4/3] max-h-[397px] overflow-hidden ${mongoliaImgClasses}`}>
         <img
           src={image}
@@ -1303,7 +1374,7 @@ export function HomeContent() {
       </section>
 
       <main className="relative z-0 flex-1">
-        <div className="max-w-[1440px] mx-auto px-4 pb-40 max-md:px-3">
+        <div className="max-w-[1440px] mx-auto px-6 pb-40 max-md:px-2">
           <section className="pt-10 pb-10 flex flex-col gap-6 max-md:pt-0" aria-labelledby="deals-heading">
             <SectionTitle aside={<SeeAllLink />} headingId="deals-heading">
               Find your next adventure with these <span className="text-purple">flight deals</span>

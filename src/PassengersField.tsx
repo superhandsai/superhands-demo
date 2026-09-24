@@ -106,7 +106,7 @@ export function PassengersField({ label = 'Travellers' }: PassengersFieldProps =
   // Desktop (>=769px) inside passengers-field group: rounded-none, border-l-0, border-r-0; when open adds purple inset shadows left/right
   // Mobile (<=768px): rounded-[16px] even when open
   const fieldBase =
-    'relative group w-full self-stretch flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] py-[9px] cursor-pointer bg-white border-2 rounded-[16px] md:rounded-none md:border-l-0 md:border-r-0 box-border'
+    'relative group w-full self-stretch flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] pt-[13px] pb-[9px] cursor-pointer bg-white border-2 rounded-[16px] md:rounded-none md:border-l-0 md:border-r-0 box-border'
   const fieldBorder = open
     ? 'border-purple md:shadow-[inset_2px_0_0_var(--color-purple),inset_-2px_0_0_var(--color-purple)] md:relative md:z-[3] max-md:rounded-[16px]'
     : 'border-grey-200'
@@ -114,7 +114,7 @@ export function PassengersField({ label = 'Travellers' }: PassengersFieldProps =
   return (
     <div
       ref={rootRef}
-      className={`relative flex flex-col flex-[0_1_280px] min-w-[240px] max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0 ${open ? 'z-[25]' : ''}`}
+      className={`relative flex flex-col flex-[0_1_280px] min-w-[240px] md:flex-[1_1_0] md:min-w-0 max-md:flex-[0_0_auto] max-md:w-full max-md:min-w-0 ${open ? 'z-[25]' : ''}`}
     >
       <input type="hidden" name="adults" value={adults} />
       <input type="hidden" name="children" value={children} />

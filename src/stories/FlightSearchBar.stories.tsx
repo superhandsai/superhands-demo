@@ -36,7 +36,7 @@ export const OnAccentBackground: Story = {
   decorators: [
     Story => (
       <div
-        className="box-border w-full p-6 bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[28px]"
+        className="box-border w-full p-6 bg-hero-search border border-[rgba(96,93,236,0.22)] rounded-[52px]"
         style={{ maxWidth: 1200 }}
       >
         <Story />
