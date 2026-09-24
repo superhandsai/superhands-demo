@@ -319,7 +319,7 @@ export function DateRangeField({
   // Desktop (md:) inside date-fields row (non one-way): rounded-none, border-left-none
   // When open: border-purple; desktop adds inset shadow for seam; mobile keeps rounded-16
   const dateFieldBase =
-    'relative group flex-1 min-w-0 flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] py-[9px] cursor-pointer bg-white border-2 rounded-[16px] box-border'
+    'relative group flex-1 min-w-0 flex flex-col justify-center items-stretch gap-[2px] min-h-20 px-[13px] pt-[13px] pb-[9px] cursor-pointer bg-white border-2 rounded-[16px] box-border'
 
   // Desktop overrides: when not one-way, split fields are in a row with seam-merged borders.
   const dateFieldDesktopJoin = oneWay ? '' : 'md:rounded-none md:border-l-0'
